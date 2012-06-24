@@ -1,0 +1,38 @@
+{% extends "thunderchild/base.html" %}
+
+{% block content %}
+
+	<ul class="breadcrumb">
+		<li>
+			<a href="{% url thunderchild.views.users %}">Users</a> <span class="divider">/</span>
+		</li>
+		<li class="active">
+			Create User
+		</li>
+	</ul>
+
+	<header>
+		<h1>Create User</h1>
+	</header>
+
+	<form method="post" action="{% url thunderchild.views.create_user %}">{% csrf_token %}
+		{% for field in form %}
+		<div class="row">
+		{% if not field.is_hidden %}
+			<div class="span2">{{ field.label_tag }}</div>
+			<div class="span10 {% if field.errors %}error{% endif %}">
+				{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
+				{{ field }}
+				{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
+			</div>
+		{% else %}
+			{{field }}
+		{% endif %}
+		</div>
+		{% endfor %}
+		<div class="row">
+			<input class="btn pull-right" type="submit" value="Create" />
+		</div>
+	</form>
+
+{% endblock %}

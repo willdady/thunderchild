@@ -1,0 +1,19 @@
+{% comment %}
+	The following modal fragment is hidden by default. Add data-toggle="modal" and href="#confirm_delete_modal" to an anchor tag to show it.
+	Must also add the following to the javascript in the footer:
+	$("#confirm_delete_modal").modal().modal("hide");
+{% endcomment %}
+
+<div id="confirm_delete_modal" class="modal">
+	<div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Confirm Delete</h3>
+	</div>
+	<div class="modal-body">
+		<p>{{ modal_message }}</p>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="{{ modal_delete_url }}" class="btn btn-danger"><i class="icon-trash icon-white"></i> Confirm Delete</a>
+	</div>
+</div>

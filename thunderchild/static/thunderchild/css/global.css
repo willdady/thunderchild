@@ -1,0 +1,189 @@
+body {
+  padding-top: 70px;
+  background: url("images/bg.gif") #fcfcfc;
+}
+input[type="text"],
+textarea,
+table {
+  width: 100%;
+}
+input[type="text"].input-small,
+textarea.input-small,
+table.input-small {
+  width: 90px;
+}
+input[type="text"].input-medium,
+textarea.input-medium,
+table.input-medium {
+  width: 200px;
+}
+input[type="text"].input-large,
+textarea.input-large,
+table.input-large {
+  width: 770px;
+}
+textarea {
+  resize: none;
+}
+form ul {
+  margin: 0px 0px 5px 0px;
+  padding: 0;
+  display: inline-block;
+  list-style: none;
+}
+form ul li {
+  float: left;
+  margin-right: 10px;
+}
+form ul li label {
+  margin: 0;
+}
+form ul li label input[type="text"],
+form ul li label input[type="radio"],
+form ul li label input[type="checkbox"] {
+  float: left;
+  margin-right: 5px;
+}
+form .alert-error {
+  padding-bottom: 4px;
+}
+form .alert-error .errorlist {
+  margin: 0px;
+}
+form .error input[type="text"],
+form .error textarea {
+  border-color: #b94a48;
+}
+form .help_text {
+  font-size: 11px;
+  font-style: italic;
+  color: #555555;
+  clear: both;
+}
+hr {
+  border-top-color: #e5e5e5;
+}
+table {
+  background: #ffffff;
+}
+table thead {
+  background: #2c2c2c;
+}
+table thead th {
+  color: #eeeeee;
+  padding: 3px 3px 5px 3px;
+}
+table tbody td {
+  text-align: center;
+}
+.group {
+  background: #f1f1f1;
+  border: solid 1px #e5e5e5;
+  border-radius: 8px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+}
+#color-strip {
+  position: fixed;
+  top: 0px;
+  height: 44px;
+  width: 100%;
+  background: #0088cc;
+  -webkit-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.35);
+  -moz-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.35);
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.35);
+}
+#content_container h1 {
+  margin-bottom: 20px;
+}
+#group_pane ul,
+#template_pane ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#group_pane ul li,
+#template_pane ul li {
+  padding: 3px 5px 5px 5px;
+}
+#group_pane_controls,
+#template_pane_controls {
+  margin-top: 10px;
+}
+#group_pane {
+  float: left;
+  background: #ffffff;
+  width: 29%;
+  height: 500px;
+  border: solid 1px #e5e5e5;
+}
+#group_pane .selected {
+  background: #f1f1f1;
+}
+#group_pane_controls {
+  float: left;
+  width: 29%;
+}
+#template_pane {
+  float: right;
+  background: #ffffff;
+  width: 70%;
+  height: 500px;
+  border: solid 1px #e5e5e5;
+}
+#template_pane .selected {
+  background: #f1f1f1;
+}
+#template_pane_controls {
+  float: right;
+  width: 70%;
+}
+.dashboard-panel {
+  background: #F00;
+  height: 200px;
+  margin-bottom: 20px;
+}
+.field_holder {
+  padding-left: 10px;
+  padding-right: 20px;
+  margin: 6px 0px 0px 0px;
+}
+.field_holder input[type="text"].input-large,
+.field_holder textarea.input-large,
+.field_holder table.input-large {
+  width: 100%;
+}
+.field_label_holder {
+  padding: 5px 10px 0px 10px;
+}
+.field_label_holder label {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+.field_label_holder .alert-error {
+  margin-top: 10px;
+}
+.accordion-group {
+  background: #F1F1F1;
+  margin-bottom: 6px;
+}
+.accordion-group ul {
+  margin: 0px 0px 5px 0px;
+  padding: 0;
+  display: inline-block;
+  list-style: none;
+}
+.accordion-group ul li {
+  float: left;
+  margin-right: 10px;
+}
+.accordion-group ul li label {
+  margin: 0;
+}
+.accordion-group ul li label input {
+  margin-right: 5px;
+}
+#user_group_form ul li {
+  clear: both;
+}

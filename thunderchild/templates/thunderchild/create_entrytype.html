@@ -1,0 +1,51 @@
+{% extends "thunderchild/base.html" %}
+
+{% block content %}
+
+		<ul class="breadcrumb">
+			<li>
+				<a href="{% url thunderchild.entry_views.entrytypes %}">Entry Types</a> <span class="divider">/</span>
+			</li>
+			<li class="active">
+				Create Entry Type
+			</li>
+		</ul>
+		
+		<header>
+			<h1>Create Entry Type</h1>
+		</header>
+		
+		<form action="{% url thunderchild.entry_views.create_entrytype %}" method="post">{% csrf_token %}
+			
+			{% for field in form %}
+				{% if not field.is_hidden %}
+				<div class="accordion-group">
+						<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
+							{{ field.label_tag }}
+							{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
+						</div>
+						<div id="form_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
+							{{ field }}
+							{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
+						</div>
+				</div>
+				{% else %}
+					{{ field }}
+				{% endif %}
+			{% endfor %}
+			
+			<input class="btn pull-right" type="submit" value="Create" />
+			
+		</form>
+		
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+	Utilities.autoSlug( $("#id_entrytype_name"), $("#id_entrytype_short_name") );
+	// This stops label elements from triggering their associated fields when clicked.
+	$(".field_label_holder label").click(function(e){
+		e.preventDefault();
+	});
+</script>
+{% endblock %}

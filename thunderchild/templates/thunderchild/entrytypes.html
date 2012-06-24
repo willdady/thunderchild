@@ -1,0 +1,34 @@
+{% extends "thunderchild/base.html" %}
+
+{% block content %}
+		
+		<header>
+			<h1>Entry Types</h1>
+		</header>
+		
+		{% if entrytypes %}
+		<table border="1">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Short name</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for entrytype in entrytypes %}
+				<tr>
+					<td><a href="{% url thunderchild.entry_views.edit_entrytype entrytype.id %}">{{ entrytype.entrytype_name }}</a></td>
+					<td>{{ entrytype.entrytype_short_name }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		{% else %}
+		<p>There are currently no entry types defined. Click 'Create entry type' below to create one.</p>
+		{% endif %}
+		
+		<div class="row">
+			<a class="btn pull-right" href="{% url thunderchild.entry_views.create_entrytype %}">Create entry type</a>
+		</div>
+		
+{% endblock %}

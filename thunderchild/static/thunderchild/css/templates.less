@@ -1,0 +1,54 @@
+#group_pane, #template_pane {
+  overflow:auto;
+  ul {
+     margin:0;
+     padding:0;
+     list-style:none;
+     font-size:14px;
+     li {
+       padding:6px 8px 8px 8px;
+     }
+  }
+}
+#group_pane_controls, #template_pane_controls {
+  margin-top:10px;
+}
+#group_pane {
+  float:left;
+  background:@white;
+  width:34%;
+  height:500px;
+  border:solid 1px @group-border-color;
+  ul {
+    cursor:pointer;
+    li {
+	    &.selected {
+	      background: #f1f1f1;
+	    }
+	    i {
+	    	width:16px;
+	    }
+    }
+  }
+}
+#group_pane_controls {
+  float:left;
+  width:34%;
+}
+#template_pane {
+  float:right;
+  background:@white;
+  width:65%;
+  height:500px;
+  border:solid 1px @group-border-color;
+  ul {
+    cursor:pointer;
+    .selected {
+      background: #f1f1f1;
+    }
+  }
+}
+#template_pane_controls {
+  float:right;
+  width:65%;
+}

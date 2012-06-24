@@ -1,0 +1,58 @@
+{% extends "thunderchild/base.html" %}
+
+{% block content %}
+	
+	<header>	
+		<h1>Entries</h1>
+	</header>
+	
+	<div class="row">
+			<table class="span12" border="1">
+			<thead>
+				<tr>
+					<th>Title</th>
+					<th>Slug</th>
+					<th>Author</th>
+					<th>Entry type</th>
+					<th>Created</th>
+					<th>Last modified</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for entry in entries %}
+				<tr>
+					<td><a href="{% url thunderchild.entry_views.edit_entry entry.id %}">{{ entry.title }}</a></td>
+					<td>{{ entry.slug }}</td>
+					<td>{{ entry.author.first_name }} {{ entry.author.last_name }}</td>
+					<td>{{ entry.entrytype.entrytype_name }}</td>
+					<td>{{ entry.creation_date }}</td>
+					<td>{{ entry.last_modified_date }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+			</table>
+	</div>
+	<hr />
+	<div class="row">
+		<div id="create_controls" class="pull-right">
+			<label for="entry_type_select">Create a new</label>
+			<select id="entry_type_select">
+				{% for entry_type in entry_types %}
+				<option value="{{ entry_type.id }}">{{ entry_type.entrytype_name }}</option>
+				{% endfor %}
+			</select>
+			{% with entry_types|first as first_entry_type %}
+			<a id="go_button" href="/backend/entries/create/{{ first_entry_type.id }}" class="btn">Go</a>
+			{% endwith %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+	var goButton = $("#go_button");
+	$("#entry_type_select").change(function(){
+		goButton.attr( "href", "/backend/entries/create/"+$(this).val() );
+	});
+</script>
+{% endblock %}

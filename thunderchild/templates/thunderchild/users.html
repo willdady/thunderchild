@@ -1,0 +1,45 @@
+{% extends "thunderchild/base.html" %}
+
+{% block content %}
+
+	<header>
+		<h1>Users</h1>
+	</header>
+	
+	<div class="row">
+		<table class="span12" border="1">
+			<thead>
+				<tr>
+					<th>Username</th>
+					<th>First name</th>
+					<th>Last name</th>
+					<th>Email</th>
+					<th>Backend access</th>
+					<th>Is active</th>
+					<th>Is superuser</th>
+					<th>Last login</th>
+					<th>Date joined</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for user in users %}
+				<tr>
+					<td><a href="{% url thunderchild.views.edit_user user.id %}">{{ user.username }}</a></td>
+					<td>{{ user.first_name }}</td>
+					<td>{{ user.last_name }}</td>
+					<td>{{ user.email }}</td>
+					<td>{{ user.is_staff }}</td>
+					<td>{{ user.is_active }}</td>
+					<td>{{ user.is_superuser }}</td>
+					<td>{{ user.last_login }}</td>
+					<td>{{ user.date_joined }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div class="row">
+		<a class="btn pull-right" href="{% url thunderchild.views.create_user %}">Create user</a>
+	</div>
+		
+{% endblock %}

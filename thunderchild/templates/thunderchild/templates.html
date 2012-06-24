@@ -1,0 +1,65 @@
+{% extends "thunderchild/base.html" %}
+
+{% block javascript %}
+	{% if debug %}
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/templates.js"></script>
+	{% else %}
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/templates.js"></script>
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+		
+		<header>
+			<h1>Templates</h1>
+		</header>
+		
+		<div class="row">
+			<div class="span12">
+				<div id="group_pane">
+					<ul>
+					{% for templategroup in templategroups %}
+					<li data-group="{{ templategroup.templategroup_short_name }}" data-id="{{ templategroup.id }}">
+						{% if templategroup.templategroup_short_name == 'root' %}
+							<i class="icon-home"></i><em> {{ templategroup.templategroup_short_name }}</em>
+						{% else %}
+							<i class="icon-folder-close"></i> {{ templategroup.templategroup_short_name }}
+							<a class="btn btn-mini pull-right edit-button" href="{% url thunderchild.template_views.edit_templategroup templategroup.id %}">
+								<i class="icon-pencil"></i> Edit
+							</a>
+						{% endif %}
+					</li>
+					{% endfor %}
+					</ul>
+				</div>
+				<div id="template_pane">
+					<ul>
+					{% for template in templates %}
+					<li data-group="{{ template.templategroup.templategroup_short_name }}" data-id="{{ template.id }}">
+						{% if template.template_is_private %}
+							<i class="icon-lock"></i> {{ template.template_short_name }}
+						{% else %}
+							<i class="icon-file"></i> {{ template.template_short_name }}
+						{% endif %}
+						<a class="btn btn-mini pull-right edit-button" href="{% url thunderchild.template_views.edit_template template.templategroup.id template.id %}">
+							<i class="icon-pencil"></i> Edit
+						</a>
+					</li>
+					{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="span12">
+				<div id="group_pane_controls">
+					<a class="btn btn-small pull-right" href="{% url thunderchild.template_views.create_templategroup %}">Create group</a>
+				</div>
+				<div id="template_pane_controls">
+					<a id="create_template_button" class="btn btn-small pull-right" href="">Create template</a>
+				</div>
+			</div>
+		</div>
+		
+{% endblock %}

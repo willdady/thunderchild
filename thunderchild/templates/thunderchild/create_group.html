@@ -1,0 +1,27 @@
+{% extends "thunderchild/base.html" %}
+
+{% block content %}
+
+	<header>
+		<h1>Create Group</h1>
+	</header>
+
+	<form id="user_group_form" method="post" action="{% url thunderchild.views.create_group %}">{% csrf_token %}
+		{% for field in form %}
+			{% if not field.is_hidden %}
+			<div class="row">
+				<div class="span2">{{ field.errors }}{{ field.label_tag }}</div>
+				<div class="span10">
+					{{ field }}
+				</div>
+			</div>
+			{% else %}
+			{{ field }}
+			{% endif %}
+		{% endfor %}
+		<div class="row">
+			<div class="pull-right"><input class="btn" style="float:right" type="submit" value="Create" /></div>
+		</div>
+	</form>
+
+{% endblock %}

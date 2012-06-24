@@ -1,0 +1,56 @@
+{% extends "thunderchild/base.html" %}
+
+{% block content %}
+		
+		<header>
+			<h1>Category Groups</h1>
+		</header>
+		
+		{% if category_list %}
+			{% for obj in category_list %}
+			<div class="row">
+				<div class="span12">
+					<h3>{{ obj.categorygroup.categorygroup_name }}</h3>
+					{% if obj.categories %}
+					<table border="1" style="table-layout:fixed;">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Short name</th>
+							</tr>
+						</thead>
+						{% if obj.categories %}
+						<tbody>
+							{% for category in obj.categories %}
+							<tr>
+								<td><a href="{% url thunderchild.category_views.edit_category obj.categorygroup.id category.id %}">{{ category.category_name }}</a></td>
+								<td>{{ category.category_short_name }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+						{% endif %}
+					</table>
+					{% else %}
+					<p>Group is empty. Click 'Create category' below to add a category to this group.</p>
+					{% endif %}
+				</div>
+			</div>
+			<div class="row">
+				<div class="span12">
+					<div class="pull-right">
+						<a class="btn btn-small" href="{% url thunderchild.category_views.edit_categorygroup obj.categorygroup.id %}">Edit group</a>
+						<a class="btn btn-small" href="{% url thunderchild.category_views.create_category obj.categorygroup.id %}">Create category</a>
+					</div>
+				</div>
+			</div>
+			<hr />
+			{% endfor %}
+		{% else %}
+			<p>There are currently no category groups defined. Click 'Create category group' below to create one.</p>
+		{% endif %}
+		
+		<div class="row">
+			<a class="btn pull-right" href="{% url thunderchild.category_views.create_categorygroup %}">Create category group</a>
+		</div>
+		
+{% endblock %}

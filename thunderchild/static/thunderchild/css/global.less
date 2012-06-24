@@ -1,0 +1,136 @@
+@import "variables.less";
+@import "mixins.less";
+
+body {
+  padding-top:70px;
+  background:url("images/bg.gif") @off-white;
+  &.media-chooser {
+    padding:0;
+    background:none;
+  }
+}
+input[type="text"], textarea, table {
+  &.input-small {
+    width:90px;
+  }
+  &.input-medium {
+    width:200px;
+  }
+  &.input-large {
+    width:770px;
+  }
+}
+textarea{
+  width:100%;
+  resize: none;
+}
+form {
+  ul {
+        margin:0px 0px 5px 0px;
+        padding:0;
+        display:inline-block;
+        list-style:none;
+        li {
+            float:left;
+            margin-right:10px;
+            label {
+                margin:0;
+                input[type="text"], input[type="radio"], input[type="checkbox"] {
+                    float:left;
+                    margin-right:5px;
+                }
+            }
+        }
+    }
+  .alert-error {
+      padding-bottom:4px;
+      .errorlist {
+          margin:0px;
+      }
+  }
+  .error {
+      input[type="text"], input[type="password"], textarea {
+          border-color: @errorBorder;
+      }
+  }
+  .help_text {
+      font-size:11px;
+      font-style:italic;
+      color: @gray;
+      clear:both;
+      padding-bottom:10px;
+      margin:0;
+  }
+  .non-editable {
+    p {
+      height:18px;
+      padding:0px 5px 10px 5px;
+      margin-bottom:9px;
+    }
+  }
+}
+hr {
+  border-top-color: @group-border-color;
+  margin-top:15px;
+  margin-bottom:15px;
+}
+table {
+  background: @white;
+  margin-bottom:9px;
+  width:100%;
+  thead {
+    background: @table-header-color;
+    th {
+      color: @grayLighter;
+      padding: 3px 3px 5px 3px;
+    }
+  }
+  tbody {
+    td {
+      text-align:center;
+    }
+  }
+}
+h1 {
+  margin-bottom:15px;
+}
+h3 {
+  margin-bottom:5px;
+}
+.group {
+  background: @group-color;
+  border:solid 1px @group-border-color;
+  .border-radius(8px);
+}
+#color-strip {
+  position:fixed;
+  top:0px;
+  height:44px;
+  width:100%;
+  background: @navBarStrip;
+  z-index:1029;
+  .box-shadow( 0px 1px 3px 0px rgba(0, 0, 0, 0.35) );
+}
+#content_container {
+  header {
+    margin-bottom:15px;
+    h1, h2 {
+        margin:0;
+    }
+  }
+}
+
+div.ui-datepicker {
+ font-size:11px;
+ .box-shadow(1px 2px 3px 0px rgba(0, 0, 0, 0.35);
+}
+
+@import "login.less";
+@import "templates.less";
+@import "create_edit_template.less";
+@import "dashboard.less";
+@import "create_edit_entry.less";
+@import "user_groups.less";
+@import "entries.less";
+@import "media.less";
+@import "time-picker.less";

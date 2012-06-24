@@ -1,0 +1,141 @@
+{% extends "thunderchild/base.html" %}
+
+{% block javascript %}
+<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities.js"></script>
+{% if debug %}
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/media.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/django-ajax.js"></script>
+{% else %}
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/media-min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/django-ajax-min.js"></script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+	<header>
+		<h1>Media</h1>
+	</header>
+	
+	<a id="upload_button" href="#" class="btn">Upload</a>
+	<a id="deselect_button" href="#" class="btn disabled">Deselect All</a>
+	<a id="delete_button" href="#" class="btn btn-danger disabled"><i class="icon-trash icon-white"></i> Delete Selected</a>
+
+	<hr />
+
+	<form id="thumbnails_form">
+		<ul id="thumbnails_list" class="thumbnails">
+			{% comment %}
+				Instances of the below thumbnail template get added here.
+			{% endcomment %}
+		</ul>
+	</form>
+	
+	<script type="text/html" id="thumbnail_template">
+		<li class="span2">
+			<a href="<%= url %>" target="_blank">
+				<div class="thumbnail">
+						<img src="<%= thumbnail_url %>" alt="media asset thumbnail" />
+						<ul>
+							<li><label for="thumbnail_<%= id %>_checkbox"><%= filename %></label></li>
+							<li><%= size %></li>
+							<li><input id="thumbnail_<%= id %>_checkbox" type="checkbox" data-id="<%= id %>" /></li>
+						</ul>
+				</div>
+			</a>
+		</li>
+	</script>
+	
+	{% if media_assets.paginator.num_pages > 1 %}
+	<hr />
+	<div class="pagination pagination-centered">
+		<ul>
+			{% if media_assets.has_previous %}
+				<li><a href="?page={{ media_assets.previous_page_number }}">«</a></li>
+			{% endif %}
+			{% for num in media_assets.paginator.page_range %}
+				{% ifequal media_assets.number num %}
+					<li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
+				{% else %}
+					<li><a href="?page={{ num }}">{{ num }}</a></li>
+				{% endifequal %}
+			{% endfor %}
+			{% if media_assets.has_next %}
+				<li><a href="?page={{ media_assets.next_page_number }}">»</a></li>
+			{% endif %}
+		</ul>
+	</div>
+	{% endif %}
+	
+	<script type="text/javascript">
+		var initial_data = '{{ media_assets_json|safe }}';
+	</script>
+	
+	<div class="modal hide" id="upload_modal">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h3 data-state="choose_file">Upload</h3>
+			<h3 data-state="uploading">Uploading</h3>
+			<h3 data-state="name_conflict">Name conflict</h3>
+		</div>
+		<div class="modal-body">
+			<div data-state="choose_file">
+				<form id="modal_upload_form">
+					<label for="modal_file_field">Select a file</label>	
+					<input id="modal_file_field" name="file" type="file"/>
+				</form>
+			</div>
+			<div data-state="uploading">
+				<p>Uploading</p>
+				<div class="progress">
+					<div class="bar"></div>
+				</div>
+			</div>	
+			<div data-state="name_conflict">
+				<p>A file with that name already exists. Would you like to replace the existing file?</p>
+			</div>		
+		</div>
+		<div class="modal-footer">
+			<div data-state="choose_file">
+				<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+				<a href="#" id="modal_upload_button" class="btn btn-primary disabled">Upload</a>
+			</div>
+			<div data-state="name_conflict">
+				<a href="#" class="btn" data-dismiss="modal">No</a>
+				<a href="#" id="replace_file_button" class="btn btn-primary">Yes</a>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal hide" id="delete_selected_modal">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h3>Confirm Delete</h3>
+		</div>
+		<div class="modal-body">
+			<p>Are you sure you want to <b>permanently</b> delete the selected assets?</p>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+			<a href="#" id="modal_confirm_delete_button" class="btn btn-danger"><i class="icon-trash icon-white"></i>Confirm Delete</a>
+		</div>
+	</div>
+	
+	<div class="modal hide" id="preview_modal">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h3>Preview</h3>
+		</div>
+		<div class="modal-body">
+		</div>
+	</div>
+	<script type="text/html" id="preview_modal_template">
+		<img src="<%= url %>" alt="<%= filename %>" />
+		<ul>
+			<li><%= filename %></li>
+			<li><%= size %></li>
+			<li><%= width %>x<%= height %></li>
+		</ul>
+	</script>
+
+{% endblock %}

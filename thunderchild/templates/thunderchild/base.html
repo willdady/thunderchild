@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	
+	<head>
+		<meta charset="utf-8">
+    	<title>{% block title %}{% endblock %}</title>
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<meta name="description" content="">
+    	<meta name="author" content="">
+		
+		<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" type="text/css" media="screen"/>
+		<link rel="stylesheet/less" href="{{ STATIC_URL }}thunderchild/css/global.less" type="text/css" media="screen"/>
+		
+		{% block css %}{% endblock %}
+		
+		{% if debug %}
+			<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/less-1.3.0.min.js"></script>
+		{% endif %}
+		
+	</head>
+	
+	<body>		
+		
+		<nav class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<div class="nav-collapse">
+						<ul class="nav">
+							<li><a href="{% url thunderchild.views.dashboard %}">Dashboard</a></li>
+							<li class="divider-vertical"></li>
+							<li><a href="{% url thunderchild.template_views.templates %}">Templates</a></li>
+							<li><a href="{% url thunderchild.media_views.media %}">Media</a></li>
+							<li><a href="{% url thunderchild.entry_views.entries %}">Entries</a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Users <b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu">
+									<li><a href="{% url thunderchild.views.users %}">Users</a></li>
+									<li><a href="{% url thunderchild.views.create_user %}">Create User</a></li>
+									<li class="divider"></li>
+									<li><a href="{% url thunderchild.views.groups %}">Groups</a></li>
+									<li><a href="{% url thunderchild.views.create_group %}">Create Group</a></li>
+								</ul>
+							</li>
+						</ul>
+						<ul class="nav pull-right">
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Admin <b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu">
+									<li><a href="{% url thunderchild.field_views.fieldgroups %}">Field Groups</a></li>
+									<li><a href="{% url thunderchild.entry_views.entrytypes %}">Entry Types</a></li>
+									<li><a href="{% url thunderchild.category_views.categorygroups %}">Category Groups</a></li>
+								</ul>
+							</li>
+							<li><a href="#">Account</a></li>
+							<li class="divider-vertical"></li>
+							<li><a href="{% url thunderchild.views.logout %}">Logout</a></li>
+						</ul>
+					</div>
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+				</div>
+			</div>
+		</nav>
+		<div id="color-strip"></div>
+		
+		<section id="content_container" class="container">
+			{% block content %}{% endblock %}
+		</section>
+		
+		
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/underscore-min.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/backbone-min.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities.js"></script>
+		
+		<script type="text/javascript">
+			$(".dropdown-toggle").dropdown(); // Initialize the dropdowns in the main nav
+		</script>
+		
+		{% block javascript %}{% endblock %}
+	</body>
+	
+</html>
