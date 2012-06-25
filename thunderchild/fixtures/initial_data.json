@@ -16,5 +16,17 @@
     		"template_content_type":"text/html",
     		"template_content":"{% load foo_tags %}\rWelcome"
 		}
+	},
+	{
+		"model":"thunderchild.Template",
+		"pk":2,
+		"fields":{
+			"templategroup":1,
+    		"template_short_name":"robots.txt",
+    		"template_uid":"root/robots.txt",
+    		"template_content_type":"text/plain",
+    		"template_cache_timeout":"604800",
+    		"template_content":"User-agent: *\rDisallow: {% url thunderchild.views.dashboard %}/"
+		}
 	}
 ]

@@ -73,11 +73,26 @@ def get_entry(*args, **kwargs):
 
 @register.simple_tag(name='template_url') 
 def get_template_url(*args, **kwargs):
+    """
+    Returns the absolute URL of the supplied template. The template should be supplied as "<template group>/<template name>"
+    
+    Example:
+    {% template_url "staff/john-smith" %}
+    """
     path = '/'.join(args)
+    if path[0:5] == 'root/':
+        path = path.replace('root/', '')
     return reverse('thunderchild.dynamic_view.dynamic_view', args=[path])
+
     
 @register.simple_tag(name='media_asset')    
 def get_media_asset(asset_id):
+    """
+    Returns the URL of a MediaAsset. Tag accepts a single argument, the id of the asset. If the asset does not exist an empty string is returned."
+    
+    Example:
+    {% media_asset 12 %}
+    """
     try:
         model = models.MediaAsset.objects.get(pk=asset_id)
     except models.MediaAsset.DoesNotExist:

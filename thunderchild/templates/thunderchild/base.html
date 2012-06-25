@@ -9,7 +9,11 @@
     	<meta name="author" content="">
 		
 		<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" type="text/css" media="screen"/>
-		<link rel="stylesheet/less" href="{{ STATIC_URL }}thunderchild/css/global.less" type="text/css" media="screen"/>
+		{% if debug %}
+		<link rel="stylesheet/less" href="{{ STATIC_URL }}thunderchild/css_src/thunderchild.less" type="text/css" media="screen"/>
+		{% else %}
+		<link rel="stylesheet" href="{{ STATIC_URL }}thunderchild/css/thunderchild.css" type="text/css" media="screen"/>
+		{% endif %}
 		
 		{% block css %}{% endblock %}
 		
@@ -38,9 +42,6 @@
 								<ul class="dropdown-menu">
 									<li><a href="{% url thunderchild.views.users %}">Users</a></li>
 									<li><a href="{% url thunderchild.views.create_user %}">Create User</a></li>
-									<li class="divider"></li>
-									<li><a href="{% url thunderchild.views.groups %}">Groups</a></li>
-									<li><a href="{% url thunderchild.views.create_group %}">Create Group</a></li>
 								</ul>
 							</li>
 						</ul>
@@ -79,7 +80,11 @@
 		<script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/underscore-min.js"></script>
 		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/backbone-min.js"></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities.js"></script>
+		{% if debug %}
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
+		{% else %}
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities-min.js"></script>
+		{% endif %}
 		
 		<script type="text/javascript">
 			$(".dropdown-toggle").dropdown(); // Initialize the dropdowns in the main nav

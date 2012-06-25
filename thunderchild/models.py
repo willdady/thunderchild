@@ -148,7 +148,7 @@ class Template(models.Model):
     template_content_type = models.CharField(max_length=50, default='text/html', verbose_name='Content type')
     template_cache_timeout = models.IntegerField(default=0, verbose_name='Cache timeout', help_text='Number of seconds the rendered template should be cached for before being re-rendered. Recommended for templates that do not change often.')
     template_is_private = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Is private?', help_text="Private templates are not publicly accessible. They're intended for use as base templates to extend from or as fragments for including in other templates.")
-    template_content = models.TextField(default='{% load foo_tags %}', verbose_name='Content')
+    template_content = models.TextField(default='{% load thunderchild_tags %}', verbose_name='Content')
     
     def set_data(self, data):
        for key, value in data.items():
@@ -362,7 +362,7 @@ class TemplateForm(ModelForm):
         # If the template is an index template, disable the name input as index templates cannot be renamed.
         if self.instance:
             if self.instance.template_short_name == 'index':
-                self.fields['template_short_name'].widget.attrs['disabled'] = 'disabled'
+                self.fields['template_short_name'].widget = HiddenInput()
     
     def clean(self):
         '''
@@ -377,12 +377,15 @@ class TemplateForm(ModelForm):
             #If instance.id is set then we are editing an existing Template.
             if self.instance.id:
                 #Find a Template with matching templategroup and template_short_name as specified in our cleaned_data. If this template is NOT
-                #the same as our instance then template_short_name is already assigned to a different Template and therefore can't be changed.
-                existing = Template.objects.filter(templategroup__exact=templategroup).filter(template_short_name__exact=template_short_name)[0]
+                #the same as our instance then template_short_name is already assigned to a different Template in the same group and therefore can't be changed.
+                existing = Template.objects.filter(templategroup__exact=templategroup).filter(template_short_name__exact=template_short_name)
+                if len(existing) == 0:
+                    return cleaned_data
+                existing = existing[0]
                 if existing.id == self.instance.id:
                     return cleaned_data
                 else:
-                    self._errors['template_short_name'] = self.error_class(['A template with this name already exists within this group'])
+                    self._errors['template_short_name'] = self.error_class(['A template with this name already exists within this group. Please choose another name.'])
                     del cleaned_data['template_short_name']
             else:
                 #No instance.id? Then we're creating a new template. We make sure template_short_name is not already assigned to a template in the same group.

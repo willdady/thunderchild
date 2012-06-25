@@ -1,11 +1,12 @@
 {% extends "thunderchild/base.html" %}
 
 {% block javascript %}
-<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities.js"></script>
 {% if debug %}
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/media.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/django-ajax.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/django-ajax.js"></script>
 {% else %}
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities-min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/media-min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/django-ajax-min.js"></script>
 {% endif %}

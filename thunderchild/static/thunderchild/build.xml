@@ -1,0 +1,61 @@
+
+<project name="Thunderchild JS/CSS build" basedir=".">
+	
+	<description>
+		Compiles coffeescript and less + minifies js using yuicompressor.
+	</description>
+
+	<property name="JAVA_COMMAND" value="java" />
+	<property name="COFFEE_COMMAND" value="coffee" />
+	<property name="LESSC_COMMAND" value="lessc.cmd" />
+	<property name="YUI_JAR" value="${basedir}/../../../yui/yuicompressor-2.4.7.jar" />
+
+	<property name="JS_SOURCE" value="${basedir}/js_src" />
+	<property name="JS_OUTPUT" value="${basedir}/js" />
+	<property name="CSS_SOURCE" value="${basedir}/css_src" />
+	<property name="CSS_OUTPUT" value="${basedir}/css" />
+	
+	<target name="compile-coffeescript">
+		<apply executable="${COFFEE_COMMAND}">
+			<fileset dir="${JS_SOURCE}" includes="*.coffee" />
+			<arg value="--compile" />
+			<srcfile />
+		</apply>
+	</target>
+	
+	<target name="minify-javascript">
+		<apply executable="${JAVA_COMMAND}" dest="${JS_OUTPUT}">
+			<fileset dir="${JS_SOURCE}" includes="*.js" excludes="*min.js" />
+			
+			<arg line="-jar"/>
+            <arg path="${YUI_JAR}"/>
+            <srcfile/>
+            <arg line="-o"/>
+            <mapper type="glob" from="*.js" to="*-min.js"/>
+            <targetfile/>
+		</apply>
+	</target>
+	
+	<target name="compile-less">
+		<exec executable="${LESSC_COMMAND}" output="${CSS_OUTPUT}/thunderchild.css">
+			<arg value="${CSS_SOURCE}/thunderchild.less" />
+		</exec>
+	</target>
+	
+	<target name="copy-css-assets">
+		<copy todir="${CSS_OUTPUT}/images">
+			<fileset dir="${CSS_SOURCE}/images" />
+		</copy>
+		<copy todir="${CSS_OUTPUT}/cupertino">
+			<fileset dir="${CSS_SOURCE}/cupertino" />
+		</copy>
+	</target>
+	
+	<target name="build">
+		<antcall target="compile-coffeescript" />
+		<antcall target="minify-javascript" />
+		<antcall target="copy-css-assets" />
+		<antcall target="compile-less" />
+	</target>
+	
+</project>

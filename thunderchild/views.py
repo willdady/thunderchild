@@ -90,39 +90,3 @@ def edit_user(request, user_id):
         form = forms.UserCreationForm(instance=model)
         return render(request, 'thunderchild/edit_user.html', {'form':form, 'user_id':user_id})
 
-
-@login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def groups(request):
-    groups = Group.objects.all()
-    return render(request, 'thunderchild/groups.html', {'groups':groups})
-    
-
-@login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def create_group(request):
-    if request.method == 'POST':
-        form = forms.GroupCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('thunderchild.views.groups')
-        else:
-            return render(request, 'thunderchild/create_group.html', {'form':form})
-    else:
-        form = forms.GroupCreationForm()
-        return render(request, 'thunderchild/create_group.html', {'form':form})
-
-
-@login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def edit_group(request, group_id):
-    model = get_object_or_404(Group, pk=group_id)
-    if request.method == 'POST':
-        form = forms.GroupCreationForm(request.POST, instance=model)
-        if form.is_valid():
-            form.save()
-            return redirect('thunderchild.views.groups')
-        else:
-            return render(request, 'thunderchild/edit_group.html', {'form':form, 'group_id':group_id})
-    else:
-        form = forms.GroupCreationForm(instance=model)
-        return render(request, 'thunderchild/edit_group.html', {'form':form, 'group_id':group_id})
-
-
