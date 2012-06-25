@@ -47,6 +47,17 @@
 				{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
 			</div>
 			<div id="form2_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
+				{% for key, value in media_assets.items %}
+					{% ifequal key field.html_name %}
+					<div class="media-asset-thumbnail">
+						<img src="{{ value.thumbnail_url }}" alt="Media asset thumbnail" />
+						<ul>
+							<li>{{ value.filename }}</li>
+						</ul>
+					</div>
+					{% endifequal %}				
+				{% endfor %}
+				
 				{{ field }}
 				{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
 			</div>
@@ -87,6 +98,15 @@
 			</div>
 		</div>
 		
+		<script type="text/html" id="mediaAssetThumbnailTemplate">
+			<div class="media-asset-thumbnail">
+				<img src="<%= thumbnail_url %>" alt="Media asset thumbnail" />
+				<ul>
+					<li><%= filename %></li>
+				</ul>
+			</div>
+		</script>
+		
 {% endblock %}
 
 {% block javascript %}
@@ -117,9 +137,9 @@
 	});
 	
 	var appModel = new window.AppModel();
-	var fileChooserModal = new window.FileChooserModalView({el:$("#media_chooser_modal"), model:appModel});
+	var mediaChooserModal = new window.MediaChooserModalView({el:$("#media_chooser_modal"), model:appModel});
 	$('[data-field-type="file"]').each(function() {
-		new window.FileChooserWidgetView({el:$(this), model:appModel});
+		new window.MediaChooserWidgetView({el:$(this), model:appModel});
 	});
 	
 </script>

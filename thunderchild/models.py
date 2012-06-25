@@ -30,9 +30,9 @@ class Entry(models.Model):
     author = models.ForeignKey(User)
     title = models.CharField(max_length=300, verbose_name='Title')
     slug = models.SlugField(max_length=255, unique=True, verbose_name='Slug')
-    creation_date = models.DateTimeField(verbose_name='Created on')
+    creation_date = models.DateTimeField(verbose_name='Created')
     last_modified_date = models.DateTimeField(auto_now=True, verbose_name='Last modified')
-    expiration_date = models.DateTimeField(verbose_name='Expires on', blank=True, null=True)
+    expiration_date = models.DateTimeField(verbose_name='Expires', blank=True, null=True)
     is_published = models.BooleanField(default=True, verbose_name='Published?', choices=((False, 'No'),(True, 'Yes')))
     categories = models.ManyToManyField('Category', blank=True)
     
@@ -150,10 +150,10 @@ class Template(models.Model):
     template_is_private = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Is private?', help_text="Private templates are not publicly accessible. They're intended for use as base templates to extend from or as fragments for including in other templates.")
     template_content = models.TextField(default='{% load thunderchild_tags %}', verbose_name='Content')
     
-    def set_data(self, data):
-       for key, value in data.items():
-           if hasattr(self, key):
-               setattr(self, key, value)
+#    def set_data(self, data):
+#       for key, value in data.items():
+#           if hasattr(self, key):
+#               setattr(self, key, value)
                
                
 class CategoryGroup(models.Model):
@@ -183,6 +183,26 @@ class MediaAsset(models.Model):
     thumbnail = models.CharField(max_length=255, blank=True, verbose_name='Thumbnail')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Created')
     
+    def _get_non_image_thumbnail_url(self, filename, type):
+        ext = None
+        common_types = [('application/pdf', 'pdf'), ('audio/mp3', 'mp3'), ('audio/wav', 'wav'), ('application/x-zip-compressed', 'zip'), ('text/plain', 'txt'), ('text/xml', 'xml'), ('text/css', 'css')]
+        for t in common_types:
+            if t[0] == type:
+                ext = t[1]
+        # If we found a match based on type we can return
+        if ext:
+            return '{}thunderchild/images/media_icons/{}.png'.format(settings.STATIC_URL, ext)
+        # If no match based on type, try match based on file extension.
+        ext = filename.split('.')[-1]
+        extensions = ['aac', 'ai', 'aiff', 'avi', 'bmp', 'c', 'cpp', 'css', 'dat', 'dmg', 'doc', 'dotx', 'dwg', 'dxf', 'eps', 'exe', 
+                      'flv', 'h', 'hpp', 'html', 'ics', 'iso', 'java', 'key', 'mid', 'mp3', 'mp4', 'mpg', 'odf', 'ods', 'odt', 'otp', 
+                      'ots', 'ott', 'pdf', 'php', 'ppt', 'psd', 'py', 'qt', 'rar', 'rb', 'rtf', 'sql', 'tga', 'tgz', 'tiff', 'txt', 
+                      'wav', 'xls', 'xlsx', 'xml', 'yml', 'zip']
+        if ext in extensions:
+            return '{}thunderchild/images/media_icons/{}.png'.format(settings.STATIC_URL, ext)
+        # If still no match simply return generic icon
+        return '{}thunderchild/images/media_icons/_blank.png'.format(settings.STATIC_URL)
+    
     @property
     def url(self):
         url = self.base_url + self.directory + self.filename
@@ -190,10 +210,11 @@ class MediaAsset(models.Model):
     
     @property
     def thumbnail_url(self):
-        if not self.thumbnail:
-            return None
-        url = self.base_url + self.directory + self.thumbnail
-        return url.replace('{ MEDIA_URL }', settings.MEDIA_URL)
+        if self.is_image:
+            url = self.base_url + self.directory + self.thumbnail
+            return url.replace('{ MEDIA_URL }', settings.MEDIA_URL)
+        else:
+            return self._get_non_image_thumbnail_url(self.filename, self.type)
     
     @property
     def file_path(self):

@@ -116,8 +116,19 @@ def edit_entry(request, entry_id):
         else:
             return render(request, 'thunderchild/edit_entry.html', {'form1':form1, 'form2':form2, 'entry_id':entry_id, 'entrytype_name':entrytype_model.entrytype_name})
     else:
-        form1 = models.EntryForm(entrytype_model=entrytype_model, initial=entry_model.dict)
-        form2 = entrytype_model.get_form(initial=entry_model.dict)
-        return render(request, 'thunderchild/edit_entry.html', {'form1':form1, 'form2':form2, 'entry_id':entry_id, 'entrytype_name':entrytype_model.entrytype_name})
+        data = entry_model.dict
+        
+        media_assets = {}
+        for key, value in data.items():
+            if type(value) == models.MediaAsset:
+                media_assets[key] = value
+                
+        form1 = models.EntryForm(entrytype_model=entrytype_model, initial=data)
+        form2 = entrytype_model.get_form(initial=data)
+        return render(request, 'thunderchild/edit_entry.html', {'form1':form1, 
+                                                                'form2':form2, 
+                                                                'entry_id':entry_id, 
+                                                                'entrytype_name':entrytype_model.entrytype_name,
+                                                                'media_assets':media_assets})
     
     

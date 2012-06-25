@@ -50,11 +50,35 @@
 			<input class="btn pull-right" type="submit" value="Create" />
 		</div>
 		</form>
+		
+		<div id="media_chooser_modal" class="modal">
+			<div class="modal-header">
+				<button class="close" data-dismiss="modal">×</button>
+				<h3>Media</h3>
+			</div>
+			<div class="modal-body">
+				<iframe src="{% url thunderchild.media_views.media_chooser %}"></iframe>
+			</div>
+		</div>
+		
+		<script type="text/html" id="mediaAssetThumbnailTemplate">
+			<div class="media-asset-thumbnail">
+				<img src="<%= thumbnail_url %>" alt="Media asset thumbnail" />
+				<ul>
+					<li><%= filename %></li>
+				</ul>
+			</div>
+		</script>
 {% endblock %}
 
 {% block javascript %}
 <script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/jquery-ui-1.8.21.custom.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/jquery-ui-timepicker-addon.js"></script>
+{% if debug %}
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/entry.js"></script>
+{% else %}
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/entry-min.js"></script>
+{% endif %}
 <script type="text/javascript">
 	// This stops label elements from triggering their associated fields when clicked.
 	$(".field_label_holder label").click(function(e){
@@ -73,6 +97,12 @@
 	});
 	$('[data-field-type="date"]').datepicker({
 		dateFormat:'yy-mm-dd',
+	});
+	
+	var appModel = new window.AppModel();
+	var mediaChooserModal = new window.MediaChooserModalView({el:$("#media_chooser_modal"), model:appModel});
+	$('[data-field-type="file"]').each(function() {
+		new window.MediaChooserWidgetView({el:$(this), model:appModel});
 	});
 </script>
 {% endblock %}

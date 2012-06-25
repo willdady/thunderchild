@@ -32,7 +32,7 @@ class DynamicForm(forms.Form):
             if field.field_type == 'checkboxes':
                 options = json.loads(field.field_options)
                 self.fields[field.field_short_name] = forms.MultipleChoiceField(help_text=field.field_instructions, choices=options['field_choices'], widget=forms.CheckboxSelectMultiple)
-            if field.field_type == 'file':
+            if field.field_type == 'file':  
                 self.fields[field.field_short_name] = forms.CharField(help_text=field.field_instructions, widget=forms.TextInput(attrs={'data-field-type':'file'}))
                 
             

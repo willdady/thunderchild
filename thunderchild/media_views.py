@@ -16,54 +16,6 @@ from datetime import date
 import os.path
 
 
-def get_non_image_thumbnail_url(filename, type):
-    thumb = None
-    if type == 'application/pdf':
-        thumb = 'pdf'
-    elif type == 'audio/mp3':
-        thumb = 'mp3'
-    elif type == 'audio/wav':
-        thumb = 'mp3'
-    elif type == 'application/x-zip-compressed':
-        thumb = 'zip'
-    elif type == 'text/plain':
-        thumb = 'txt'
-    elif type == 'text/xml':
-        thumb = 'txt'
-    elif type == 'text/css':
-        thumb = 'css'
-    # If we found a match based on type we can return
-    if thumb:
-        return '{}thunderchild/images/media_icons/{}.png'.format(settings.STATIC_URL, thumb)
-    # If no match based on type, try match based on file extension.
-    ext = filename.split('.')[-1]
-    extensions = ['aac', 'ai', 'aiff', 'avi', 
-                  'bmp', 
-                  'c', 'cpp', 'css', 
-                  'dat', 'dmg', 'doc', 'dotx', 'dwg', 'dxf', 
-                  'eps', 'exe', 
-                  'flv', 
-                  'h', 'hpp', 'html', 
-                  'ics', 'iso',
-                  'java', 
-                  'key', 
-                  'mid', 'mp3', 'mp4', 'mpg', 
-                  'odf', 'ods', 'odt', 'otp', 'ots', 'ott', 
-                  'pdf', 'php', 'ppt', 'psd', 'py', 
-                  'qt', 
-                  'rar', 'rb', 'rtf', 
-                  'sql',
-                  'tga', 'tgz', 'tiff', 'txt', 
-                  'wav', 
-                  'xls', 'xlsx', 'xml', 
-                  'yml', 
-                  'zip']
-    if ext in extensions:
-        return '{}thunderchild/images/media_icons/{}.png'.format(settings.STATIC_URL, ext)
-    # If still no match simply return generic icon
-    return '{}thunderchild/images/media_icons/_blank.png'.format(settings.STATIC_URL)
-
-
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def media(request):
 
@@ -88,10 +40,7 @@ def media(request):
         a['width'] = asset.width
         a['height'] = asset.height
         a['is_image'] = asset.is_image
-        if asset.is_image:
-            a['thumbnail_url'] = asset.thumbnail_url
-        else:
-            a['thumbnail_url'] = get_non_image_thumbnail_url(asset.filename, asset.type)
+        a['thumbnail_url'] = asset.thumbnail_url
         data.append(a)
     return render(request, 'thunderchild/media.html', {'media_assets_json':json.dumps(data), 'media_assets':media_assets})
 

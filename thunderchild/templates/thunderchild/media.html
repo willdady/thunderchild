@@ -1,17 +1,5 @@
 {% extends "thunderchild/base.html" %}
 
-{% block javascript %}
-{% if debug %}
-	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/media.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/django-ajax.js"></script>
-{% else %}
-	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities-min.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/media-min.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/django-ajax-min.js"></script>
-{% endif %}
-{% endblock %}
-
 {% block content %}
 
 	<header>
@@ -72,41 +60,7 @@
 		var initial_data = '{{ media_assets_json|safe }}';
 	</script>
 	
-	<div class="modal hide" id="upload_modal">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">×</button>
-			<h3 data-state="choose_file">Upload</h3>
-			<h3 data-state="uploading">Uploading</h3>
-			<h3 data-state="name_conflict">Name conflict</h3>
-		</div>
-		<div class="modal-body">
-			<div data-state="choose_file">
-				<form id="modal_upload_form">
-					<label for="modal_file_field">Select a file</label>	
-					<input id="modal_file_field" name="file" type="file"/>
-				</form>
-			</div>
-			<div data-state="uploading">
-				<p>Uploading</p>
-				<div class="progress">
-					<div class="bar"></div>
-				</div>
-			</div>	
-			<div data-state="name_conflict">
-				<p>A file with that name already exists. Would you like to replace the existing file?</p>
-			</div>		
-		</div>
-		<div class="modal-footer">
-			<div data-state="choose_file">
-				<a href="#" class="btn" data-dismiss="modal">Cancel</a>
-				<a href="#" id="modal_upload_button" class="btn btn-primary disabled">Upload</a>
-			</div>
-			<div data-state="name_conflict">
-				<a href="#" class="btn" data-dismiss="modal">No</a>
-				<a href="#" id="replace_file_button" class="btn btn-primary">Yes</a>
-			</div>
-		</div>
-	</div>
+	{% include "thunderchild/includes/upload_modal.html" %}
 	
 	<div class="modal hide" id="delete_selected_modal">
 		<div class="modal-header">
@@ -139,4 +93,16 @@
 		</ul>
 	</script>
 
+{% endblock %}
+
+{% block javascript %}
+{% if debug %}
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/media.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/django-ajax.js"></script>
+{% else %}
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities-min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/media-min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/django-ajax-min.js"></script>
+{% endif %}
 {% endblock %}

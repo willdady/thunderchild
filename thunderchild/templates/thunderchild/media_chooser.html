@@ -15,8 +15,6 @@
 			<link rel="stylesheet" href="{{ STATIC_URL }}thunderchild/css/thunderchild.css" type="text/css" media="screen"/>
 		{% endif %}
 		
-		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/jquery-1.7.2.min.js"></script>
-		
 	</head>
 	
 	<body class="media-chooser">		
@@ -29,9 +27,9 @@
 				{% for media_asset in media_assets%}
 				<li class="span2">
 					<a href="#" target="_blank">
-						<div class="thumbnail">
-								<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" />
-								<p>{{ media_asset.filename }}</p>
+						<div class="thumbnail" data-id="{{ media_asset.id }}">
+							<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" />
+							<p>{{ media_asset.filename }}</p>
 						</div>
 					</a>
 				</li>
@@ -59,8 +57,22 @@
 			{% endif %}
 		</section>
 		
+		{% include "thunderchild/includes/upload_modal.html" %}
+				
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/underscore-min.js"></script>
 		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/backbone-min.js"></script>
+		
+		{% if debug %}
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/django-ajax.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/media-chooser.js"></script>
+		{% else %}
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities-min.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/django-ajax-min.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/media-chooser-min.js"></script>
+		{% endif %}
 	</body>
 	
 </html>
