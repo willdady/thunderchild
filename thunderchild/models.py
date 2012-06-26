@@ -20,6 +20,8 @@ class EntryType(models.Model):
     entrytype_short_name = models.SlugField(max_length=80, unique=True, verbose_name='Short name')
     
     def get_form(self, *args, **kwargs):
+        if not self.fieldgroup:
+            return None
         fields = Field.objects.filter(fieldgroup__exact=self.fieldgroup.id).order_by('field_display_order', 'field_name')
         form = thunderchild.forms.DynamicForm(fields, *args, **kwargs)
         return form

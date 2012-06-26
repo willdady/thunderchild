@@ -1,6 +1,8 @@
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from thunderchild import models
 from thunderchild import forms
 
@@ -53,12 +55,23 @@ def delete_entrytype(request, entrytype_id):
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def entries(request):
-    entry_objects = models.Entry.objects.all() #TODO: This should really be paginated
+    entry_objects = models.Entry.objects.all().order_by('-creation_date')
+    
+    paginator = Paginator(entry_objects, 30)
+    
+    page = request.GET.get('page')
+    try:
+        p = paginator.page(page)
+    except PageNotAnInteger:
+        p = paginator.page(1)
+    except EmptyPage:
+        p = paginator.page(paginator.num_pages)
+    
     entries = []
-    for entry in entry_objects:
+    for entry in p:
         entries.append(entry.dict)
     entry_types = models.EntryType.objects.all()
-    return render(request, 'thunderchild/entries.html', {'entries':entries, 'entry_types':entry_types})
+    return render(request, 'thunderchild/entries.html', {'page':p, 'entries':entries, 'entry_types':entry_types})
     
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -67,21 +80,28 @@ def create_entry(request, entrytype_id):
     if request.method == 'POST':
         form1 = models.EntryForm(entrytype_model=entrytype_model, data=request.POST)
         form2 = entrytype_model.get_form(request.POST)
-        if form1.is_valid() and form2.is_valid():
+        # As it's possible form2 == None we must check it' existance. If it's not valid there's no point validating form1.
+        if form2:
+            if not form2.is_valid():
+                return render(request, 'thunderchild/create_entry.html', {'form1':form1, 'form2':form2, 'entrytype_id':entrytype_id, 'entrytype_name':entrytype_model.entrytype_name})
+        
+        if form1.is_valid():
             form1.instance.author = request.user
             form1.save()
             entry = form1.instance
-            #Save each custom field into a FieldData object
-            fields = models.Field.objects.filter(fieldgroup__exact=entrytype_model.fieldgroup)
-            for field in fields:
-                value = form2.cleaned_data[field.field_short_name]
-                field_data = models.FieldData(field=field, entry=entry, value=value)
-                field_data.save()
+            if form2:
+                #Save each custom field into a FieldData object
+                fields = models.Field.objects.filter(fieldgroup__exact=entrytype_model.fieldgroup)
+                for field in fields:
+                    value = form2.cleaned_data[field.field_short_name]
+                    field_data = models.FieldData(field=field, entry=entry, value=value)
+                    field_data.save()
             return redirect('thunderchild.entry_views.entries')
         else:
             return render(request, 'thunderchild/create_entry.html', {'form1':form1, 'form2':form2, 'entrytype_id':entrytype_id, 'entrytype_name':entrytype_model.entrytype_name})
     else:
-        form1 = models.EntryForm(entrytype_model=entrytype_model, initial={'entrytype':entrytype_id})
+        creation_date_value = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        form1 = models.EntryForm(entrytype_model=entrytype_model, initial={'entrytype':entrytype_id, 'creation_date':creation_date_value})
         form2 = entrytype_model.get_form()
         return render(request, 'thunderchild/create_entry.html', {'form1':form1, 'form2':form2, 'entrytype_id':entrytype_id, 'entrytype_name':entrytype_model.entrytype_name})
 
