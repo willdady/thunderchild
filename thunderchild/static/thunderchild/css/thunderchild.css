@@ -215,10 +215,18 @@ div.ui-datepicker {
 .field_label_holder {
   padding: 5px 10px 0px 10px;
 }
-.field_label_holder label {
+.field_label_holder label,
+.field_label_holder p {
   margin: 0;
   padding: 0;
   font-weight: bold;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .field_label_holder .alert-error {
   margin-top: 10px;
@@ -274,6 +282,36 @@ div.ui-datepicker {
   height: 535px;
   border: none;
 }
+.field_holder .choose-file-button {
+  float: left;
+  clear: both;
+}
+.field_holder .media-asset-thumbnail {
+  float: left;
+  clear: both;
+  background: #ffffff;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  padding: 5px;
+  border: 1px solid #dddddd;
+  width: 140px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.field_holder .media-asset-thumbnail img {
+  margin-bottom: 5px;
+}
+.field_holder .media-asset-thumbnail ul {
+  margin: 0;
+}
+.field_holder .media-asset-thumbnail ul li {
+  font-size: 10px;
+  margin: 0;
+  word-wrap: break-word;
+  width: 130px;
+  line-height: 1.3em;
+}
 #thumbnails_form {
   margin: 0;
 }
@@ -289,6 +327,7 @@ ul.thumbnails li a {
 }
 ul.thumbnails li .thumbnail {
   text-align: center;
+  background: #ffffff;
 }
 ul.thumbnails li .thumbnail img {
   max-height: 86px;
@@ -337,6 +376,12 @@ ul.thumbnails li .thumbnail:hover {
 }
 #media_chooser_upload_button {
   margin-bottom: 14px;
+}
+.media-chooser .modal-backdrop {
+  background-color: #ffffff;
+}
+.media-chooser #upload_modal {
+  top: 370px;
 }
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header {

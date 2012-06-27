@@ -1,6 +1,8 @@
+from datetime import datetime
 from django import template
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.utils.timezone import now
 from thunderchild import models
 
 register = template.Library()
@@ -24,9 +26,10 @@ def get_entries(context, entrytype_short_name, *args, **kwargs):
     try:
         entrytype = models.EntryType.objects.get(entrytype_short_name__exact=entrytype_short_name)
     except models.EntryType.DoesNotExist:
-        return ''
+        return None
     
-    entries = models.Entry.objects.filter(entrytype__exact=entrytype)
+    # We get all entries of this EntryType EXCEPT those which have been marked as published = False AND/OR have expired.
+    entries = models.Entry.objects.filter(entrytype__exact=entrytype).filter(is_published__exact=True).exclude(expiration_date__lt=datetime.now())
 
     if order_by:
         order_by = [field_name.strip() for field_name in order_by.split(',')]
@@ -70,6 +73,10 @@ def get_entry(*args, **kwargs):
         elif slug:
             model = models.Entry.objects.get(slug__exact=slug)
     except models.Entry.DoesNotExist:
+        return None
+     
+    
+    if not model.is_published or model.expiration_date < now(): # Note we use Django's 'now' function as it will return either a naive or aware datetime according to settings.USE_TZ.
         return None
     
     return model.dict

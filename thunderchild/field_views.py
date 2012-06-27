@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from thunderchild import models
 from thunderchild import forms
 
@@ -83,7 +83,12 @@ def edit_field(request, fieldgroup_id, field_id):
             return render(request, 'thunderchild/edit_field.html', {'form':form, 'fieldgroup_id':fieldgroup_id, 'field_id':field_id, 'fieldgroup_name':model.fieldgroup.fieldgroup_name})
     else:
         form = models.FieldForm(instance=model)
-        return render(request, 'thunderchild/edit_field.html', {'form':form, 'fieldgroup_id':fieldgroup_id, 'field_id':field_id, 'fieldgroup_name':model.fieldgroup.fieldgroup_name})
+        delete_url = reverse(delete_field, args=[model.fieldgroup.id, model.id])
+        return render(request, 'thunderchild/edit_field.html', {'form':form, 
+                                                                'fieldgroup_id':fieldgroup_id, 
+                                                                'field_id':field_id, 
+                                                                'fieldgroup_name':model.fieldgroup.fieldgroup_name,
+                                                                'delete_url':delete_url})
     
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))    
