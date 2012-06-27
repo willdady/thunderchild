@@ -23,11 +23,18 @@
       this.modalFileField = $("#modal_file_field");
       this.uploadButton = $("#modal_upload_button");
       this.progressBar = this.$el.find(".progress .bar");
-      return this.model.on("showUploadModal", this.show, this);
+      this.replaceAssetControlsDisabled = false;
+      this.model.on("showUploadModal", this.show, this);
+      this.options.uploadService.on("progress", this.uploadProgressHandler, this);
+      this.options.uploadService.on("complete", this.uploadCompleteHandler, this);
+      this.options.uploadService.on("nameConflict", this.uploadNameConflictHandler, this);
+      return this.options.uploadService.on("replaceComplete", this.replaceCompleteHandler, this);
     },
     events: {
       'click #modal_upload_button': 'uploadClickHandler',
-      'change #modal_file_field': 'fileFieldChangeHandler'
+      'change #modal_file_field': 'fileFieldChangeHandler',
+      'click #yes-replace-button': 'replaceFileClickHandler',
+      'click #no-replace-button': 'dontReplaceFileClickHandler'
     },
     showState: function(state) {
       var stateElements;
@@ -41,37 +48,20 @@
       if (file_list.length > 0) {
         file = file_list[0];
         this.showState(this.UPLOADING_STATE);
-        this.uploadFile(file);
+        this.options.uploadService.uploadFile(file);
       }
       return e.preventDefault();
     },
-    onProgressHandler: function(e) {
-      var percentage;
-      percentage = Math.round((e.position / e.total) * 100);
+    uploadProgressHandler: function(percentage) {
       return this.progressBar.width(percentage + "%");
     },
-    onLoadHandler: function(e) {
-      var response;
-      if (e.currentTarget.status === 200) {
-        response = $.parseJSON(e.currentTarget.response);
-        if (response.name_conflict) {
-          return this.showState(this.NAME_CONFLICT_STATE);
-        } else {
-          this.$el.modal("hide");
-          return window.location.replace(window.location.href);
-        }
-      }
+    uploadCompleteHandler: function() {
+      this.$el.modal("hide");
+      return window.location.replace(window.location.href);
     },
-    uploadFile: function(file, onprogress, onload) {
-      var fd, xhr;
-      fd = new FormData();
-      fd.append("file", file);
-      xhr = new XMLHttpRequest();
-      xhr.open("POST", "/backend/media/upload", true);
-      xhr.upload.onprogress = _.bind(this.onProgressHandler, this);
-      xhr.onload = _.bind(this.onLoadHandler, this);
-      xhr.setRequestHeader("X-CSRFToken", Utilities.getCookie('csrftoken'));
-      return xhr.send(fd);
+    uploadNameConflictHandler: function(response) {
+      this.model.set("uploadResponse", response);
+      return this.showState(this.NAME_CONFLICT_STATE);
     },
     show: function() {
       this.uploadButton.addClass("disabled");
@@ -81,6 +71,26 @@
     },
     fileFieldChangeHandler: function() {
       return this.uploadButton.removeClass("disabled");
+    },
+    replaceFileClickHandler: function(e) {
+      var uploadResponse;
+      if (!this.replaceAssetControlsDisabled) {
+        uploadResponse = this.model.get("uploadResponse");
+        this.replaceAssetControlsDisabled = true;
+        this.options.uploadService.replaceAsset(uploadResponse.name_conflict.id, uploadResponse.id);
+      }
+      return e.preventDefault();
+    },
+    replaceCompleteHandler: function() {
+      this.$el.modal("hide");
+      return window.location.replace(window.location.href);
+    },
+    dontReplaceFileClickHandler: function(e) {
+      if (!this.replaceAssetControlsDisabled) {
+        this.$el.modal("hide");
+        window.location.replace(window.location.href);
+      }
+      return e.preventDefault();
     }
   });
   AssetItemView = Backbone.View.extend({
@@ -121,10 +131,12 @@
     }
   });
   $(function() {
-    var appView, model, uploadModal;
+    var appView, model, uploadModal, uploadService;
     model = new AppModel();
+    uploadService = new window.MediaUploadService();
     uploadModal = new UploadModalView({
-      model: model
+      model: model,
+      uploadService: uploadService
     });
     return appView = new AppView({
       model: model

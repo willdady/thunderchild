@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
 from django.core.paginator import Paginator, PageNotAnInteger
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core import serializers
@@ -142,9 +142,16 @@ def replace(request):
         
     else:
         return HttpResponseNotAllowed(permitted_methods=['POST'])
+
+
+@login_required(login_url=reverse_lazy('thunderchild.views.login'))
+def assets(request):
+    data = serializers.serialize("json", models.MediaAsset.objects.all())
+    return HttpResponse(data, content_type="text/json")
+
     
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def edit_asset(request, asset_id):    
+def edit_asset(request, asset_id):   
     if request.method == 'DELETE':
         try:
             model = models.MediaAsset.objects.get(pk=asset_id)

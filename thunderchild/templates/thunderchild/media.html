@@ -96,12 +96,19 @@
 {% endblock %}
 
 {% block javascript %}
+<script type="text/javascript">
+	var uploadURL = "{% url thunderchild.media_views.upload %}";
+	var replaceURL = "{% url thunderchild.media_views.replace %}";
+	var assetsURL = "{% url thunderchild.media_views.assets %}";
+</script>
 {% if debug %}
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/media-upload-service.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/media.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/django-ajax.js"></script>
 {% else %}
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities-min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/media-upload-service-min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/media-min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/django-ajax-min.js"></script>
 {% endif %}

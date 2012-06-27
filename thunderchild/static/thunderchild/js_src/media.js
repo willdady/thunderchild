@@ -1,12 +1,11 @@
 (function() {
   var AppModel, AppView, AssetCollection, AssetItemView, AssetItemsView, AssetModel, DeleteSelectedModalView, PreviewModalView, UploadModalView;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   AssetModel = Backbone.Model.extend({
     selected: false
   });
   AssetCollection = Backbone.Collection.extend({
     model: AssetModel,
-    url: '/backend/media/assets'
+    url: assetsURL
   });
   AppModel = Backbone.Model.extend({
     showUploadModal: function() {
@@ -75,7 +74,11 @@
       this.uploadButton = $("#modal_upload_button");
       this.progressBar = this.$el.find(".progress .bar");
       this.replaceAssetControlsDisabled = false;
-      return this.model.on("showUploadModal", this.show, this);
+      this.model.on("showUploadModal", this.show, this);
+      this.options.uploadService.on("progress", this.uploadProgressHandler, this);
+      this.options.uploadService.on("complete", this.uploadCompleteHandler, this);
+      this.options.uploadService.on("nameConflict", this.uploadNameConflictHandler, this);
+      return this.options.uploadService.on("replaceComplete", this.replaceCompleteHandler, this);
     },
     events: {
       'click #modal_upload_button': 'uploadClickHandler',
@@ -95,39 +98,20 @@
       if (file_list.length > 0) {
         file = file_list[0];
         this.showState(this.UPLOADING_STATE);
-        this.uploadFile(file);
+        this.options.uploadService.uploadFile(file);
       }
       return e.preventDefault();
     },
-    onProgressHandler: function(e) {
-      var percentage;
-      percentage = Math.round((e.position / e.total) * 100);
-      this.progressBar.width(percentage + "%");
-      return console.log("percentage: ", percentage, e);
+    uploadProgressHandler: function(percentage) {
+      return this.progressBar.width(percentage + "%");
     },
-    onLoadHandler: function(e) {
-      var response;
-      if (e.currentTarget.status === 200) {
-        response = $.parseJSON(e.currentTarget.response);
-        if (response.name_conflict) {
-          this.model.set("uploadResponse", response);
-          return this.showState(this.NAME_CONFLICT_STATE);
-        } else {
-          this.$el.modal("hide");
-          return window.location.replace(window.location.href);
-        }
-      }
+    uploadCompleteHandler: function() {
+      this.$el.modal("hide");
+      return window.location.replace(window.location.href);
     },
-    uploadFile: function(file, onprogress, onload) {
-      var fd, xhr;
-      fd = new FormData();
-      fd.append("file", file);
-      xhr = new XMLHttpRequest();
-      xhr.open("POST", "/backend/media/upload", true);
-      xhr.upload.onprogress = _.bind(this.onProgressHandler, this);
-      xhr.onload = _.bind(this.onLoadHandler, this);
-      xhr.setRequestHeader("X-CSRFToken", Utilities.getCookie('csrftoken'));
-      return xhr.send(fd);
+    uploadNameConflictHandler: function(response) {
+      this.model.set("uploadResponse", response);
+      return this.showState(this.NAME_CONFLICT_STATE);
     },
     show: function() {
       this.uploadButton.addClass("disabled");
@@ -139,24 +123,17 @@
       return this.uploadButton.removeClass("disabled");
     },
     replaceFileClickHandler: function(e) {
-      var existing_asset_id, new_asset_id, uploadResponse;
+      var uploadResponse;
       if (!this.replaceAssetControlsDisabled) {
         uploadResponse = this.model.get("uploadResponse");
-        existing_asset_id = uploadResponse.name_conflict.id;
-        new_asset_id = uploadResponse.id;
         this.replaceAssetControlsDisabled = true;
-        $.post("/backend/media/replace", {
-          existing_asset_id: existing_asset_id,
-          new_asset_id: new_asset_id
-        }, __bind(function(response) {
-          this.replaceAssetControlsDisabled = false;
-          if (response.response === 'OK') {
-            this.$el.modal("hide");
-            return window.location.replace(window.location.href);
-          }
-        }, this));
+        this.options.uploadService.replaceAsset(uploadResponse.name_conflict.id, uploadResponse.id);
       }
       return e.preventDefault();
+    },
+    replaceCompleteHandler: function() {
+      this.$el.modal("hide");
+      return window.location.replace(window.location.href);
     },
     dontReplaceFileClickHandler: function(e) {
       if (!this.replaceAssetControlsDisabled) {
@@ -273,13 +250,15 @@
     }
   });
   $(function() {
-    var appView, assetCollection, assetItemsView, deleteSelectedModal, model, previewModal, uploadModal;
+    var appView, assetCollection, assetItemsView, deleteSelectedModal, model, previewModal, uploadModal, uploadService;
     assetCollection = new AssetCollection();
     model = new AppModel({
       assetCollection: assetCollection
     });
+    uploadService = new window.MediaUploadService();
     uploadModal = new UploadModalView({
-      model: model
+      model: model,
+      uploadService: uploadService
     });
     deleteSelectedModal = new DeleteSelectedModalView({
       model: model

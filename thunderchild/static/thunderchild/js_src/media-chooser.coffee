@@ -30,11 +30,19 @@ UploadModalView = Backbone.View.extend
     @uploadButton = $("#modal_upload_button")
     @progressBar = @$el.find(".progress .bar")
     
+    @replaceAssetControlsDisabled = false
+    
     @model.on "showUploadModal", @show, @
+    @options.uploadService.on "progress", @uploadProgressHandler, @
+    @options.uploadService.on "complete", @uploadCompleteHandler, @
+    @options.uploadService.on "nameConflict", @uploadNameConflictHandler, @
+    @options.uploadService.on "replaceComplete", @replaceCompleteHandler, @
     
   events:
     'click #modal_upload_button':'uploadClickHandler',
-    'change #modal_file_field':'fileFieldChangeHandler'
+    'change #modal_file_field':'fileFieldChangeHandler',
+    'click #yes-replace-button':'replaceFileClickHandler'
+    'click #no-replace-button':'dontReplaceFileClickHandler'
     
   showState:(state) ->
     stateElements = @$el.find('[data-state]')
@@ -46,33 +54,19 @@ UploadModalView = Backbone.View.extend
     if file_list.length > 0
       file = file_list[0]
       @showState(@UPLOADING_STATE)
-      @uploadFile(file)
+      @options.uploadService.uploadFile(file)
     e.preventDefault()
-
-  onProgressHandler:(e) ->
-    percentage = Math.round((e.position / e.total) * 100)
+    
+  uploadProgressHandler:(percentage) ->
     @progressBar.width(percentage+"%")
+  
+  uploadCompleteHandler: ->
+    @$el.modal("hide")
+    window.location.replace(window.location.href) # We reload the page (without url parameters, taking us to the first page)
 
-  onLoadHandler:(e) ->
-    if e.currentTarget.status == 200
-        #Add the thumbnail to our list of thumbnails
-        response = $.parseJSON(e.currentTarget.response)
-        if response.name_conflict
-          @showState(@NAME_CONFLICT_STATE)
-        else
-          @$el.modal("hide")
-          window.location.replace(window.location.href) # We reload the page (without url parameters, taking us to the first page)
-          #@model.get("assetCollection").add(response)
-
-  uploadFile:(file, onprogress, onload) ->
-      fd = new FormData()
-      fd.append("file", file)
-      xhr = new XMLHttpRequest()
-      xhr.open("POST","/backend/media/upload", true)
-      xhr.upload.onprogress = _.bind(@onProgressHandler, @)
-      xhr.onload = _.bind(@onLoadHandler, @)
-      xhr.setRequestHeader("X-CSRFToken", Utilities.getCookie('csrftoken'))
-      xhr.send(fd)
+  uploadNameConflictHandler: (response) ->
+    @model.set("uploadResponse", response) # Store the response in the app model so we can retrieve it later.
+    @showState(@NAME_CONFLICT_STATE)
       
   show: ->
     #We disable the upload button and reset the form when displaying the modal
@@ -82,8 +76,24 @@ UploadModalView = Backbone.View.extend
     @$el.modal("show")
     
   fileFieldChangeHandler: ->
-    #When the input changes we enable the upload button
-    @uploadButton.removeClass "disabled"
+    @uploadButton.removeClass "disabled" #When the input changes we enable the upload button
+    
+  replaceFileClickHandler:(e) ->
+    if !@replaceAssetControlsDisabled
+      uploadResponse = @model.get("uploadResponse")
+      @replaceAssetControlsDisabled = true
+      @options.uploadService.replaceAsset(uploadResponse.name_conflict.id, uploadResponse.id)
+    e.preventDefault()
+    
+  replaceCompleteHandler: ->
+    @$el.modal("hide")
+    window.location.replace(window.location.href) # We reload the page (without url parameters, taking us to the first page)
+    
+  dontReplaceFileClickHandler:(e) ->
+    if !@replaceAssetControlsDisabled
+      @$el.modal("hide")
+      window.location.replace(window.location.href) # We reload the page (without url parameters, taking us to the first page)
+    e.preventDefault()
   
   
 AssetItemView = Backbone.View.extend
@@ -118,7 +128,8 @@ AppView = Backbone.View.extend
 
 $ ->
   model = new AppModel()
+  uploadService = new window.MediaUploadService()
   
-  uploadModal = new UploadModalView({model:model})
+  uploadModal = new UploadModalView({model:model, uploadService:uploadService})
   appView = new AppView({model:model})
   
