@@ -16,6 +16,7 @@
 						<thead>
 							<tr>
 								<th>Name</th>
+								<th>Short name</th>
 								<th>Type</th>
 								<th>Display order</th>
 								<th>Required</th>
@@ -25,6 +26,7 @@
 							{% for field in obj.fields %}
 							<tr>
 								<td><a href="{% url thunderchild.field_views.edit_field obj.fieldgroup.id field.id %}"}>{{ field.field_name }}</a></td>
+								<td>{{ field.field_short_name }}</td>
 								<td>{{ field.field_type }}</td>
 								<td>{{ field.field_display_order }}</td>
 								<td>{{ field.field_is_required }}</td>

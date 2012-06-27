@@ -32,7 +32,7 @@ PreviewModalView = Backbone.View.extend
   el:"#preview_modal"
   
   initialize: ->
-    @$el.modal({backdrop:"static"}).modal("hide");
+    @$el.modal().modal("hide");
     @model.on "showPreviewModal", @show, @
     @imageTemplate = _.template( $("#preview_modal_template").html() )
     
@@ -47,7 +47,7 @@ DeleteSelectedModalView = Backbone.View.extend
   el:"#delete_selected_modal"
 
   initialize: ->
-    @$el.modal({backdrop:"static"}).modal("hide");
+    @$el.modal().modal("hide");
     @model.on "showDeleteSelectedModal", @show, @
     
   events:
@@ -78,16 +78,20 @@ UploadModalView = Backbone.View.extend
     @UPLOADING_STATE = "uploading"
     @NAME_CONFLICT_STATE = "name_conflict"
     
-    @$el.modal({backdrop:"static"}).modal("hide")
+    @$el.modal().modal("hide")
     @modalFileField = $("#modal_file_field")
     @uploadButton = $("#modal_upload_button")
     @progressBar = @$el.find(".progress .bar")
+    
+    @replaceAssetControlsDisabled = false;
     
     @model.on "showUploadModal", @show, @
     
   events:
     'click #modal_upload_button':'uploadClickHandler',
-    'change #modal_file_field':'fileFieldChangeHandler'
+    'change #modal_file_field':'fileFieldChangeHandler',
+    'click #yes-replace-button':'replaceFileClickHandler'
+    'click #no-replace-button':'dontReplaceFileClickHandler'
     
   showState:(state) ->
     stateElements = @$el.find('[data-state]')
@@ -112,6 +116,7 @@ UploadModalView = Backbone.View.extend
         #Add the thumbnail to our list of thumbnails
         response = $.parseJSON(e.currentTarget.response)
         if response.name_conflict
+          @model.set("uploadResponse", response)
           @showState(@NAME_CONFLICT_STATE)
         else
           @$el.modal("hide")
@@ -139,6 +144,26 @@ UploadModalView = Backbone.View.extend
     #When the input changes we enable the upload button
     @uploadButton.removeClass "disabled"
 
+  replaceFileClickHandler:(e) ->
+    if !@replaceAssetControlsDisabled
+      uploadResponse = @model.get("uploadResponse")
+      existing_asset_id = uploadResponse.name_conflict.id
+      new_asset_id = uploadResponse.id
+      
+      @replaceAssetControlsDisabled = true
+      
+      $.post "/backend/media/replace", {existing_asset_id:existing_asset_id, new_asset_id:new_asset_id}, (response) =>
+        @replaceAssetControlsDisabled = false
+        if response.response == 'OK'
+          @$el.modal("hide")
+          window.location.replace(window.location.href) # We reload the page (without url parameters, taking us to the first page)
+    e.preventDefault()
+    
+  dontReplaceFileClickHandler:(e) ->
+    if !@replaceAssetControlsDisabled
+      @$el.modal("hide")
+      window.location.replace(window.location.href) # We reload the page (without url parameters, taking us to the first page)
+    e.preventDefault()
 
 AssetItemView = Backbone.View.extend
 

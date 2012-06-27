@@ -1,5 +1,6 @@
 (function() {
   var AppModel, AppView, AssetCollection, AssetItemView, AssetItemsView, AssetModel, DeleteSelectedModalView, PreviewModalView, UploadModalView;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   AssetModel = Backbone.Model.extend({
     selected: false
   });
@@ -21,9 +22,7 @@
   PreviewModalView = Backbone.View.extend({
     el: "#preview_modal",
     initialize: function() {
-      this.$el.modal({
-        backdrop: "static"
-      }).modal("hide");
+      this.$el.modal().modal("hide");
       this.model.on("showPreviewModal", this.show, this);
       return this.imageTemplate = _.template($("#preview_modal_template").html());
     },
@@ -37,9 +36,7 @@
   DeleteSelectedModalView = Backbone.View.extend({
     el: "#delete_selected_modal",
     initialize: function() {
-      this.$el.modal({
-        backdrop: "static"
-      }).modal("hide");
+      this.$el.modal().modal("hide");
       return this.model.on("showDeleteSelectedModal", this.show, this);
     },
     events: {
@@ -73,17 +70,18 @@
       this.CHOOSE_FILE_STATE = "choose_file";
       this.UPLOADING_STATE = "uploading";
       this.NAME_CONFLICT_STATE = "name_conflict";
-      this.$el.modal({
-        backdrop: "static"
-      }).modal("hide");
+      this.$el.modal().modal("hide");
       this.modalFileField = $("#modal_file_field");
       this.uploadButton = $("#modal_upload_button");
       this.progressBar = this.$el.find(".progress .bar");
+      this.replaceAssetControlsDisabled = false;
       return this.model.on("showUploadModal", this.show, this);
     },
     events: {
       'click #modal_upload_button': 'uploadClickHandler',
-      'change #modal_file_field': 'fileFieldChangeHandler'
+      'change #modal_file_field': 'fileFieldChangeHandler',
+      'click #yes-replace-button': 'replaceFileClickHandler',
+      'click #no-replace-button': 'dontReplaceFileClickHandler'
     },
     showState: function(state) {
       var stateElements;
@@ -112,6 +110,7 @@
       if (e.currentTarget.status === 200) {
         response = $.parseJSON(e.currentTarget.response);
         if (response.name_conflict) {
+          this.model.set("uploadResponse", response);
           return this.showState(this.NAME_CONFLICT_STATE);
         } else {
           this.$el.modal("hide");
@@ -138,6 +137,33 @@
     },
     fileFieldChangeHandler: function() {
       return this.uploadButton.removeClass("disabled");
+    },
+    replaceFileClickHandler: function(e) {
+      var existing_asset_id, new_asset_id, uploadResponse;
+      if (!this.replaceAssetControlsDisabled) {
+        uploadResponse = this.model.get("uploadResponse");
+        existing_asset_id = uploadResponse.name_conflict.id;
+        new_asset_id = uploadResponse.id;
+        this.replaceAssetControlsDisabled = true;
+        $.post("/backend/media/replace", {
+          existing_asset_id: existing_asset_id,
+          new_asset_id: new_asset_id
+        }, __bind(function(response) {
+          this.replaceAssetControlsDisabled = false;
+          if (response.response === 'OK') {
+            this.$el.modal("hide");
+            return window.location.replace(window.location.href);
+          }
+        }, this));
+      }
+      return e.preventDefault();
+    },
+    dontReplaceFileClickHandler: function(e) {
+      if (!this.replaceAssetControlsDisabled) {
+        this.$el.modal("hide");
+        window.location.replace(window.location.href);
+      }
+      return e.preventDefault();
     }
   });
   AssetItemView = Backbone.View.extend({

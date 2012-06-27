@@ -21,7 +21,11 @@ def get_entries(context, entrytype_short_name, *args, **kwargs):
     month = kwargs.get('month')
     day = kwargs.get('day')
     
-    entrytype = models.EntryType.objects.get(entrytype_short_name__exact=entrytype_short_name) #TODO: This needs a try catch
+    try:
+        entrytype = models.EntryType.objects.get(entrytype_short_name__exact=entrytype_short_name)
+    except models.EntryType.DoesNotExist:
+        return ''
+    
     entries = models.Entry.objects.filter(entrytype__exact=entrytype)
 
     if order_by:

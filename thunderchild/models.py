@@ -1,6 +1,6 @@
 from datetime import datetime
 import json
-import os.path
+import os
 from django.db import models
 from django.conf import settings
 from django.forms.models import ModelForm
@@ -49,8 +49,8 @@ class Entry(models.Model):
         d['creation_date'] = self.creation_date
         d['last_modified_date'] = self.last_modified_date
         d['expiration_date'] = self.expiration_date
-        d['is_published'] = self.is_published
         d['categories'] = self.categories.all()
+        d['is_published'] = self.is_published
         fielddatas = FieldData.objects.filter(entry__exact=self).filter(field__fieldgroup__exact=self.entrytype.fieldgroup).select_related('field')
         for fielddata in fielddatas:
             d['{}'.format(fielddata.field.field_short_name)] = fielddata.value
@@ -151,11 +151,6 @@ class Template(models.Model):
     template_cache_timeout = models.IntegerField(default=0, verbose_name='Cache timeout', help_text='Number of seconds the rendered template should be cached for before being re-rendered. Recommended for templates that do not change often.')
     template_is_private = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Is private?', help_text="Private templates are not publicly accessible. They're intended for use as base templates to extend from or as fragments for including in other templates.")
     template_content = models.TextField(default='{% load thunderchild_tags %}', verbose_name='Content')
-    
-#    def set_data(self, data):
-#       for key, value in data.items():
-#           if hasattr(self, key):
-#               setattr(self, key, value)
                
                
 class CategoryGroup(models.Model):
@@ -229,6 +224,16 @@ class MediaAsset(models.Model):
     @property
     def is_image(self):
         return self.type == 'image/jpeg' or self.type == 'image/png' or self.type == 'image/gif'
+    
+    def delete_from_disk(self):
+        '''
+        Convienience method for deleting this asset's associated file from disk. NOTE: This makes no changes to the model.
+        '''
+        if os.path.exists(self.file_path):
+            os.remove(self.file_path)
+        if os.path.exists(self.thumbnail_path):
+            if os.path.isfile(self.thumbnail_path):
+                os.remove(self.thumbnail_path)
 
     def __unicode__(self):
         return u'{}'.format(self.id)
@@ -237,8 +242,8 @@ class MediaAsset(models.Model):
 
 
 class EntryTypeForm(ModelForm):
-    fieldgroup = forms.ModelChoiceField(queryset=FieldGroup.objects.all(), required=False)
-    categorygroup = forms.ModelChoiceField(queryset=CategoryGroup.objects.all(), required=False)
+    fieldgroup = forms.ModelChoiceField(queryset=FieldGroup.objects.all(), required=False, label='Field group')
+    categorygroup = forms.ModelChoiceField(queryset=CategoryGroup.objects.all(), required=False, label='Category group')
     class Meta:
         model = EntryType
         widgets = {
