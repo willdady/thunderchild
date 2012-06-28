@@ -1,5 +1,6 @@
 (function() {
   var AppModel, AppView, AssetCollection, AssetItemView, AssetItemsView, AssetModel, DeleteSelectedModalView, PreviewModalView, UploadModalView;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   AssetModel = Backbone.Model.extend({
     selected: false
   });
@@ -180,26 +181,26 @@
   AssetItemsView = Backbone.View.extend({
     el: "#thumbnails_list",
     initialize: function() {
-      this.collection.on("reset", this.collectionResetHandler, this);
-      return this.thumbnail_template = _.template($("#thumbnail_template").html());
-    },
-    collectionResetHandler: function() {
-      var asset, model, modelJSON, _i, _len, _ref, _results;
-      this.$el.empty();
-      _ref = this.collection.models;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        model = _ref[_i];
-        modelJSON = model.toJSON();
+      return this.$el.children().each(__bind(function(i, el) {
+        var asset, m;
+        el = $(el);
+        m = new AssetModel({
+          id: el.find('.thumbnail').attr('data-id'),
+          is_image: el.find('.thumbnail').attr('data-is-image') === 'True',
+          filename: el.find('.thumbnail').attr('data-filename'),
+          url: el.find('.thumbnail').attr('data-url'),
+          size: el.find('.size').text(),
+          width: el.find('img').attr('data-width'),
+          height: el.find('img').attr('data-height')
+        });
         asset = new AssetItemView({
-          el: this.thumbnail_template(modelJSON),
-          model: model,
+          el: el,
+          model: m,
           appModel: this.model
         });
         asset.on("selection_change", this.assetSelectionChangeHandler, this);
-        _results.push(this.$el.append(asset.el));
-      }
-      return _results;
+        return this.collection.add(m);
+      }, this));
     },
     assetSelectionChangeHandler: function(isSelected) {
       var numCheckedAssets;
@@ -216,7 +217,8 @@
     events: {
       'click #upload_button': 'uploadButtonClickHandler',
       'click #deselect_button': 'deselectButtonClickHandler',
-      'click #delete_button': 'deleteButtonClickHandler'
+      'click #delete_button': 'deleteButtonClickHandler',
+      'click #select_all_button': 'selectAllButtonClickHandler'
     },
     uploadButtonClickHandler: function(e) {
       this.model.showUploadModal();
@@ -229,6 +231,15 @@
         this.thumbnailsForm[0].reset();
         this.model.set("numCheckedAssets", 0);
       }
+      return e.preventDefault();
+    },
+    selectAllButtonClickHandler: function(e) {
+      var button, checkboxes;
+      button = $(e.currentTarget);
+      checkboxes = $(".thumbnail input[type='checkbox']");
+      checkboxes.prop("checked", true);
+      checkboxes.trigger("change");
+      this.model.set("numCheckedAssets", checkboxes.length);
       return e.preventDefault();
     },
     deleteButtonClickHandler: function(e) {
@@ -269,10 +280,9 @@
     appView = new AppView({
       model: model
     });
-    assetItemsView = new AssetItemsView({
+    return assetItemsView = new AssetItemsView({
       collection: assetCollection,
       model: model
     });
-    return assetCollection.reset($.parseJSON(initial_data));
   });
 }).call(this);

@@ -28,21 +28,22 @@ def media(request):
     except PageNotAnInteger:
         media_assets = paginator.page(1)
     
-    data = []
-    for asset in media_assets:
-        a = {}
-        a['id'] = asset.id
-        a['filename'] = asset.filename
-        a['url'] = asset.url
-        a['size'] = filesizeformat(asset.size)
-        a['is_image'] = asset.is_image
-        a['type'] = asset.type
-        a['width'] = asset.width
-        a['height'] = asset.height
-        a['is_image'] = asset.is_image
-        a['thumbnail_url'] = asset.thumbnail_url
-        data.append(a)
-    return render(request, 'thunderchild/media.html', {'media_assets_json':json.dumps(data), 'media_assets':media_assets})
+#    data = []
+#    for asset in media_assets:
+#        a = {}
+#        a['id'] = asset.id
+#        a['filename'] = asset.filename
+#        a['url'] = asset.url
+#        a['size'] = filesizeformat(asset.size)
+#        a['is_image'] = asset.is_image
+#        a['type'] = asset.type
+#        a['width'] = asset.width
+#        a['height'] = asset.height
+#        a['is_image'] = asset.is_image
+#        a['thumbnail_url'] = asset.thumbnail_url
+#        data.append(a)
+#    return render(request, 'thunderchild/media.html', {'media_assets_json':json.dumps(data), 'media_assets':media_assets})
+    return render(request, 'thunderchild/media.html', {'media_assets':media_assets})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))

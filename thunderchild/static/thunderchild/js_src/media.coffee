@@ -185,16 +185,21 @@ AssetItemsView = Backbone.View.extend
   el:"#thumbnails_list"
 
   initialize: ->
-    @collection.on "reset", @collectionResetHandler, @
-    @thumbnail_template = _.template($("#thumbnail_template").html())
     
-  collectionResetHandler: ->
-    @$el.empty()
-    for model in @collection.models
-      modelJSON = model.toJSON()
-      asset = new AssetItemView({el:@thumbnail_template(modelJSON), model:model, appModel:@model})
+    @$el.children().each (i, el) =>
+      el = $(el)
+      m = new AssetModel
+        id:el.find('.thumbnail').attr('data-id'),
+        is_image:el.find('.thumbnail').attr('data-is-image') == 'True',
+        filename:el.find('.thumbnail').attr('data-filename'),
+        url:el.find('.thumbnail').attr('data-url'),
+        size:el.find('.size').text(),
+        width:el.find('img').attr('data-width'),
+        height:el.find('img').attr('data-height'),
+                           
+      asset = new AssetItemView({el:el, model:m, appModel:@model})
       asset.on "selection_change", @assetSelectionChangeHandler, @
-      @$el.append(asset.el)
+      @collection.add m
       
   assetSelectionChangeHandler:(isSelected) ->
     numCheckedAssets = $(".thumbnail input[type='checkbox']:checked").length
@@ -212,7 +217,8 @@ AppView = Backbone.View.extend
   events:
     'click #upload_button':'uploadButtonClickHandler',
     'click #deselect_button':'deselectButtonClickHandler',
-    'click #delete_button':'deleteButtonClickHandler'
+    'click #delete_button':'deleteButtonClickHandler',
+    'click #select_all_button':'selectAllButtonClickHandler'
     
   uploadButtonClickHandler:(e) ->
     @model.showUploadModal()
@@ -223,6 +229,14 @@ AppView = Backbone.View.extend
     if !button.hasClass('disabled')
       @thumbnailsForm[0].reset()
       @model.set("numCheckedAssets", 0)
+    e.preventDefault()
+    
+  selectAllButtonClickHandler:(e) ->
+    button = $(e.currentTarget)
+    checkboxes = $(".thumbnail input[type='checkbox']")
+    checkboxes.prop("checked", true);
+    checkboxes.trigger "change" # We must manually force a change event for the checkboxes
+    @model.set("numCheckedAssets", checkboxes.length)
     e.preventDefault()
     
   deleteButtonClickHandler:(e) ->
@@ -251,7 +265,6 @@ $ ->
   appView = new AppView({model:model})
 
   assetItemsView = new AssetItemsView({collection:assetCollection, model:model})
-  assetCollection.reset($.parseJSON(initial_data))
   
   
 
