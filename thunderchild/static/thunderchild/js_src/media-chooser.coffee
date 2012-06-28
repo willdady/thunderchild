@@ -101,12 +101,13 @@ AssetItemView = Backbone.View.extend
   initialize: ->
     @filename = @$el.find("p").text()
     @id = @$el.attr("data-id")
+    @url = @$el.attr("data-url")
     
   events: ->
     'click':'clickHandler'
     
   clickHandler: (e) ->
-    @model.assetSelectionCallback( {id:@id, filename:@filename, thumbnail_url:@$el.find("img")[0].src } )
+    @model.assetSelectionCallback( {id:@id, filename:@filename, thumbnail_url:@$el.find("img")[0].src, url:@url } )
     e.preventDefault()
   
     

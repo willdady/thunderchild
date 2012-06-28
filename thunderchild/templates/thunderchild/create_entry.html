@@ -75,8 +75,10 @@
 <script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/jquery-ui-1.8.21.custom.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/jquery-ui-timepicker-addon.js"></script>
 {% if debug %}
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/entry.js"></script>
 {% else %}
+	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities-min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/entry-min.js"></script>
 {% endif %}
 <script type="text/javascript">
@@ -103,6 +105,10 @@
 	var mediaChooserModal = new window.MediaChooserModalView({el:$("#media_chooser_modal"), model:appModel});
 	$('[data-field-type="file"]').each(function() {
 		new window.MediaChooserWidgetView({el:$(this), model:appModel});
+	});
+	
+	$('textarea').each(function() {
+		new window.RichTextAreaView({el:$(this), model:appModel});
 	});
 </script>
 {% endblock %}

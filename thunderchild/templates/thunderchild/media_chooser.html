@@ -27,7 +27,7 @@
 				{% for media_asset in media_assets%}
 				<li class="span2">
 					<a href="#" target="_blank">
-						<div class="thumbnail" data-id="{{ media_asset.id }}">
+						<div class="thumbnail" data-id="{{ media_asset.id }}" data-url="{{ media_asset.url }}">
 							<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" />
 							<p>{{ media_asset.filename }}</p>
 						</div>

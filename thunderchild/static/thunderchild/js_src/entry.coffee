@@ -57,4 +57,28 @@ window.MediaChooserModalView = Backbone.View.extend
   hide: ->
     @$el.modal("hide")
     
+
+window.RichTextAreaView = Backbone.View.extend
+
+  initialize: ->
+    @uid = counter # We give each widget a UID
+    counter++
+    
+    @assetButton = $('<a href="#" class="rich-text-asset-button btn"><i class="icon-picture"></i></a>')
+    @$el.parent().prepend(@assetButton)
+      
+    @assetButton.click _.bind(@assetButtonClickHandler, @)
+    @model.on "assetSelected", @assetSelectedHandler, @
+    
+  assetButtonClickHandler:(e) ->
+    @model.showMediaChooser(@uid)
+    e.preventDefault()
+  
+  assetSelectedHandler:(obj) ->
+    if @model.get("uid") != @uid
+      return # Make sure the event belongs to us by checking the received uid matches.
+    Utilities.insertAtCaret( @$el.attr('id'), obj.url )
+    # Hide the chooser
+    @model.hideMediaChooser()
+    
     

@@ -96,7 +96,8 @@
   AssetItemView = Backbone.View.extend({
     initialize: function() {
       this.filename = this.$el.find("p").text();
-      return this.id = this.$el.attr("data-id");
+      this.id = this.$el.attr("data-id");
+      return this.url = this.$el.attr("data-url");
     },
     events: function() {
       return {
@@ -107,7 +108,8 @@
       this.model.assetSelectionCallback({
         id: this.id,
         filename: this.filename,
-        thumbnail_url: this.$el.find("img")[0].src
+        thumbnail_url: this.$el.find("img")[0].src,
+        url: this.url
       });
       return e.preventDefault();
     }

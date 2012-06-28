@@ -60,4 +60,25 @@
       return this.$el.modal("hide");
     }
   });
+  window.RichTextAreaView = Backbone.View.extend({
+    initialize: function() {
+      this.uid = counter;
+      counter++;
+      this.assetButton = $('<a href="#" class="rich-text-asset-button btn"><i class="icon-picture"></i></a>');
+      this.$el.parent().prepend(this.assetButton);
+      this.assetButton.click(_.bind(this.assetButtonClickHandler, this));
+      return this.model.on("assetSelected", this.assetSelectedHandler, this);
+    },
+    assetButtonClickHandler: function(e) {
+      this.model.showMediaChooser(this.uid);
+      return e.preventDefault();
+    },
+    assetSelectedHandler: function(obj) {
+      if (this.model.get("uid") !== this.uid) {
+        return;
+      }
+      Utilities.insertAtCaret(this.$el.attr('id'), obj.url);
+      return this.model.hideMediaChooser();
+    }
+  });
 }).call(this);
