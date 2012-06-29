@@ -282,6 +282,31 @@ div.ui-datepicker {
   height: 535px;
   border: none;
 }
+#textarea-modal {
+  width: 970px;
+  height: 620px;
+  margin: -350px 0 0 -485px;
+  z-index: 1049;
+}
+#textarea-modal .modal-body {
+  max-height: none;
+}
+#textarea-modal .modal-body ul {
+  margin: 0px 0px 5px 0px;
+  list-style: none;
+  display: inline-block;
+}
+#textarea-modal .modal-body ul li {
+  float: left;
+  margin-right: 5px;
+}
+#textarea-modal .modal-body textarea {
+  width: 930px;
+  height: 482px;
+}
+.field_holder .textarea-controls li {
+  margin-right: 5px;
+}
 .field_holder .choose-file-button {
   float: left;
   clear: both;
@@ -328,6 +353,7 @@ ul.thumbnails li a {
 ul.thumbnails li .thumbnail {
   text-align: center;
   background: #ffffff;
+  height: 150px;
 }
 ul.thumbnails li .thumbnail img {
   max-height: 86px;
@@ -373,6 +399,12 @@ ul.thumbnails li .thumbnail:hover {
 }
 #media_chooser_thumbnails_list {
   height: 439px;
+}
+#media_chooser_thumbnails_list li .thumbnail {
+  height: 130px;
+}
+#media_chooser_thumbnails_list li .thumbnail img {
+  margin-bottom: 5px;
 }
 #media_chooser_upload_button {
   margin-bottom: 14px;

@@ -6,12 +6,22 @@
       this.unset("uid");
       return this.trigger("hideMediaChooser");
     },
-    showMediaChooser: function(uid) {
+    showMediaChooser: function(uid, backdrop) {
+      if (backdrop == null) {
+        backdrop = true;
+      }
       this.set("uid", uid);
-      return this.trigger("showMediaChooser");
+      return this.trigger("showMediaChooser", backdrop);
     },
     assetSelectionCallback: function(obj) {
       return this.trigger("assetSelected", obj);
+    },
+    showTextAreaModal: function(uid, text) {
+      this.set("uid", uid);
+      return this.trigger("showTextAreaModal", text);
+    },
+    textAreaModalClosed: function(text) {
+      return this.trigger("textAreaModalChange", text);
     }
   });
   window.MediaChooserWidgetView = Backbone.View.extend({
@@ -53,24 +63,57 @@
       this.model.on("showMediaChooser", this.show, this);
       return this.model.on("hideMediaChooser", this.hide, this);
     },
-    show: function() {
-      return this.$el.modal("show");
+    show: function(backdrop) {
+      this.$el.modal("show");
+      if (!backdrop) {
+        return $(".modal-backdrop:last").remove();
+      }
     },
     hide: function() {
       return this.$el.modal("hide");
+    }
+  });
+  window.TextAreaModalView = Backbone.View.extend({
+    initialize: function() {
+      this.$el.modal().modal('hide');
+      this.textarea = $("#textarea-modal-textarea");
+      return this.model.on("showTextAreaModal", this.show, this);
+    },
+    events: {
+      'click #textarea-modal-done-button': 'doneClickHandler'
+    },
+    show: function(text) {
+      this.$el.modal('show');
+      return this.textarea.val(text);
+    },
+    doneClickHandler: function() {
+      return this.model.textAreaModalClosed(this.textarea.val());
     }
   });
   window.RichTextAreaView = Backbone.View.extend({
     initialize: function() {
       this.uid = counter;
       counter++;
-      this.assetButton = $('<a href="#" class="rich-text-asset-button btn"><i class="icon-picture"></i></a>');
-      this.$el.parent().prepend(this.assetButton);
+      this.controls = $($("#textarea-controls-template").text());
+      this.assetButton = this.controls.find('.rich-text-asset-button');
+      this.$el.parent().prepend(this.controls);
       this.assetButton.click(_.bind(this.assetButtonClickHandler, this));
-      return this.model.on("assetSelected", this.assetSelectedHandler, this);
+      this.fullscreenButton = this.controls.find('.rich-text-fullscreen-button');
+      if (this.options.noFullscreen) {
+        this.fullscreenButton.hide();
+      }
+      ({
+        "else": this.fullscreenButton.click(_.bind(this.fullscreenButtonClickHandler, this))
+      });
+      this.model.on("assetSelected", this.assetSelectedHandler, this);
+      return this.model.on("textAreaModalChange", this.textAreaModalChangeHandler, this);
     },
     assetButtonClickHandler: function(e) {
-      this.model.showMediaChooser(this.uid);
+      if (this.options.hideMediaChooserBackdrop) {
+        this.model.showMediaChooser(this.uid, false);
+      } else {
+        this.model.showMediaChooser(this.uid);
+      }
       return e.preventDefault();
     },
     assetSelectedHandler: function(obj) {
@@ -79,6 +122,16 @@
       }
       Utilities.insertAtCaret(this.$el.attr('id'), obj.url);
       return this.model.hideMediaChooser();
+    },
+    fullscreenButtonClickHandler: function(e) {
+      this.model.showTextAreaModal(this.uid, this.$el.val());
+      return e.preventDefault();
+    },
+    textAreaModalChangeHandler: function(text) {
+      if (this.model.get("uid") !== this.uid) {
+        return;
+      }
+      return this.$el.val(text);
     }
   });
 }).call(this);

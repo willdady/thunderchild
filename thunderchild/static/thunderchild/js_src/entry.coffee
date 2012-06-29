@@ -6,12 +6,19 @@ window.AppModel = Backbone.Model.extend
     @unset("uid")
     @trigger "hideMediaChooser"
 
-  showMediaChooser:(uid) ->
+  showMediaChooser:(uid, backdrop=true) ->
     @set("uid", uid)
-    @trigger "showMediaChooser"
+    @trigger "showMediaChooser", backdrop
     
   assetSelectionCallback: (obj) ->
     @trigger "assetSelected", obj
+    
+  showTextAreaModal:(uid, text) ->
+    @set("uid", uid)
+    @trigger "showTextAreaModal", text
+    
+  textAreaModalClosed:(text) ->
+    @trigger "textAreaModalChange", text
 
 window.MediaChooserWidgetView = Backbone.View.extend
 
@@ -51,12 +58,32 @@ window.MediaChooserModalView = Backbone.View.extend
     @model.on "showMediaChooser", @show, @
     @model.on "hideMediaChooser", @hide, @
     
-  show: ->
+  show:(backdrop) ->
     @$el.modal("show")
+    if !backdrop
+      $(".modal-backdrop:last").remove() # We immediately remove the modal backdrop from the dom of backdrop == false
     
   hide: ->
     @$el.modal("hide")
     
+
+window.TextAreaModalView = Backbone.View.extend
+
+  initialize: ->
+    @$el.modal().modal('hide')
+    @textarea = $("#textarea-modal-textarea")
+    
+    @model.on "showTextAreaModal", @show, @
+    
+  events:
+    'click #textarea-modal-done-button':'doneClickHandler'
+    
+  show:(text) ->
+    @$el.modal('show')
+    @textarea.val(text)
+
+  doneClickHandler: ->
+    @model.textAreaModalClosed( @textarea.val() )
 
 window.RichTextAreaView = Backbone.View.extend
 
@@ -64,21 +91,40 @@ window.RichTextAreaView = Backbone.View.extend
     @uid = counter # We give each widget a UID
     counter++
     
-    @assetButton = $('<a href="#" class="rich-text-asset-button btn"><i class="icon-picture"></i></a>')
-    @$el.parent().prepend(@assetButton)
+    @controls = $( $("#textarea-controls-template").text() )
+    @assetButton = @controls.find('.rich-text-asset-button')
+    @$el.parent().prepend(@controls)
       
     @assetButton.click _.bind(@assetButtonClickHandler, @)
+    
+    @fullscreenButton = @controls.find('.rich-text-fullscreen-button')
+    if @options.noFullscreen
+      @fullscreenButton.hide()
+    else:
+      @fullscreenButton.click _.bind(@fullscreenButtonClickHandler, @)
+    
     @model.on "assetSelected", @assetSelectedHandler, @
+    @model.on "textAreaModalChange", @textAreaModalChangeHandler, @
     
   assetButtonClickHandler:(e) ->
-    @model.showMediaChooser(@uid)
+    if @options.hideMediaChooserBackdrop
+      @model.showMediaChooser(@uid, false)
+    else
+      @model.showMediaChooser(@uid)
     e.preventDefault()
   
   assetSelectedHandler:(obj) ->
     if @model.get("uid") != @uid
-      return # Make sure the event belongs to us by checking the received uid matches.
+      return # Make sure the event belongs to us by checking the active uid matches.
     Utilities.insertAtCaret( @$el.attr('id'), obj.url )
     # Hide the chooser
     @model.hideMediaChooser()
     
+  fullscreenButtonClickHandler:(e) ->
+    @model.showTextAreaModal( @uid, @$el.val() )
+    e.preventDefault()
     
+  textAreaModalChangeHandler:(text) ->
+    if @model.get("uid") != @uid
+      return # Make sure the event belongs to us by checking the active uid matches.
+    @$el.val(text)
