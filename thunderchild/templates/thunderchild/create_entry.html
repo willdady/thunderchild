@@ -51,7 +51,7 @@
 		</div>
 		</form>
 		
-		<div id="media_chooser_modal" class="modal">
+		<div id="media_chooser_modal" class="modal" style="display:none;">
 			<div class="modal-header">
 				<button class="close" data-dismiss="modal">×</button>
 				<h3>Media</h3>
@@ -71,6 +71,7 @@
 		</script>
 		
 		{% include 'thunderchild/includes/textarea_controls.html' %}
+		{% include 'thunderchild/includes/textarea_modal.html' %}
 {% endblock %}
 
 {% block javascript %}
@@ -109,8 +110,16 @@
 		new window.MediaChooserWidgetView({el:$(this), model:appModel});
 	});
 	
+	// Convert all textareas to rich textareas. Note the textearea in the textarea modal will not create a fullscreen button
 	$('textarea').each(function() {
-		new window.RichTextAreaView({el:$(this), model:appModel});
+		el = $(this)
+		if (el.attr("id") !== "textarea-modal-textarea") {
+			new window.RichTextAreaView({el:el, model:appModel});
+		} else {
+			new window.RichTextAreaView({el:el, model:appModel, noFullscreen:true, hideMediaChooserBackdrop:true});
+		}
 	});
+	
+	var textAreaModal = new window.TextAreaModalView({el:$("#textarea-modal"), model:appModel})
 </script>
 {% endblock %}

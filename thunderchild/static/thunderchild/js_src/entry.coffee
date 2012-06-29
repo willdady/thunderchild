@@ -3,7 +3,6 @@ counter = 0
 window.AppModel = Backbone.Model.extend
 
   hideMediaChooser: ->
-    @unset("uid")
     @trigger "hideMediaChooser"
 
   showMediaChooser:(uid, backdrop=true) ->
@@ -14,7 +13,7 @@ window.AppModel = Backbone.Model.extend
     @trigger "assetSelected", obj
     
   showTextAreaModal:(uid, text) ->
-    @set("uid", uid)
+    @set("fullscreen_source_uid", uid)
     @trigger "showTextAreaModal", text
     
   textAreaModalClosed:(text) ->
@@ -125,6 +124,6 @@ window.RichTextAreaView = Backbone.View.extend
     e.preventDefault()
     
   textAreaModalChangeHandler:(text) ->
-    if @model.get("uid") != @uid
+    if @model.get("fullscreen_source_uid") != @uid
       return # Make sure the event belongs to us by checking the active uid matches.
     @$el.val(text)

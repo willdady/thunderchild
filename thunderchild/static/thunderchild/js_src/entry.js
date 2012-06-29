@@ -3,7 +3,6 @@
   counter = 0;
   window.AppModel = Backbone.Model.extend({
     hideMediaChooser: function() {
-      this.unset("uid");
       return this.trigger("hideMediaChooser");
     },
     showMediaChooser: function(uid, backdrop) {
@@ -17,7 +16,7 @@
       return this.trigger("assetSelected", obj);
     },
     showTextAreaModal: function(uid, text) {
-      this.set("uid", uid);
+      this.set("fullscreen_source_uid", uid);
       return this.trigger("showTextAreaModal", text);
     },
     textAreaModalClosed: function(text) {
@@ -128,7 +127,7 @@
       return e.preventDefault();
     },
     textAreaModalChangeHandler: function(text) {
-      if (this.model.get("uid") !== this.uid) {
+      if (this.model.get("fullscreen_source_uid") !== this.uid) {
         return;
       }
       return this.$el.val(text);
