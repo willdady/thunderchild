@@ -27,24 +27,26 @@ if you are new to Django or need a refresher. The following assumes you have set
 4. Edit *urls.py* inside your project's main package to include Thunderchild's own *urls.py*. It is strongly recommended Thunderchild is mounted at the root of your website as shown below. It must be
 included as the last item.
 
-```from django.conf.urls import patterns, include
-
-urlpatterns = patterns('',
-	# Other apps should go here.
-    (r'^', include('thunderchild.urls')),
-)```
+	```
+	from django.conf.urls import patterns, include
+	
+	urlpatterns = patterns('',
+		# Other apps should go here.
+	    (r'^', include('thunderchild.urls')),
+	)
+	```
 
 5. From the root of your project run syncdb to have Django setup the required tables and fixtures in your database:
 
-```
-python manage.py syncdb
-```
+	```
+	python manage.py syncdb
+	```
     
 6. If you are in a local development environment start the server with:
 
-```
-python manage.py runserver
-```
+	```
+	python manage.py runserver
+	```
 	
 7. Assuming you mounted Thunderchild at the root of your website, you may now point your browser at localhost:8000/backend to login with the user you created in step 5.
 
