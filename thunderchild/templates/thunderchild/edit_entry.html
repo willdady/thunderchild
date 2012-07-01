@@ -20,58 +20,117 @@
 			<h2>{{ entrytype_name }}</h2>
 		</header>
 		
+		
+		<ul class="nav nav-tabs" id="tabs">
+			<li><a href="#fields" data-toggle="tab">Fields</a></li>
+			<li><a href="#dates" data-toggle="tab">Dates</a></li>
+			<li><a href="#comments" data-toggle="tab">Comments</a></li>
+		</ul>
+		
 		<form action="{% url thunderchild.entry_views.edit_entry entry_id %}" method="post">{% csrf_token %}
-		{% for field in form1 %}
-		{% if not field.is_hidden %}
-		<div class="accordion-group">
-				<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_{{ forloop.counter }}">
-					{{ field.label_tag }}
-					{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
-				</div>
-				<div id="form1_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
-					{{ field }}
-					{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
-				</div>
-		</div>
-		{% else %}
-			{{ field }}
-		{% endif %}
-		{% endfor %}
-		
-		
-		{% for field in form2 %}
-		{% if not field.is_hidden %}
-		<div class="accordion-group">
-			<div class="field_label_holder" data-toggle="collapse" data-target="#form2_fieldholder_{{ forloop.counter }}">
-				{{ field.label_tag }}
-				{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
-			</div>
-			<div id="form2_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
-				{% for key, value in media_assets.items %}
-					{% ifequal key field.html_name %}
-					<div class="media-asset-thumbnail">
-						<img src="{{ value.thumbnail_url }}" alt="Media asset thumbnail" />
-						<ul>
-							<li>{{ value.filename }}</li>
-						</ul>
-					</div>
-					{% endifequal %}				
-				{% endfor %}
+			<div class="tab-content">
 				
-				{{ field }}
-				{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
+				<div id="fields" class="tab-pane">
+					
+					{{ form1.entrytype }}
+					
+					<div class="accordion-group">
+							<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_title">
+								<label for="">{{ form1.title.label }}</label>
+								{% if form1.title.errors %}<div class="alert alert-error">{{ form1.title.errors }}</div>{% endif %}
+							</div>
+							<div id="form1_fieldholder_title" class="collapse control-group field_holder {% if form1.title.errors %}error{% endif %} {% if not form1.title.field.field_collapsed_by_default %}in{% endif %}">
+								{{ form1.title }}
+								{% if form1.title.help_text %}<p class="help_text">{{ form1.title.help_text }}</p>{% endif %}
+							</div>
+					</div>
+					
+					<div class="accordion-group">
+							<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_slug">
+								<label for="">{{ form1.slug.label }}</label>
+								{% if form1.slug.errors %}<div class="alert alert-error">{{ form1.slug.errors }}</div>{% endif %}
+							</div>
+							<div id="form1_fieldholder_slug" class="collapse control-group field_holder {% if form1.slug.errors %}error{% endif %} {% if not form1.slug.field.field_collapsed_by_default %}in{% endif %}">
+								{{ form1.slug }}
+								{% if form1.slug.help_text %}<p class="help_text">{{ form1.slug.help_text }}</p>{% endif %}
+							</div>
+					</div>
+					
+					{% for field in form2 %}
+						{% if not field.is_hidden %}
+						<div class="accordion-group">
+							<div class="field_label_holder" data-toggle="collapse" data-target="#form2_fieldholder_{{ forloop.counter }}">
+								{{ field.label_tag }}
+								{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
+							</div>
+							<div id="form2_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
+								{% for key, value in media_assets.items %}
+									{% ifequal key field.html_name %}
+									<div class="media-asset-thumbnail">
+										<img src="{{ value.thumbnail_url }}" alt="Media asset thumbnail" />
+										<ul>
+											<li>{{ value.filename }}</li>
+										</ul>
+									</div>
+									{% endifequal %}				
+								{% endfor %}
+								
+								{{ field }}
+								{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
+							</div>
+						</div>
+						{% else %}
+							{{ field }}
+						{% endif %}
+					{% endfor %}
+					
+					<div class="accordion-group">
+							<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_is_published">
+								<label for="">{{ form1.is_published.label }}</label>
+								{% if form1.is_published.errors %}<div class="alert alert-error">{{ form1.is_published.errors }}</div>{% endif %}
+							</div>
+							<div id="form1_fieldholder_is_published" class="collapse control-group field_holder {% if form1.is_published.errors %}error{% endif %} {% if not form1.is_published.field.field_collapsed_by_default %}in{% endif %}">
+								{{ form1.is_published }}
+								{% if form1.is_published.help_text %}<p class="help_text">{{ form1.is_published.help_text }}</p>{% endif %}
+							</div>
+					</div>
+				</div>
+				
+				<div id="dates" class="tab-pane">
+					<div class="accordion-group">
+							<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_creation_date">
+								<label for="">{{ form1.creation_date.label }}</label>
+								{% if form1.creation_date.errors %}<div class="alert alert-error">{{ form1.creation_date.errors }}</div>{% endif %}
+							</div>
+							<div id="form1_fieldholder_creation_date" class="collapse control-group field_holder {% if form1.creation_date.errors %}error{% endif %} {% if not form1.creation_date.field.field_collapsed_by_default %}in{% endif %}">
+								{{ form1.creation_date }}
+								{% if form1.creation_date.help_text %}<p class="help_text">{{ form1.creation_date.help_text }}</p>{% endif %}
+							</div>
+					</div>
+					
+					<div class="accordion-group">
+							<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_expiration_date">
+								<label for="">{{ form1.expiration_date.label }}</label>
+								{% if form1.expiration_date.errors %}<div class="alert alert-error">{{ form1.expiration_date.errors }}</div>{% endif %}
+							</div>
+							<div id="form1_fieldholder_expiration_date" class="collapse control-group field_holder {% if form1.expiration_date.errors %}error{% endif %} {% if not form1.expiration_date.field.field_collapsed_by_default %}in{% endif %}">
+								{{ form1.expiration_date }}
+								{% if form1.expiration_date.help_text %}<p class="help_text">{{ form1.expiration_date.help_text }}</p>{% endif %}
+							</div>
+					</div>
+				</div>
+				
+				<div id="comments" class="tab-pane">
+					<p>Comment controls go here</p>
+				</div>
+				
 			</div>
-		</div>
-		{% else %}
-			{{ field }}
-		{% endif %}
-		{% endfor %}
-		<div class="row">
-			<div class="pull-right">
-				<a class="btn btn-danger" data-toggle="modal" href="#confirm_delete_modal"><i class="icon-trash icon-white"></i> Delete</a>
-				<input class="btn" type="submit" value="Save" />
+			<div class="row">
+				<div class="pull-right">
+					<a class="btn btn-danger" data-toggle="modal" href="#confirm_delete_modal"><i class="icon-trash icon-white"></i> Delete</a>
+					<input class="btn" type="submit" value="Save" />
+				</div>
 			</div>
-		</div>
 		</form>
 		
 		<div id="confirm_delete_modal" class="modal" style="display:none;">
@@ -157,6 +216,11 @@
 	});
 	
 	var textAreaModal = new window.TextAreaModalView({el:$("#textarea-modal"), model:appModel})
-	
+	// Activate tabs
+	$("#tabs a").click(function(e){
+		$(this).tab("show");
+		e.preventDefault();
+	});
+	$("#tabs a:first").tab("show");
 </script>
 {% endblock %}

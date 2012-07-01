@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from thunderchild import models
-from thunderchild import forms
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -57,6 +56,18 @@ def delete_entrytype(request, entrytype_id):
 def entries(request):
     entry_objects = models.Entry.objects.all().order_by('-creation_date')
     
+    # Filter entires by entrytype is entrytype parameter is set
+    entrytype_id = request.GET.get('entrytype')
+    if entrytype_id:
+        entry_objects = entry_objects.filter(entrytype__exact=entrytype_id)
+    # Filter entires by author is author parameter is set    
+    author_id = request.GET.get('author')
+    if author_id:
+        entry_objects = entry_objects.filter(author__exact=author_id)
+    # If both entrytype and author URL parameters are present but equal to empty strings we redirect to the same URL without the parameters.    
+    if entrytype_id == '' and author_id == '':
+        return redirect('thunderchild.entry_views.entries')
+    
     paginator = Paginator(entry_objects, 30)
     
     page = request.GET.get('page')
@@ -71,7 +82,10 @@ def entries(request):
     for entry in p:
         entries.append(entry.dict)
     entry_types = models.EntryType.objects.all()
-    return render(request, 'thunderchild/entries.html', {'page':p, 'entries':entries, 'entry_types':entry_types})
+    
+    form = models.EntriesFilterForm(request.GET)
+    
+    return render(request, 'thunderchild/entries.html', {'page':p, 'entries':entries, 'entry_types':entry_types, 'form':form})
     
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))

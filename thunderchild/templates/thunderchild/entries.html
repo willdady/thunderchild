@@ -6,6 +6,18 @@
 		<h1>Entries</h1>
 	</header>
 	
+	<form id="entries_filter_form" action="{% url thunderchild.entry_views.entries %}" method="get">
+		<ul>
+			{% for field in form %}
+			<li>{{ field.label_tag }}</li>
+			<li>{{ field }}</li>
+			{% endfor %}
+			<li><input type="submit" value="Filter" class="btn" /></li>
+		</ul>
+	</form>
+	
+	<hr />
+	
 	<div class="row">
 			<table class="span12" border="1">
 			<thead>

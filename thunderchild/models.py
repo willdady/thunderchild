@@ -438,3 +438,24 @@ class CategoryForm(ModelForm):
                    'category_short_name':TextInput(attrs={'class':'input-large'})
                    }
         
+
+class EntriesFilterForm(forms.Form):
+    entrytype = forms.ChoiceField(choices=[], required=False, label="Entry type")
+    author = forms.ChoiceField(choices=[], required=False)
+    
+    def __init__(self, *args, **kwargs):
+        super(EntriesFilterForm, self).__init__(*args, **kwargs)
+        
+        entrytype_choices = [('', '---------')]
+        entrytypes = EntryType.objects.values_list('id', 'entrytype_name')
+        for e in entrytypes:
+            entrytype_choices.append(e)
+        self.fields['entrytype'].choices = entrytype_choices
+        
+        author_choices = [('', '---------')]
+        authors = User.objects.values_list('id', 'first_name', 'last_name')
+        for a in authors:
+            author_choices.append((a[0], '{} {}'.format(a[1], a[2]).strip()))
+        self.fields['author'].choices = author_choices
+    
+    

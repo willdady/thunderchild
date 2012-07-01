@@ -2,11 +2,13 @@
 @import "mixins.less";
 
 body {
+  overflow-y:scroll;
   padding-top:70px;
   background:url("images/bg.gif") @off-white;
   &.media-chooser {
     padding:0;
     background:none;
+    overflow-y:visible;
   }
 }
 input[type="text"], textarea, table {

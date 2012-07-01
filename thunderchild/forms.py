@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
-import thunderchild.models
+import thunderchild
 
 
 class DynamicForm(forms.Form):
@@ -128,6 +128,4 @@ class GroupCreationForm(forms.ModelForm):
                     'name':forms.TextInput(attrs={'class':'input-large'}),
                     'permissions':forms.CheckboxSelectMultiple()
         }
-
-    
     
