@@ -4,9 +4,8 @@ Thunderchild is a turn-key CMS solution built atop Django. It is inspired by Exp
 
 ## Requirements
 
-[Django 1.4](https://www.djangoproject.com/)
-
-[Python Imaging Library](http://www.pythonware.com/products/pil/)
+* [Django 1.4](https://www.djangoproject.com/)
+* [Python Imaging Library](http://www.pythonware.com/products/pil/)
 
 ## Features
 
@@ -23,25 +22,29 @@ As Thunderchild is a Django app, an understanding of creating a Django project i
 if you are new to Django or need a refresher. The following assumes you have setup a database on your environment and you are creating a NEW project for this installation.
 
 1. Create your Django project.
-2. Copy thunderchild folder to the root of your project (the directory containing manage.py).
-3. Edit settings.py inside your project's main package to include your Database connection details. Include settings required by Thunderchild - See Settings section below.
-4. Edit urls.py inside your project's main package to include Thunderchild's own urls.py. It is strongly recommended Thunderchild is mounted at the root of your website as shown below. It must be
+2. Copy thunderchild folder to the root of your project (the directory containing *manage.py*).
+3. Edit *settings.py* inside your project's main package to include your Database connection details. Include settings required by Thunderchild - See Settings section below.
+4. Edit *urls.py* inside your project's main package to include Thunderchild's own *urls.py*. It is strongly recommended Thunderchild is mounted at the root of your website as shown below. It must be
 included as the last item.
 
-	from django.conf.urls import patterns, include
-	
-	urlpatterns = patterns('',
-		# Other apps should go here.
-	    (r'^', include('thunderchild.urls')),
-	)
+```from django.conf.urls import patterns, include
+
+urlpatterns = patterns('',
+	# Other apps should go here.
+    (r'^', include('thunderchild.urls')),
+)```
 
 5. From the root of your project run syncdb to have Django setup the required tables and fixtures in your database:
 
-    python manage.py syncdb
+```
+python manage.py syncdb
+```
     
 6. If you are in a local development environment start the server with:
 
-	python manage.py runserver
+```
+python manage.py runserver
+```
 	
 7. Assuming you mounted Thunderchild at the root of your website, you may now point your browser at localhost:8000/backend to login with the user you created in step 5.
 
