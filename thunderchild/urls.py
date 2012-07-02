@@ -14,8 +14,6 @@ urlpatterns = patterns('',
     (r'^backend/media/chooser$', 'thunderchild.media_views.media_chooser'),
     
     (r'^backend/users$', 'thunderchild.views.users'),
-    (r'^backend/users/create$', 'thunderchild.views.create_user'),
-    (r'^backend/users/edit/(\d+)$', 'thunderchild.views.edit_user'),
     
     (r'^backend/field-groups$', 'thunderchild.field_views.fieldgroups'),
     (r'^backend/field-groups/create$', 'thunderchild.field_views.create_fieldgroup'),
@@ -48,6 +46,11 @@ urlpatterns = patterns('',
     (r'^backend/templates/group/(\d+)/create$', 'thunderchild.template_views.create_template'),
     (r'^backend/templates/group/(\d+)/edit/(\d+)', 'thunderchild.template_views.edit_template'),
     (r'^backend/templates/group/(\d+)/delete/(\d+)', 'thunderchild.template_views.delete_template'),
+    
+    (r'^backend/forms/contact$', 'thunderchild.form_views.contactforms'),
+    (r'^backend/forms/contact/create$', 'thunderchild.form_views.create_contactform'),
+    (r'^backend/forms/contact/edit/(\d+)$', 'thunderchild.form_views.edit_contactform'),
+    (r'^backend/forms/contact/process/(\d+)$', 'thunderchild.form_views.process_contactform'),
     
 )
 

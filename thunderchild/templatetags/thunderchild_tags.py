@@ -95,7 +95,7 @@ def get_template_url(*args, **kwargs):
         path = path.replace('root/', '')
     return reverse('thunderchild.dynamic_view.dynamic_view', args=[path])
 
-    
+
 @register.simple_tag(name='media_asset')    
 def get_media_asset(asset_id):
     """
@@ -111,3 +111,45 @@ def get_media_asset(asset_id):
     url = model.url
     # Replace the substring '{ MEDIA_URL }' with the value defined in settings. No effect if doesn't exist in string.
     return url.replace('{ MEDIA_URL }', settings.MEDIA_URL)
+
+
+@register.assignment_tag(name='contact_form') 
+def get_contactform(*args, **kwargs):
+    """
+    Returns a dictionary object representing the ContactForm belonging to the passed id.
+    
+    The returned dictionary has the following parameters:
+    action: The URL the form will submit to.
+    method: The forms method (currently this will always be 'post').
+    form: The actual form instance.
+    
+    Example:
+    {% contact_form id=1 as my_form %}
+    
+    <form action="{{ my_form.action }}" method="{{ my_form.method }}">
+        {% csrf_token %}
+        <ul>
+            {{ my_form.form.as_ul }}
+            <li>
+                <input type="submit" value="Send" />
+            </li>
+        </ul>
+    </form>
+    
+    """
+    id = kwargs.get('id')
+    
+    if not id:
+        return ''
+    try:
+        model = models.ContactForm.objects.get(pk=id)
+    except models.ContactForm.DoesNotExist:
+        return ''
+    
+    form = model.get_form()
+    action = reverse('thunderchild.form_views.process_contactform', args=[model.id])
+    method = 'post'
+    
+    return {'action':action, 'method':method, 'form':form}
+    
+    

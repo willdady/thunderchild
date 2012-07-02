@@ -115,17 +115,9 @@ class UserCreationForm(forms.ModelForm):
         return user
     
     
-class GroupCreationForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(GroupCreationForm, self).__init__(*args, **kwargs)
-        self.fields['permissions'].choices = [(permission.id, permission.name) for permission in Permission.objects.all()]
-        self.fields['permissions'].help_text = ''
-    
-    class Meta:
-        model = Group
-        widgets  = {
-                    'name':forms.TextInput(attrs={'class':'input-large'}),
-                    'permissions':forms.CheckboxSelectMultiple()
-        }
+class ContactForm(forms.Form):
+    form_id = forms.IntegerField(widget=forms.HiddenInput)
+    email = forms.EmailField()
+    subject = forms.CharField(max_length=150)
+    message = forms.CharField(max_length=300, widget=forms.Textarea)
     

@@ -14,7 +14,7 @@
     		"template_short_name":"index",
     		"template_uid":"root/index",
     		"template_content_type":"text/html",
-    		"template_content":"{% load foo_tags %}\rWelcome"
+    		"template_content":"{% load thunderchild_tags %}\rWelcome"
 		}
 	},
 	{

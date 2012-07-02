@@ -152,6 +152,8 @@ class Template(models.Model):
     template_is_private = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Is private?', help_text="Private templates are not publicly accessible. They're intended for use as base templates to extend from or as fragments for including in other templates.")
     template_content = models.TextField(default='{% load thunderchild_tags %}', verbose_name='Content')
                
+    def __unicode__(self):
+        return u'{}/{}'.format(self.templategroup.templategroup_short_name, self.template_short_name)
                
 class CategoryGroup(models.Model):
     categorygroup_name = models.CharField(max_length=255, unique=True, verbose_name='Name')
@@ -237,6 +239,25 @@ class MediaAsset(models.Model):
 
     def __unicode__(self):
         return u'{}'.format(self.id)
+    
+    
+class ContactForm(models.Model):
+    contactform_name = models.CharField(max_length=255, unique=True, verbose_name='Name')
+    contactform_short_name = models.SlugField(max_length=255, unique=True, verbose_name='Short name')
+    recipient_emails = models.CharField(max_length=1000, help_text="A comma separated list of recipient email addresses which will receive data submitted via this form.", verbose_name='Recipients')
+    success_url = models.CharField(max_length=1000, verbose_name='Success URL', help_text="A URL to redirect the user to once they have successfully submitted the form.")
+    error_url = models.CharField(max_length=1000, verbose_name='Error URL', help_text="A URL to redirect the user to if an error occurs while submitting the form.")
+    
+    def get_recipient_list(self):
+        return [x.strip() for x in self.recipient_emails.split(',')]
+    
+    def get_form(self, *args, **kwargs):
+        if args:
+            form = thunderchild.forms.ContactForm(*args)
+        else:
+            form = thunderchild.forms.ContactForm(initial={'form_id':self.id})
+        return form
+
 
 # FORMS
 
@@ -459,3 +480,13 @@ class EntriesFilterForm(forms.Form):
         self.fields['author'].choices = author_choices
     
     
+class ContactFormForm(ModelForm):
+    class Meta:
+        model = ContactForm
+        widgets = {
+                   'contactform_name':TextInput(attrs={'class':'input-large'}),
+                   'contactform_short_name':TextInput(attrs={'class':'input-large'}),
+                   'recipient_emails':TextInput(attrs={'class':'input-large'}),
+                   'success_url':TextInput(attrs={'class':'input-large'}),
+                   'error_url':TextInput(attrs={'class':'input-large'})
+                   }

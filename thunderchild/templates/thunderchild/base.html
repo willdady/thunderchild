@@ -35,15 +35,7 @@
 							<li><a href="{% url thunderchild.template_views.templates %}">Templates</a></li>
 							<li><a href="{% url thunderchild.media_views.media %}">Media</a></li>
 							<li><a href="{% url thunderchild.entry_views.entries %}">Entries</a></li>
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								Users <b class="caret"></b>
-								</a>
-								<ul class="dropdown-menu">
-									<li><a href="{% url thunderchild.views.users %}">Users</a></li>
-									<li><a href="{% url thunderchild.views.create_user %}">Create User</a></li>
-								</ul>
-							</li>
+							<li><a href="{% url thunderchild.views.users %}">Users</a></li>
 						</ul>
 						<ul class="nav pull-right">
 							<li class="dropdown">
@@ -54,6 +46,8 @@
 									<li><a href="{% url thunderchild.field_views.fieldgroups %}">Field Groups</a></li>
 									<li><a href="{% url thunderchild.entry_views.entrytypes %}">Entry Types</a></li>
 									<li><a href="{% url thunderchild.category_views.categorygroups %}">Category Groups</a></li>
+									<li class="divider"></li>
+									<li><a href="{% url thunderchild.form_views.contactforms %}">Contact Forms</a></li>
 								</ul>
 							</li>
 							<li><a href="#">Account</a></li>
