@@ -94,10 +94,14 @@ def create_entry(request, entrytype_id):
     if request.method == 'POST':
         form1 = models.EntryForm(entrytype_model=entrytype_model, data=request.POST)
         form2 = entrytype_model.get_form(request.POST)
-        # As it's possible form2 == None we must check it' existance. If it's not valid there's no point validating form1.
+        # As it's possible form2 == None we must check it' existence. If it's not valid there's no point validating form1.
         if form2:
             if not form2.is_valid():
-                return render(request, 'thunderchild/create_entry.html', {'form1':form1, 'form2':form2, 'entrytype_id':entrytype_id, 'entrytype_name':entrytype_model.entrytype_name})
+                return render(request, 'thunderchild/create_entry.html', {'form1':form1, 
+                                                                          'form2':form2, 
+                                                                          'entrytype_id':entrytype_id, 
+                                                                          'entrytype_name':entrytype_model.entrytype_name,
+                                                                          'has_categorygroup':entrytype_model.categorygroup})
         
         if form1.is_valid():
             form1.instance.author = request.user
@@ -112,12 +116,20 @@ def create_entry(request, entrytype_id):
                     field_data.save()
             return redirect('thunderchild.entry_views.entries')
         else:
-            return render(request, 'thunderchild/create_entry.html', {'form1':form1, 'form2':form2, 'entrytype_id':entrytype_id, 'entrytype_name':entrytype_model.entrytype_name})
+            return render(request, 'thunderchild/create_entry.html', {'form1':form1, 
+                                                                      'form2':form2, 
+                                                                      'entrytype_id':entrytype_id, 
+                                                                      'entrytype_name':entrytype_model.entrytype_name,
+                                                                      'has_categorygroup':entrytype_model.categorygroup})
     else:
         creation_date_value = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         form1 = models.EntryForm(entrytype_model=entrytype_model, initial={'entrytype':entrytype_id, 'creation_date':creation_date_value})
         form2 = entrytype_model.get_form()
-        return render(request, 'thunderchild/create_entry.html', {'form1':form1, 'form2':form2, 'entrytype_id':entrytype_id, 'entrytype_name':entrytype_model.entrytype_name})
+        return render(request, 'thunderchild/create_entry.html', {'form1':form1, 
+                                                                  'form2':form2, 
+                                                                  'entrytype_id':entrytype_id, 
+                                                                  'entrytype_name':entrytype_model.entrytype_name,
+                                                                  'has_categorygroup':entrytype_model.categorygroup})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -148,7 +160,11 @@ def edit_entry(request, entry_id):
                     fielddata.save()
             return redirect('thunderchild.entry_views.entries')
         else:
-            return render(request, 'thunderchild/edit_entry.html', {'form1':form1, 'form2':form2, 'entry_id':entry_id, 'entrytype_name':entrytype_model.entrytype_name})
+            return render(request, 'thunderchild/edit_entry.html', {'form1':form1, 
+                                                                    'form2':form2, 
+                                                                    'entry_id':entry_id, 
+                                                                    'entrytype_name':entrytype_model.entrytype_name,
+                                                                    'has_categorygroup':entrytype_model.categorygroup})
     else:
         data = entry_model.dict
         
@@ -163,6 +179,7 @@ def edit_entry(request, entry_id):
                                                                 'form2':form2, 
                                                                 'entry_id':entry_id, 
                                                                 'entrytype_name':entrytype_model.entrytype_name,
-                                                                'media_assets':media_assets})
+                                                                'media_assets':media_assets,
+                                                                'has_categorygroup':entrytype_model.categorygroup})
     
     

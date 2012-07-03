@@ -34,9 +34,12 @@ class Entry(models.Model):
     slug = models.SlugField(max_length=255, unique=True, verbose_name='Slug')
     creation_date = models.DateTimeField(verbose_name='Created')
     last_modified_date = models.DateTimeField(auto_now=True, verbose_name='Last modified')
-    expiration_date = models.DateTimeField(verbose_name='Expires', blank=True, null=True)
+    expiration_date = models.DateTimeField(verbose_name='Expires', blank=True, null=True, help_text='A future date for when this entry should expire. Expired entries will not render to templates. Leave blank to never expire.')
     is_published = models.BooleanField(default=True, verbose_name='Published?', choices=((False, 'No'),(True, 'Yes')))
     categories = models.ManyToManyField('Category', blank=True)
+    comments_enabled = models.BooleanField(default=False, verbose_name='Enable comments?', choices=((False, 'No'),(True, 'Yes')))
+    comments_expiration_date = models.DateTimeField(verbose_name='Disallow comments after:', blank=True, null=True, help_text='A date from when new comments will no longer be accepted. Leave blank to allow comments indefinitely.')
+
     
     def _get_dict(self):
         """ Returns a dictionary representation of this entry INCLUDING it's associated field data."""
@@ -49,8 +52,10 @@ class Entry(models.Model):
         d['creation_date'] = self.creation_date
         d['last_modified_date'] = self.last_modified_date
         d['expiration_date'] = self.expiration_date
-        d['categories'] = self.categories.all()
         d['is_published'] = self.is_published
+        d['categories'] = self.categories.all()
+        d['comments_enabled'] = self.comments_enabled
+        d['comments_expiration_date'] = self.comments_expiration_date
         fielddatas = FieldData.objects.filter(entry__exact=self).filter(field__fieldgroup__exact=self.entrytype.fieldgroup).select_related('field')
         for fielddata in fielddatas:
             d['{}'.format(fielddata.field.field_short_name)] = fielddata.value
@@ -285,14 +290,16 @@ class EntryForm(ModelForm):
     
     class Meta:
         model = Entry
-        exclude = ['author', 'categories']
+        exclude = ['author']
         widgets  = {
                     'entrytype':HiddenInput(),
                     'title':TextInput(attrs={'class':'input-large'}),
                     'slug':TextInput(attrs={'class':'input-large'}),
                     'creation_date':TextInput(attrs={'class':'input-medium', 'data-field-type':'datetime'}),
                     'expiration_date':TextInput(attrs={'class':'input-medium', 'data-field-type':'datetime'}),
-                    'is_published':RadioSelect()
+                    'is_published':RadioSelect(),
+                    'comments_enabled':RadioSelect(),
+                    'comments_expiration_date':TextInput(attrs={'class':'input-medium', 'data-field-type':'datetime'})
         }
         
 
