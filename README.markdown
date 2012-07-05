@@ -66,11 +66,11 @@ In addition to the default settings provided when creating a project with Django
 
 Templates created by Thunderchild have the following variables automatically set in the context and are available in all templates.
 
-*segment_1, segment_2, segment_3 etc.*
+#### segment_1, segment_2, segment_3 etc.
 
 Each segment of the current URL. For example, if the URL is http://example.com/blog/archive/2012 you would have segment_1 = 'blog', segment_2 = 'archive', segment_3 = '2012'
 
-*last_segment*
+#### last_segment
 
 The last segment of the URL. In the above example segment_3 and last_segment would both equal '2012'. You would often use last_segment to retrive an Entry by it's slug.
 
@@ -78,32 +78,24 @@ The last segment of the URL. In the above example segment_3 and last_segment wou
 
 Thunderchild comes with it's own set of template tags for retrieving entries from the system and rendering them. Thunderchild automatically adds the following load tag to new Templates.
 
-	```
 	{% load thunderchild_tags %}
-	```
 	
 In order to use the following Thunderchild tags the above load tag *must* be present at the top of your template.
 
-*{% entry %}*
+#### {% entry %}
 
 Usage:
 
-	```
 	{% entry slug='test' as my_entry %}
-	```
 
-*{% entries %}*
+#### {% entries %}
 
 Usage:
 
-	```
 	{% entries 'blog_entry' offset=2 limit=3 year=2012 order_by='-title, author' as blog_entries %}
-	```
 	
-*{% template_url %}*
+#### {% template_url %}
 
 Usage:
 
-	```
 	{% template_url "staff/john-smith" %}
-	```
