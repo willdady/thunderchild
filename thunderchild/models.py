@@ -1,16 +1,23 @@
 from datetime import datetime
+from django import forms
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.db import models
+from django.forms.models import ModelForm
+from django.forms.widgets import Select, HiddenInput, RadioSelect, TextInput, \
+    Textarea
+from django.utils.timezone import utc
+from thunderchild.validators import validate_lowercase, validate_urlchars
 import json
 import os
-from django.db import models
-from django.conf import settings
-from django.forms.models import ModelForm
-from django.forms.widgets import Select, HiddenInput, RadioSelect, TextInput,\
-    Textarea
-from django import forms
-from django.contrib.auth.models import User
 import thunderchild.forms
-from thunderchild.validators import validate_lowercase, validate_urlchars
-from django.utils.timezone import utc
+from django.contrib.sites.models import Site
+
+
+class SiteSettings(Site):
+    comment_success_url = models.CharField(default='/', max_length=200, help_text="A URL to redirect the user to after they successfully submit a comment.")
+    comment_error_url = models.CharField(default='/', max_length=200, help_text="A URL to redirect the user to if their comment submission contains errors. ie. Missing fields, malformed email etc.")
 
 
 class EntryType(models.Model):
@@ -40,7 +47,19 @@ class Entry(models.Model):
     comments_enabled = models.BooleanField(default=False, verbose_name='Enable comments?', choices=((False, 'No'),(True, 'Yes')))
     comments_expiration_date = models.DateTimeField(verbose_name='Disallow comments after:', blank=True, null=True, help_text='A date from when new comments will no longer be accepted. Leave blank to allow comments indefinitely.')
 
-    
+    def get_comment_form(self, *args, **kwargs):
+        return thunderchild.forms.CommentForm(*args)
+
+    @property
+    def comment_form_dict(self):
+        try :
+            self._comment_form_dict
+        except AttributeError:
+            self._comment_form_dict = {'form':self.get_comment_form(),
+                                        'action':reverse('thunderchild.comment_views.submit', args=[self.id]),
+                                        'method':'post'}
+        return self._comment_form_dict
+
     def _get_dict(self):
         """ Returns a dictionary representation of this entry INCLUDING it's associated field data."""
         d = {}
@@ -56,6 +75,10 @@ class Entry(models.Model):
         d['categories'] = self.categories.all()
         d['comments_enabled'] = self.comments_enabled
         d['comments_expiration_date'] = self.comments_expiration_date
+        if self.comments_enabled:
+            d['comments'] = Comment.objects.filter(entry__exact=self.id, is_spam__exact=False, is_approved__exact=True)
+            d['comment_form'] = self.comment_form_dict
+        
         fielddatas = FieldData.objects.filter(entry__exact=self).filter(field__fieldgroup__exact=self.entrytype.fieldgroup).select_related('field')
         for fielddata in fielddatas:
             d['{}'.format(fielddata.field.field_short_name)] = fielddata.value
@@ -142,11 +165,24 @@ class FieldData(models.Model):
     value = property(_get_value, _set_value)
     
     
+class Comment(models.Model):
+    entry = models.ForeignKey('Entry')
+    name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
+    website = models.URLField(blank=True)
+    message = models.TextField(max_length=500)
+    created = models.DateField(auto_now_add=True)
+    ip_address = models.IPAddressField()
+    is_approved = models.BooleanField(default=False)
+    is_spam = models.BooleanField(default=False)
+    
+    
 class TemplateGroup(models.Model):
     templategroup_short_name = models.CharField(max_length=125, unique=True, verbose_name='Name', validators=[validate_lowercase, validate_urlchars], error_messages={'unique':'A template group already exists with that name'})
     
     def __unicode__(self):
         return u'{}'.format(self.templategroup_short_name)
+    
     
 class Template(models.Model):
     templategroup = models.ForeignKey('TemplateGroup')
@@ -159,6 +195,7 @@ class Template(models.Model):
                
     def __unicode__(self):
         return u'{}/{}'.format(self.templategroup.templategroup_short_name, self.template_short_name)
+               
                
 class CategoryGroup(models.Model):
     categorygroup_name = models.CharField(max_length=255, unique=True, verbose_name='Name')
@@ -262,238 +299,3 @@ class ContactForm(models.Model):
         else:
             form = thunderchild.forms.ContactForm(initial={'form_id':self.id})
         return form
-
-
-# FORMS
-
-
-class EntryTypeForm(ModelForm):
-    fieldgroup = forms.ModelChoiceField(queryset=FieldGroup.objects.all(), required=False, label='Field group')
-    categorygroup = forms.ModelChoiceField(queryset=CategoryGroup.objects.all(), required=False, label='Category group')
-    class Meta:
-        model = EntryType
-        widgets = {
-                   'entrytype_name':TextInput(attrs={'class':'input-large'}),
-                   'entrytype_short_name':TextInput(attrs={'class':'input-large'}),
-                   }
-        
-        
-class EntryForm(ModelForm):
-    
-    def __init__(self, entrytype_model, *args, **kwargs):
-        super(EntryForm, self).__init__(*args, **kwargs)
-        categories_queryset = Category.objects.filter(categorygroup__exact=entrytype_model.categorygroup)
-        if categories_queryset:
-            self.fields['categories'] = forms.ModelMultipleChoiceField(queryset=categories_queryset, 
-                                                                   widget=forms.CheckboxSelectMultiple,
-                                                                   required=False)
-    
-    class Meta:
-        model = Entry
-        exclude = ['author']
-        widgets  = {
-                    'entrytype':HiddenInput(),
-                    'title':TextInput(attrs={'class':'input-large'}),
-                    'slug':TextInput(attrs={'class':'input-large'}),
-                    'creation_date':TextInput(attrs={'class':'input-medium', 'data-field-type':'datetime'}),
-                    'expiration_date':TextInput(attrs={'class':'input-medium', 'data-field-type':'datetime'}),
-                    'is_published':RadioSelect(),
-                    'comments_enabled':RadioSelect(),
-                    'comments_expiration_date':TextInput(attrs={'class':'input-medium', 'data-field-type':'datetime'})
-        }
-        
-
-FIELD_TYPES = (('text', 'Text'), 
-               ('textarea', 'TextArea'), 
-               ('datetime', 'DateTime'),
-               ('date', 'Date'),
-               ('select', 'Select Dropdown'),
-               ('checkboxes', 'Checkboxes'),
-               ('radiobuttons', 'Radio Buttons'),
-               ('file', 'File'))
-
-class FieldForm(ModelForm):
-    
-    maxlength = forms.IntegerField(help_text='The maximum number of characters allowed.', initial=128, required=False, widget=TextInput(attrs={'class':'input-small'}))
-    field_choices = thunderchild.forms.TextToChoicesField(help_text='One choice per line. Minimum 2 choices.', required=False, widget=Textarea(attrs={'class':'input-large'}))
-    
-    def __init__(self, *args, **kwargs):
-        instance = kwargs.get('instance')
-        if instance:
-            # If our form has a model instance and it contains field_options, parse the data from JSON back to native Python and use as initial data for the form.
-            if instance.field_options:
-                initial = kwargs.get('initial', {})
-                json_data = json.loads(instance.field_options)
-                if 'field_choices' in json_data:
-                    field_choices = ''
-                    for choice in json_data['field_choices']:
-                        field_choices = field_choices + choice[1] + '\r'
-                    initial['field_choices'] = field_choices[0:-1]
-                if 'maxlength' in json_data:
-                    initial['maxlength'] = json_data['maxlength']
-                kwargs['initial'] = initial
-            
-        super(FieldForm, self).__init__(*args, **kwargs)
-        
-    def clean(self):
-        cleaned_data = super(FieldForm, self).clean()
-        field_type = cleaned_data.get('field_type')
-        maxlength = cleaned_data.get('maxlength')
-        field_choices = cleaned_data.get('field_choices')
-        # We validate our field options conditionally, based on the value of field_type. For example, max_length must be specified for 'text' and 'textarea' types
-        # but is not required for 'select' and 'radiobuttons' types.
-        if (field_type == 'text' or field_type == 'textarea') and (maxlength <= 0 or maxlength == None):
-            if maxlength <= 0:
-                self._errors['maxlength'] = self.error_class(['Value must be greater than 0'])
-            if maxlength == None:
-                self._errors['maxlength'] = self.error_class(['This field is required'])
-        if (field_type == 'select' or field_type == 'radiobuttons') and len(field_choices) < 2:
-            self._errors['field_choices'] = self.error_class(['Field must have at least two choices'])
-        # Convert the appropriate options for the specified field_type to JSON and store in cleaned_data['field_options'].
-        if field_type == 'text' or field_type == 'textarea':
-            options = json.dumps({'maxlength':maxlength})
-            cleaned_data['field_options'] = options
-        elif field_type == 'select' or field_type == 'checkboxes' or field_type == 'radiobuttons':
-            options = json.dumps({'field_choices':field_choices})
-            cleaned_data['field_options'] = options
-        
-        del cleaned_data['maxlength']
-        del cleaned_data['field_choices']        
-    
-        return cleaned_data
-    
-    class Meta:
-        model = Field
-        exclude = ['field_options'] # We don't render the field_options field as it's populated with JSON in the above clean method.
-        widgets  = {
-                    'field_name':TextInput(attrs={'class':'input-large'}),
-                    'field_short_name':TextInput(attrs={'class':'input-large'}),
-                    'field_instructions':TextInput(attrs={'class':'input-large'}),
-                    'field_display_order':TextInput(attrs={'class':'input-small'}),
-                    'field_is_required':RadioSelect(),
-                    'field_collapsed_by_default':RadioSelect(),
-                    'field_type':Select(choices=FIELD_TYPES),
-                    'fieldgroup':HiddenInput()
-        }
-        
-
-class FieldGroupForm(ModelForm):
-    class Meta:
-        model = FieldGroup
-        widgets = {
-                   'fieldgroup_name':TextInput(attrs={'class':'input-large'})
-                   }
-      
-      
-class TemplateGroupForm(ModelForm):
-    class Meta:
-        model = TemplateGroup
-        widgets = {
-                   'templategroup_short_name':TextInput(attrs={'class':'input-large'})
-                   }
-        
-      
-TEMPLATE_CONTENT_TYPES = (('text/html', 'HTML'),
-                          ('text/xhtml+xml', 'XHTML'), 
-                          ('text/css', 'CSS'), 
-                          ('text/xml', 'XML'), 
-                          ('application/rss+xml', 'RSS'), 
-                          ('application/json', 'JSON'),
-                          ('application/javascript', 'Javascript'),
-                          ('text/plain', 'Text'))  
-class TemplateForm(ModelForm):
-    class Meta:
-        model = Template
-        exclude = ['template_uid']
-        widgets  = {
-                    'template_content_type':Select(choices=TEMPLATE_CONTENT_TYPES),
-                    'templategroup':HiddenInput(),
-                    'template_short_name':TextInput(attrs={'class':'input-large'}),
-                    'template_is_private':RadioSelect(),
-                    'template_content':Textarea(attrs={'class':'input-large'})
-        }
-    
-    def __init__(self, *args, **kwargs):
-        super(TemplateForm, self).__init__(*args, **kwargs)
-        # If the template is an index template, disable the name input as index templates cannot be renamed.
-        if self.instance:
-            if self.instance.template_short_name == 'index':
-                self.fields['template_short_name'].widget = HiddenInput()
-    
-    def clean(self):
-        '''
-        Validates that template_short_name is not already assigned to a different Template within the same group.
-        '''
-        cleaned_data = super(TemplateForm, self).clean()
-        
-        templategroup = cleaned_data.get('templategroup')
-        template_short_name = cleaned_data.get('template_short_name')
-        
-        if templategroup and template_short_name:
-            #If instance.id is set then we are editing an existing Template.
-            if self.instance.id:
-                #Find a Template with matching templategroup and template_short_name as specified in our cleaned_data. If this template is NOT
-                #the same as our instance then template_short_name is already assigned to a different Template in the same group and therefore can't be changed.
-                existing = Template.objects.filter(templategroup__exact=templategroup).filter(template_short_name__exact=template_short_name)
-                if len(existing) == 0:
-                    return cleaned_data
-                existing = existing[0]
-                if existing.id == self.instance.id:
-                    return cleaned_data
-                else:
-                    self._errors['template_short_name'] = self.error_class(['A template with this name already exists within this group. Please choose another name.'])
-                    del cleaned_data['template_short_name']
-            else:
-                #No instance.id? Then we're creating a new template. We make sure template_short_name is not already assigned to a template in the same group.
-                if Template.objects.filter(templategroup__exact=templategroup).filter(template_short_name__exact=template_short_name).exists():
-                    self._errors['template_short_name'] = self.error_class(['A template with this name already exists within this group'])
-                    del cleaned_data['template_short_name']
-        return cleaned_data
-    
-
-class CategoryGroupForm(ModelForm):
-    class Meta:
-        model = CategoryGroup
-        widgets = {'categorygroup_name':TextInput(attrs={'class':'input-large'})}    
-    
-
-class CategoryForm(ModelForm):
-    class Meta:
-        model = Category
-        widgets = {
-                   'categorygroup':HiddenInput(),
-                   'category_name':TextInput(attrs={'class':'input-large'}),
-                   'category_short_name':TextInput(attrs={'class':'input-large'})
-                   }
-        
-
-class EntriesFilterForm(forms.Form):
-    entrytype = forms.ChoiceField(choices=[], required=False, label="Entry type")
-    author = forms.ChoiceField(choices=[], required=False)
-    
-    def __init__(self, *args, **kwargs):
-        super(EntriesFilterForm, self).__init__(*args, **kwargs)
-        
-        entrytype_choices = [('', '---------')]
-        entrytypes = EntryType.objects.values_list('id', 'entrytype_name')
-        for e in entrytypes:
-            entrytype_choices.append(e)
-        self.fields['entrytype'].choices = entrytype_choices
-        
-        author_choices = [('', '---------')]
-        authors = User.objects.values_list('id', 'first_name', 'last_name')
-        for a in authors:
-            author_choices.append((a[0], '{} {}'.format(a[1], a[2]).strip()))
-        self.fields['author'].choices = author_choices
-    
-    
-class ContactFormForm(ModelForm):
-    class Meta:
-        model = ContactForm
-        widgets = {
-                   'contactform_name':TextInput(attrs={'class':'input-large'}),
-                   'contactform_short_name':TextInput(attrs={'class':'input-large'}),
-                   'recipient_emails':TextInput(attrs={'class':'input-large'}),
-                   'success_url':TextInput(attrs={'class':'input-large'}),
-                   'error_url':TextInput(attrs={'class':'input-large'})
-                   }

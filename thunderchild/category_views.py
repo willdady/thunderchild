@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
 from thunderchild import models
 from thunderchild import forms
+from thunderchild import model_forms
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))    
 def categorygroups(request):
@@ -20,7 +21,7 @@ def categorygroups(request):
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))    
 def create_categorygroup(request):
     if request.method == 'POST':
-        form = models.CategoryGroupForm(request.POST)
+        form = model_forms.CategoryGroupForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('thunderchild.category_views.categorygroups')
@@ -28,7 +29,7 @@ def create_categorygroup(request):
         else:
             return render(request, 'thunderchild/create_categorygroup.html', {'form':form})
     else:
-        form = models.CategoryGroupForm()
+        form = model_forms.CategoryGroupForm()
         return render(request, 'thunderchild/create_categorygroup.html', {'form':form})
 
 
@@ -36,14 +37,14 @@ def create_categorygroup(request):
 def edit_categorygroup(request, categorygroup_id):
     model = get_object_or_404(models.CategoryGroup, pk=categorygroup_id)
     if request.method == 'POST':
-        form = models.CategoryGroupForm(request.POST, instance=model)
+        form = model_forms.CategoryGroupForm(request.POST, instance=model)
         if form.is_valid():
             form.save()
             return redirect('thunderchild.category_views.categorygroups')
         else:
             return render(request, 'thunderchild/edit_categorygroup.html', {'form':form, 'categorygroup_id':categorygroup_id})
     else:
-        form = models.CategoryGroupForm(instance=model)
+        form = model_forms.CategoryGroupForm(instance=model)
         return render(request, 'thunderchild/edit_categorygroup.html', {'form':form, 'categorygroup_id':categorygroup_id})
 
 
@@ -56,14 +57,14 @@ def delete_categorygroup(request, categorygroup_id):
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))   
 def create_category(request, categorygroup_id):
     if request.method == 'POST':
-        form = models.CategoryForm(request.POST)
+        form = model_forms.CategoryForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('thunderchild.category_views.categorygroups')
         else:
             return render(request, 'thunderchild/create_category.html', {'form':form, 'categorygroup_id':categorygroup_id})
     else:
-        form = models.CategoryForm(initial={'categorygroup':categorygroup_id})
+        form = model_forms.CategoryForm(initial={'categorygroup':categorygroup_id})
         return render(request, 'thunderchild/create_category.html', {'form':form, 'categorygroup_id':categorygroup_id})
 
 
@@ -71,14 +72,14 @@ def create_category(request, categorygroup_id):
 def edit_category(request, categorygroup_id, category_id):
     model = get_object_or_404(models.Category, pk=category_id)
     if request.method == 'POST':
-        form = models.CategoryForm(request.POST, instance=model)
+        form = model_forms.CategoryForm(request.POST, instance=model)
         if form.is_valid():
             form.save()
             return redirect('thunderchild.category_views.categorygroups')
         else:
             return render(request, 'thunderchild/edit_category.html', {'form':form, 'categorygroup_id':categorygroup_id, 'category_id':category_id})
     else:
-        form = models.CategoryForm(instance=model)
+        form = model_forms.CategoryForm(instance=model)
         return render(request, 'thunderchild/edit_category.html', {'form':form, 'categorygroup_id':categorygroup_id, 'category_id':category_id})
 
 

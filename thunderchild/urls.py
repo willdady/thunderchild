@@ -5,6 +5,7 @@ urlpatterns = patterns('',
     (r'^backend/login$', 'thunderchild.views.login'),
     (r'^backend/logout$', 'thunderchild.views.logout'),
     (r'^backend$', 'thunderchild.views.dashboard'),
+    (r'^backend/settings$', 'thunderchild.views.site_settings'),
     
     (r'^backend/media$', 'thunderchild.media_views.media'),
     (r'^backend/media/upload$', 'thunderchild.media_views.upload'),
@@ -52,6 +53,10 @@ urlpatterns = patterns('',
     (r'^backend/forms/contact/edit/(\d+)$', 'thunderchild.form_views.edit_contactform'),
     (r'^backend/forms/contact/process/(\d+)$', 'thunderchild.form_views.process_contactform'),
     
+    (r'^backend/comments$', 'thunderchild.comment_views.comments'),
+    (r'^backend/comments/submit/(\d+)$', 'thunderchild.comment_views.submit'),
+    (r'^backend/comments/edit/(\d+)$', 'thunderchild.comment_views.edit'),
+    (r'^backend/comments/delete/(\d+)$', 'thunderchild.comment_views.delete'),
 )
 
 if settings.DEBUG:

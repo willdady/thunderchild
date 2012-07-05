@@ -3,12 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
 from thunderchild import models
 from thunderchild import forms
+from thunderchild import model_forms
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def create_templategroup(request):
     if request.method == 'POST':
-        form = models.TemplateGroupForm(request.POST)
+        form = model_forms.TemplateGroupForm(request.POST)
         if form.is_valid():
             model = models.TemplateGroup(**form.cleaned_data)
             model.save()
@@ -19,7 +20,7 @@ def create_templategroup(request):
         else:
             return render(request, 'thunderchild/create_templategroup.html', {'form':form})
     else:
-        form = models.TemplateGroupForm()
+        form = model_forms.TemplateGroupForm()
         return render(request, 'thunderchild/create_templategroup.html', {'form':form})
 
 
@@ -27,7 +28,7 @@ def create_templategroup(request):
 def edit_templategroup(request, templategroup_id): 
     model = get_object_or_404(models.TemplateGroup, pk=templategroup_id)
     if request.method == 'POST':
-        form = models.TemplateGroupForm(request.POST)
+        form = model_forms.TemplateGroupForm(request.POST)
         if form.is_valid():
             model.set_data(form.cleaned_data)
             model.save()
@@ -38,7 +39,7 @@ def edit_templategroup(request, templategroup_id):
                                                                        'is_root':model.templategroup_short_name == 'root',
                                                                        'delete_url':reverse('thunderchild.template_views.delete_templategroup', args=[templategroup_id])})
     else:
-        form = models.TemplateGroupForm(instance=model)
+        form = model_forms.TemplateGroupForm(instance=model)
         return render(request, 'thunderchild/edit_templategroup.html', {'form':form, 
                                                                    'templategroup_id':templategroup_id,
                                                                    'is_root':model.templategroup_short_name == 'root',
@@ -61,7 +62,7 @@ def templates(request):
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def create_template(request, templategroup_id):
     if request.method == 'POST':
-        form = models.TemplateForm(request.POST)
+        form = model_forms.TemplateForm(request.POST)
         if form.is_valid():
             model = models.Template(**form.cleaned_data)
             model.template_uid = '{}/{}'.format(models.TemplateGroup.objects.get(pk=model.templategroup.id).templategroup_short_name, model.template_short_name)
@@ -70,7 +71,7 @@ def create_template(request, templategroup_id):
         else:
             return render(request, 'thunderchild/create_template.html', {'form':form, 'templategroup_id':templategroup_id})
     else:
-        form = models.TemplateForm(initial={'templategroup':templategroup_id})
+        form = model_forms.TemplateForm(initial={'templategroup':templategroup_id})
         return render(request, 'thunderchild/create_template.html', {'form':form, 'templategroup_id':templategroup_id})
 
 
@@ -78,7 +79,7 @@ def create_template(request, templategroup_id):
 def edit_template(request, templategroup_id, template_id):
     model = get_object_or_404(models.Template, pk=template_id)
     if request.method == 'POST':
-        form = models.TemplateForm(request.POST, instance=model)
+        form = model_forms.TemplateForm(request.POST, instance=model)
         if form.is_valid():
             form.save()
             return redirect('thunderchild.template_views.templates')
@@ -90,7 +91,7 @@ def edit_template(request, templategroup_id, template_id):
                                                                   'is_index':model.template_short_name == 'index',
                                                                   'delete_url':reverse('thunderchild.template_views.delete_template', args=[templategroup_id, template_id])})
     else:
-        form = models.TemplateForm(instance=model)
+        form = model_forms.TemplateForm(instance=model)
         return render(request, 'thunderchild/edit_template.html', {'form':form, 
                                                               'templategroup_id':templategroup_id,
                                                               'templategroup_short_name':model.templategroup.templategroup_short_name,

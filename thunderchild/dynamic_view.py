@@ -10,7 +10,7 @@ from django.template.loader import get_template
 def dynamic_view(request, path):
     context = {}
     # Split the path into segments and add each to our context. 
-    # Note we use path instead of request.path_info as the former does not include the part of the url where are app is mounted.
+    # Note we use path instead of request.path_info as the former does not include the part of the url where the app is mounted.
     # For example, if our app is mounted at example.com/foo segment_1 will ALWAYS be equal to foo if splitting on request.path_info.
     segments = [segment for segment in path.split('/') if segment]
     for index, value in enumerate(segments):
@@ -41,7 +41,6 @@ def dynamic_view(request, path):
     # If we have our template cached no need to process it further. Simply return it.
     cached_template = cache.get(path)
     if cached_template:
-        print 'returning cached template'
         return HttpResponse(cached_template, content_type=model.template_content_type)
     
     compiled_template = get_template(template_name)

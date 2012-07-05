@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
-from thunderchild import models
-from thunderchild import forms
+from django.shortcuts import render, redirect, get_object_or_404
+from thunderchild import forms, model_forms, models
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -21,7 +20,7 @@ def fieldgroups(request):
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def create_fieldgroup(request):
     if request.method == 'POST':
-        form = models.FieldGroupForm(request.POST)
+        form = model_forms.FieldGroupForm(request.POST)
         if form.is_valid():
             model = models.FieldGroup(**form.cleaned_data)
             model.save()
@@ -29,7 +28,7 @@ def create_fieldgroup(request):
         else:
             return render(request, 'thunderchild/create_fieldgroup.html', {'form':form})
     else:
-        form = models.FieldGroupForm()
+        form = model_forms.FieldGroupForm()
         return render(request, 'thunderchild/create_fieldgroup.html', {'form':form})
     
     
@@ -37,14 +36,14 @@ def create_fieldgroup(request):
 def edit_fieldgroup(request, fieldgroup_id):
     model = get_object_or_404(models.FieldGroup, pk=fieldgroup_id)
     if request.method == 'POST':
-        form = models.FieldGroupForm(request.POST, instance=model)
+        form = model_forms.FieldGroupForm(request.POST, instance=model)
         if form.is_valid():
             form.save()
             return redirect('thunderchild.field_views.fieldgroups')
         else:
             return render(request, 'thunderchild/edit_fieldgroup.html', {'form':form, 'fieldgroup_id':fieldgroup_id})
     else:
-        form = models.FieldGroupForm(instance=model)
+        form = model_forms.FieldGroupForm(instance=model)
         return render(request, 'thunderchild/edit_fieldgroup.html', {'form':form, 'fieldgroup_id':fieldgroup_id})
 
 
@@ -57,7 +56,7 @@ def delete_fieldgroup(request, fieldgroup_id):
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def create_field(request, fieldgroup_id):
     if request.method == 'POST':
-        form = models.FieldForm(request.POST)
+        form = model_forms.FieldForm(request.POST)
         if form.is_valid():
             model = models.Field(**form.cleaned_data)
             model.save()
@@ -66,7 +65,7 @@ def create_field(request, fieldgroup_id):
             model = get_object_or_404(models.FieldGroup, pk=fieldgroup_id)
             return render(request, 'thunderchild/create_field.html', {'form':form, 'fieldgroup_id':fieldgroup_id, 'fieldgroup_name':model.fieldgroup_name})
     else:
-        form = models.FieldForm(initial={'fieldgroup':fieldgroup_id})
+        form = model_forms.FieldForm(initial={'fieldgroup':fieldgroup_id})
         model = get_object_or_404(models.FieldGroup, pk=fieldgroup_id)
         return render(request, 'thunderchild/create_field.html', {'form':form, 'fieldgroup_id':fieldgroup_id, 'fieldgroup_name':model.fieldgroup_name})
 
@@ -75,14 +74,14 @@ def create_field(request, fieldgroup_id):
 def edit_field(request, fieldgroup_id, field_id):
     model = get_object_or_404(models.Field, pk=field_id)
     if request.method == 'POST':
-        form = models.FieldForm(request.POST, instance=model)
+        form = model_forms.FieldForm(request.POST, instance=model)
         if form.is_valid():
             form.save()
             return redirect('thunderchild.field_views.fieldgroups')
         else:
             return render(request, 'thunderchild/edit_field.html', {'form':form, 'fieldgroup_id':fieldgroup_id, 'field_id':field_id, 'fieldgroup_name':model.fieldgroup.fieldgroup_name})
     else:
-        form = models.FieldForm(instance=model)
+        form = model_forms.FieldForm(instance=model)
         delete_url = reverse(delete_field, args=[model.fieldgroup.id, model.id])
         return render(request, 'thunderchild/edit_field.html', {'form':form, 
                                                                 'fieldgroup_id':fieldgroup_id, 

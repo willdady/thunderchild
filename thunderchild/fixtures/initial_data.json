@@ -28,5 +28,13 @@
     		"template_cache_timeout":"604800",
     		"template_content":"User-agent: *\rDisallow: {% url thunderchild.views.dashboard %}/"
 		}
+	},
+	{
+		"model":"thunderchild.SiteSettings",
+		"pk":1,
+		"fields":{
+			"comment_success_url":"/",
+			"comment_error_url":"/"
+		}
 	}
 ]

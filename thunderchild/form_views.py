@@ -1,11 +1,11 @@
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse_lazy
-from thunderchild import models
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import HttpResponseNotAllowed
 from django.core.mail import send_mail
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.urlresolvers import reverse_lazy
+from django.http import HttpResponseNotAllowed
+from django.shortcuts import render, redirect, get_object_or_404
 from smtplib import SMTPException
+from thunderchild import model_forms, models
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def contactforms(request):
@@ -27,14 +27,14 @@ def contactforms(request):
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def create_contactform(request):
     if request.method == 'POST':
-        form = models.ContactFormForm(request.POST)
+        form = model_forms.ContactFormForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('thunderchild.form_views.contactforms')
         else:
             return render(request, 'thunderchild/create_contactform.html', {'form':form})
     else:
-        form = models.ContactFormForm()
+        form = model_forms.ContactFormForm()
         return render(request, 'thunderchild/create_contactform.html', {'form':form})
 
 
@@ -42,14 +42,14 @@ def create_contactform(request):
 def edit_contactform(request, contactform_id):
     model = get_object_or_404(models.ContactForm, pk=contactform_id)
     if request.method == 'POST':
-        form = models.ContactFormForm(request.POST, instance=model)
+        form = model_forms.ContactFormForm(request.POST, instance=model)
         if form.is_valid():
             form.save()
             return redirect('thunderchild.form_views.contactforms')
         else:
             return render(request, 'thunderchild/edit_contactform.html', {'form':form, 'contactform_id':contactform_id})
     else:
-        form = models.ContactFormForm(instance=model)
+        form = model_forms.ContactFormForm(instance=model)
         return render(request, 'thunderchild/edit_contactform.html', {'form':form, 'contactform_id':contactform_id})
     
     

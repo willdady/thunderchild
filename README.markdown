@@ -24,7 +24,7 @@ if you are new to Django or need a refresher. The following assumes you have set
 1. Create your Django project.
 2. Copy thunderchild folder to the root of your project (the directory containing *manage.py*).
 3. Edit *settings.py* inside your project's main package to include your Database connection details. Include settings required by Thunderchild - See Settings section below.
-4. Edit *urls.py* inside your project's main package to include Thunderchild's own *urls.py*. It is strongly recommended Thunderchild is mounted at the root of your website as shown below. It must be
+4. Edit *urls.py* inside your project's main package to include Thunderchild's own *urls.py*. It is strongly recommended that Thunderchild is mounted at the root of your website as shown below. It must be
 included as the last item.
 
 	```
@@ -60,5 +60,50 @@ In addition to the default settings provided when creating a project with Django
 4. If you are installing in a development environment you should set DEBUG = True and must also add INTERNAL_IPS = ('127.0.0.1',). Remember to set Debug = False if deploying to a production environment.
 
 
+## Templates
 
+### Context variables
 
+Templates created by Thunderchild have the following variables automatically set in the context and are available in all templates.
+
+*segment_1, segment_2, segment_3 etc.*
+
+Each segment of the current URL. For example, if the URL is http://example.com/blog/archive/2012 you would have segment_1 = 'blog', segment_2 = 'archive', segment_3 = '2012'
+
+*last_segment*
+
+The last segment of the URL. In the above example segment_3 and last_segment would both equal '2012'. You would often use last_segment to retrive an Entry by it's slug.
+
+### Template tags
+
+Thunderchild comes with it's own set of template tags for retrieving entries from the system and rendering them. Thunderchild automatically adds the following load tag to new Templates.
+
+	```
+	{% load thunderchild_tags %}
+	```
+	
+In order to use the following Thunderchild tags the above load tag *must* be present at the top of your template.
+
+*{% entry %}*
+
+Usage:
+
+	```
+	{% entry slug='test' as my_entry %}
+	```
+
+*{% entries %}*
+
+Usage:
+
+	```
+	{% entries 'blog_entry' offset=2 limit=3 year=2012 order_by='-title, author' as blog_entries %}
+	```
+	
+*{% template_url %}*
+
+Usage:
+
+	```
+	{% template_url "staff/john-smith" %}
+	```

@@ -1,0 +1,71 @@
+{% extends "thunderchild/base.html" %}
+
+{% block content %}
+		
+		
+		<header>
+			<h1>Comments</h1>
+		</header>
+		
+		<div class="row">
+			<table class="span12" border="1">
+			<thead>
+				<tr>
+					<th>
+						<label for="select_all_checkbox" class="visuallyhidden">Select All</label>
+						<input id="select_all_checkbox" type="checkbox" />
+					</th>
+					<th>Entry</th>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Website</th>
+					<th>Created</th>
+					<th>Is Spam</th>
+					<th>Is Approved</th>
+					<th>Edit</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for comment in comments %}
+				<tr>
+					<td>
+						<label for="comment_{{ comment.id }}_checkbox" class="visuallyhidden">Comment {{ comment.id }} checkbox</label>
+						<input id="comment_{{ comment.id }}_checkbox" name="comment_{{ comment.id }}_checkbox" type="checkbox" data-comment-id="{{ comment.id }}" />
+					</td>
+					<td>{{ comment.entry.title }}</td>
+					<td>{{ comment.name }}</td>
+					<td>{{ comment.email }}</td>
+					<td>{% if comment.website %}<a href="{{ comment.website }}" target="_blank">{{ comment.website }}</a>{% endif %}</td>
+					<td>{{ comment.created }}</td>
+					<td>{{ comment.is_spam }}</td>
+					<td>{{ comment.is_approved }}</td>
+					<td><a href="{% url thunderchild.comment_views.edit comment.id %}">Edit</a></td>
+				</tr>
+				{% endfor %}
+			</tbody>
+			</table>
+		</div>
+		
+		{% if comments.paginator.num_pages > 1 %}
+		<hr />
+		<div class="pagination pagination-centered">
+			<ul>
+				{% if comments.has_previous %}
+					<li><a href="?page={{ page.previous_page_number }}">«</a></li>
+				{% endif %}
+				{% for num in comments.paginator.page_range %}
+					{% ifequal comments.number num %}
+						<li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
+					{% else %}
+						<li><a href="?page={{ num }}">{{ num }}</a></li>
+					{% endifequal %}
+				{% endfor %}
+				{% if comments.has_next %}
+					<li><a href="?page={{ comments.next_page_number }}">»</a></li>
+				{% endif %}
+			</ul>
+		</div>
+		{% endif %}
+		
+{% endblock %}
+

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from thunderchild import models
+from thunderchild import model_forms
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -15,7 +16,7 @@ def entrytypes(request):
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def create_entrytype(request):
     if request.method == 'POST':
-        form = models.EntryTypeForm(request.POST)
+        form = model_forms.EntryTypeForm(request.POST)
         if form.is_valid():
             model = models.EntryType(**form.cleaned_data)
             model.save()
@@ -23,7 +24,7 @@ def create_entrytype(request):
         else:
             return render(request, 'thunderchild/create_entrytype.html', {'form':form})
     else:
-        form = models.EntryTypeForm()
+        form = model_forms.EntryTypeForm()
         return render(request, 'thunderchild/create_entrytype.html', {'form':form})
     
     
@@ -31,7 +32,7 @@ def create_entrytype(request):
 def edit_entrytype(request, entrytype_id):
     model = get_object_or_404(models.EntryType, pk=entrytype_id)
     if request.method == 'POST':
-        form = models.EntryTypeForm(request.POST, instance=model)
+        form = model_forms.EntryTypeForm(request.POST, instance=model)
         if form.is_valid():
             form.save()
             return redirect('thunderchild.entry_views.entrytypes')
@@ -40,7 +41,7 @@ def edit_entrytype(request, entrytype_id):
                                                                    'entrytype_id':entrytype_id,
                                                                    'delete_url':reverse('thunderchild.entry_views.delete_entrytype', args=[entrytype_id])})
     else:
-        form = models.EntryTypeForm(instance=model)
+        form = model_forms.EntryTypeForm(instance=model)
         return render(request, 'thunderchild/edit_entrytype.html', {'form':form, 
                                                                'entrytype_id':entrytype_id,
                                                                'delete_url':reverse('thunderchild.entry_views.delete_entrytype', args=[entrytype_id])})
@@ -83,7 +84,7 @@ def entries(request):
         entries.append(entry.dict)
     entry_types = models.EntryType.objects.all()
     
-    form = models.EntriesFilterForm(request.GET)
+    form = model_forms.EntriesFilterForm(request.GET)
     
     return render(request, 'thunderchild/entries.html', {'page':p, 'entries':entries, 'entry_types':entry_types, 'form':form})
     
@@ -92,7 +93,7 @@ def entries(request):
 def create_entry(request, entrytype_id):
     entrytype_model = get_object_or_404(models.EntryType, pk=entrytype_id)
     if request.method == 'POST':
-        form1 = models.EntryForm(entrytype_model=entrytype_model, data=request.POST)
+        form1 = model_forms.EntryForm(entrytype_model=entrytype_model, data=request.POST)
         form2 = entrytype_model.get_form(request.POST)
         # As it's possible form2 == None we must check it' existence. If it's not valid there's no point validating form1.
         if form2:
@@ -123,7 +124,7 @@ def create_entry(request, entrytype_id):
                                                                       'has_categorygroup':entrytype_model.categorygroup})
     else:
         creation_date_value = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        form1 = models.EntryForm(entrytype_model=entrytype_model, initial={'entrytype':entrytype_id, 'creation_date':creation_date_value})
+        form1 = model_forms.EntryForm(entrytype_model=entrytype_model, initial={'entrytype':entrytype_id, 'creation_date':creation_date_value})
         form2 = entrytype_model.get_form()
         return render(request, 'thunderchild/create_entry.html', {'form1':form1, 
                                                                   'form2':form2, 
@@ -137,9 +138,18 @@ def edit_entry(request, entry_id):
     entry_model = get_object_or_404(models.Entry, pk=entry_id)
     entrytype_model = entry_model.entrytype
     if request.method == 'POST':
-        form1 = models.EntryForm(entrytype_model=entrytype_model, data=request.POST, instance=entry_model)
+        form1 = model_forms.EntryForm(entrytype_model=entrytype_model, data=request.POST, instance=entry_model)
         form2 = entrytype_model.get_form(request.POST)
-        if form1.is_valid() and form2.is_valid():
+        # As it's possible form2 == None we must check it' existence. If it's not valid there's no point validating form1.
+        if form2:
+            if not form2.is_valid():
+                return render(request, 'thunderchild/edit_entry.html', {'form1':form1, 
+                                                                    'form2':form2, 
+                                                                    'entry_id':entry_id, 
+                                                                    'entrytype_name':entrytype_model.entrytype_name,
+                                                                    'has_categorygroup':entrytype_model.categorygroup})
+                
+        if form1.is_valid():
             form1.instance.author = request.user
             form1.save()
             # Get the Fields and FieldData models associated with this Entry.
@@ -173,7 +183,7 @@ def edit_entry(request, entry_id):
             if type(value) == models.MediaAsset:
                 media_assets[key] = value
                 
-        form1 = models.EntryForm(entrytype_model=entrytype_model, initial=data)
+        form1 = model_forms.EntryForm(entrytype_model=entrytype_model, initial=data)
         form2 = entrytype_model.get_form(initial=data)
         return render(request, 'thunderchild/edit_entry.html', {'form1':form1, 
                                                                 'form2':form2, 

@@ -29,7 +29,7 @@ def get_entries(context, entrytype_short_name, *args, **kwargs):
         return None
     
     # We get all entries of this EntryType EXCEPT those which have been marked as published = False AND/OR have expired.
-    entries = models.Entry.objects.filter(entrytype__exact=entrytype).filter(is_published__exact=True).exclude(expiration_date__lt=datetime.now())
+    entries = models.Entry.objects.filter(entrytype__exact=entrytype, is_published__exact=True).exclude(expiration_date__lt=datetime.now())
 
     if order_by:
         order_by = [field_name.strip() for field_name in order_by.split(',')]
@@ -60,9 +60,9 @@ def get_entry(*args, **kwargs):
     """
     
     Example:
-    {% get_entry slug='test' as my_entry %}
+    {% entry slug='test' as my_entry %}
     or
-    {% get_entry id=3 as my_entry %}
+    {% entry id=3 as my_entry %}
     
     """
     id = kwargs.get('id')
@@ -75,9 +75,12 @@ def get_entry(*args, **kwargs):
     except models.Entry.DoesNotExist:
         return None
      
-    
-    if not model.is_published or model.expiration_date < now(): # Note we use Django's 'now' function as it will return either a naive or aware datetime according to settings.USE_TZ.
+    if not model.is_published:
         return None
+    
+    if model.expiration_date:
+        if model.expiration_date < now(): # Note we use Django's 'now' function as it will return either a naive or aware datetime according to settings.USE_TZ.
+            return None
     
     return model.dict
         
@@ -152,4 +155,4 @@ def get_contactform(*args, **kwargs):
     
     return {'action':action, 'method':method, 'form':form}
     
-    
+       
