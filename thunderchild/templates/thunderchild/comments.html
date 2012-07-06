@@ -7,13 +7,27 @@
 			<h1>Comments</h1>
 		</header>
 		
+		<form id="comments_form" action="{% url thunderchild.comment_views.bulk_action %}" method="post">{% csrf_token %}
+		<ul>
+			<li>
+				<select name="action">
+					<option value="approve">Approve selected</option>
+					<option value="unapprove">Unapprove selected</option>
+					<option value="delete">Delete selected</option>
+				</select>
+			</li>
+			<li><input type="submit" value="Go" class="btn" /></li>
+		</ul>
+	
+		<hr />
+		
 		<div class="row">
 			<table class="span12" border="1">
 			<thead>
 				<tr>
 					<th>
 						<label for="select_all_checkbox" class="visuallyhidden">Select All</label>
-						<input id="select_all_checkbox" type="checkbox" />
+						<input id="select_all_checkbox" name="select_all_checkbox" type="checkbox" value="0" />
 					</th>
 					<th>Entry</th>
 					<th>Name</th>
@@ -30,7 +44,7 @@
 				<tr>
 					<td>
 						<label for="comment_{{ comment.id }}_checkbox" class="visuallyhidden">Comment {{ comment.id }} checkbox</label>
-						<input id="comment_{{ comment.id }}_checkbox" name="comment_{{ comment.id }}_checkbox" type="checkbox" data-comment-id="{{ comment.id }}" />
+						<input id="comment_{{ comment.id }}_checkbox" name="comment" value="{{ comment.id }}" type="checkbox" data-comment-id="{{ comment.id }}" />
 					</td>
 					<td>{{ comment.entry.title }}</td>
 					<td>{{ comment.name }}</td>
@@ -45,6 +59,7 @@
 			</tbody>
 			</table>
 		</div>
+		</form>
 		
 		{% if comments.paginator.num_pages > 1 %}
 		<hr />

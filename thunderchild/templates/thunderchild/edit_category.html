@@ -32,15 +32,19 @@
 					{{ field }}
 				{% endif %}
 			{% endfor %}
-			<div class="row">
-				<input class="btn pull-right" type="submit" value="Save" />
+			<div class="pull-right">
+				<a class="btn btn-danger" data-toggle="modal" href="#confirm_delete_modal"><i class="icon-trash icon-white"></i> Delete</a>
+				<input class="btn" type="submit" value="Save" />
 			</div>
 		</form>
+		
+		{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this category?" modal_delete_url=delete_url %}
 		
 {% endblock %}
 
 {% block javascript %}
 <script type="text/javascript">
+	$("#confirm_delete_modal").modal().modal("hide");
 	Utilities.autoSlug( $("#id_category_name"), $("#id_category_short_name") );
 	// This stops label elements from triggering their associated fields when clicked.
 	$(".field_label_holder label").click(function(e){

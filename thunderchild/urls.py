@@ -57,6 +57,7 @@ urlpatterns = patterns('',
     (r'^backend/comments/submit/(\d+)$', 'thunderchild.comment_views.submit'),
     (r'^backend/comments/edit/(\d+)$', 'thunderchild.comment_views.edit'),
     (r'^backend/comments/delete/(\d+)$', 'thunderchild.comment_views.delete'),
+    (r'^backend/comments/bulk-action$', 'thunderchild.comment_views.bulk_action'),
 )
 
 if settings.DEBUG:

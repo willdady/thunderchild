@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from thunderchild import models
 from thunderchild import forms
 from thunderchild import model_forms
@@ -77,10 +77,16 @@ def edit_category(request, categorygroup_id, category_id):
             form.save()
             return redirect('thunderchild.category_views.categorygroups')
         else:
-            return render(request, 'thunderchild/edit_category.html', {'form':form, 'categorygroup_id':categorygroup_id, 'category_id':category_id})
+            return render(request, 'thunderchild/edit_category.html', {'form':form, 
+                                                                       'categorygroup_id':categorygroup_id, 
+                                                                       'category_id':category_id,
+                                                                       'delete_url':reverse('thunderchild.category_views.delete_category', args=[categorygroup_id, category_id])})
     else:
         form = model_forms.CategoryForm(instance=model)
-        return render(request, 'thunderchild/edit_category.html', {'form':form, 'categorygroup_id':categorygroup_id, 'category_id':category_id})
+        return render(request, 'thunderchild/edit_category.html', {'form':form, 
+                                                                   'categorygroup_id':categorygroup_id, 
+                                                                   'category_id':category_id,
+                                                                   'delete_url':reverse('thunderchild.category_views.delete_category', args=[categorygroup_id, category_id])})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))   

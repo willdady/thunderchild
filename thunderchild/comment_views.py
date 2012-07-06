@@ -1,4 +1,4 @@
-from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotAllowed, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from thunderchild import models, model_forms
 from django.conf import settings
@@ -50,6 +50,33 @@ def delete(request, comment_id):
     comment_model = get_object_or_404(models.Comment, pk=comment_id)
     comment_model.delete()
     return redirect('thunderchild.comment_views.comments')
+
+
+@login_required(login_url=reverse_lazy('thunderchild.views.login'))
+def bulk_action(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        comments = request.POST.getlist('comment')
+        
+        if action == None or comments == None:
+            return redirect('thunderchild.comment_views.comments')
+        
+        if action == 'delete':
+            for comment_id in comments:
+                print 'YO', comment_id
+                models.Comment.objects.filter(id__exact=comment_id).delete()
+        elif action == 'approve' or action == 'unapprove':
+            for comment_id in comments:
+                try:
+                    comment = models.Comment.objects.get(pk=comment_id)
+                except models.Comment.DoesNotExist:
+                    continue
+                comment.is_approved = action == 'approve'
+                comment.save()
+            
+        return redirect('thunderchild.comment_views.comments')
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
 
 
 def submit(request, entry_id):
