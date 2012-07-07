@@ -21,7 +21,7 @@
 				{% if not field.is_hidden %}
 				<div class="accordion-group">
 						<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
-							{{ field.label_tag }}
+							{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
 							{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
 						</div>
 						<div id="form_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">

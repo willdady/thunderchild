@@ -287,8 +287,8 @@ class ContactForm(models.Model):
     contactform_name = models.CharField(max_length=255, unique=True, verbose_name='Name')
     contactform_short_name = models.SlugField(max_length=255, unique=True, verbose_name='Short name')
     recipient_emails = models.CharField(max_length=1000, help_text="A comma separated list of recipient email addresses which will receive data submitted via this form.", verbose_name='Recipients')
-    success_url = models.CharField(max_length=1000, verbose_name='Success URL', help_text="A URL to redirect the user to once they have successfully submitted the form.")
-    error_url = models.CharField(max_length=1000, verbose_name='Error URL', help_text="A URL to redirect the user to if an error occurs while submitting the form.")
+    success_url = models.CharField(max_length=1000, verbose_name='Success URL', help_text="A URL to redirect the user to once they have successfully submitted the form. eg. /contact/success")
+    error_url = models.CharField(max_length=1000, verbose_name='Error URL', help_text="A URL to redirect the user to if an error occurs while submitting the form.  eg. /contact/error")
     
     def get_recipient_list(self):
         return [x.strip() for x in self.recipient_emails.split(',')]

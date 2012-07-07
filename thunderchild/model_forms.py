@@ -5,6 +5,7 @@ from django.forms.widgets import TextInput, RadioSelect, HiddenInput, Textarea, 
     Select
 from thunderchild import models
 import thunderchild.forms
+import json
 
 
 class SiteSettingsForm(forms.ModelForm):
@@ -138,14 +139,18 @@ class TemplateGroupForm(ModelForm):
                    }
         
       
-TEMPLATE_CONTENT_TYPES = (('text/html', 'HTML'),
-                          ('text/xhtml+xml', 'XHTML'), 
-                          ('text/css', 'CSS'), 
-                          ('text/xml', 'XML'), 
-                          ('application/rss+xml', 'RSS'), 
-                          ('application/json', 'JSON'),
-                          ('application/javascript', 'Javascript'),
-                          ('text/plain', 'Text'))  
+TEMPLATE_CONTENT_TYPES = (('text/html', 'HTML - text/html'),
+                          ('text/xhtml+xml', 'XHTML - text/xhtml+xml'), 
+                          ('text/css', 'CSS - text/css'),
+                          ('application/javascript', 'Javascript - application/javascript'), 
+                          ('application/json', 'JSON - application/json'),
+                          ('application/rss+xml', 'RSS - application/rss+xml'), 
+                          ('application/atom+xml', 'Atom - application/atom+xml'),
+                          ('text/xml', 'XML - text/xml'),
+                          ('text/csv', 'CSV - text/csv'),  
+                          ('application/soap+xml', 'SOAP - application/soap+xml'), 
+                          ('text/vcard', 'vCard - text/vcard'),
+                          ('text/plain', 'Text - text/plain'))  
 
 class TemplateForm(ModelForm):
     class Meta:
