@@ -43,6 +43,7 @@ class DynamicForm(forms.Form):
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=30)
     password = forms.CharField(widget=forms.PasswordInput())
+    remember_me = forms.BooleanField(required=False)
                 
                 
 class TextToChoicesField(forms.CharField):

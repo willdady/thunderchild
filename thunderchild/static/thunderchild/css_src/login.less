@@ -6,5 +6,33 @@
   margin-top:200px;
   form {
     margin:0;
+    &.form-horizontal {
+      .control-label {
+        width:auto;
+      }
+      .controls {
+        margin:0;
+        float:right;
+      }
+    }
+  }
+  .alert {
+    &.alert-error {
+      ul {
+        margin:0;
+        list-style:none;
+      }
+    }
+  }
+}
+#login-control-group {
+  margin:0;
+  .controls {
+    width:100%;
+    label {
+      color:@grayLight;
+      width:auto;
+      float:left;
+    }
   }
 }

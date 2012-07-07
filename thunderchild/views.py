@@ -17,12 +17,16 @@ def login(request):
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
         if form.is_valid():
-            username = request.POST['username']
-            password = request.POST['password']
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            remember_me = request.POST.get('remember_me')
             user = authenticate(username=username, password=password)
             if user is not None:
                 if not user.is_active: return render(request, 'thunderchild/login.html', {'form':form, 'next':next, 'errors':['Account is inactive']})
                 if not user.is_staff: return render(request, 'thunderchild/login.html', {'form':form, 'next':next, 'errors':['Your account is not authorized to access this area']})
+                # If remember me is False, set session expiry to 0 so the login will remain active for the current session only.
+                if not remember_me:
+                    request.session.set_expiry(0)
                 do_login(request, user)
                 if next:
                     return redirect(next)
@@ -31,7 +35,7 @@ def login(request):
             else:
                 return render(request, 'thunderchild/login.html', {'form':form, 'next':next, 'errors':['Invalid login']})
         else:
-            return render(request, 'thunderchild/login.html', {'form':form, 'next':next})
+            return render(request, 'thunderchild/login.html', {'form':form, 'next':next, 'errors':['Invalid login']})
     else:
         form = forms.LoginForm()
         return render(request, 'thunderchild/login.html', {'form':form, 'next':next})
