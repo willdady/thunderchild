@@ -23,6 +23,9 @@ class DynamicForm(forms.Form):
                 self.fields[field.field_short_name] = forms.DateTimeField(help_text=field.field_instructions, widget=forms.TextInput(attrs={'class':'input-medium', 'data-field-type':'datetime'}))
             if field.field_type == 'date':
                 self.fields[field.field_short_name] = forms.DateField(help_text=field.field_instructions, widget=forms.TextInput(attrs={'class':'input-medium', 'data-field-type':'date'}))
+            if field.field_type == 'boolean':
+                self.fields[field.field_short_name] = forms.BooleanField(help_text=field.field_instructions)
+                self.fields[field.field_short_name].required = False # Required is set to False regardless of the value of field.field_is_required because a False value is never sent with the form.
             if field.field_type == 'select':
                 options = json.loads(field.field_options)
                 self.fields[field.field_short_name] = forms.ChoiceField(help_text=field.field_instructions, choices=options['field_choices'])
@@ -35,8 +38,8 @@ class DynamicForm(forms.Form):
             if field.field_type == 'file':  
                 self.fields[field.field_short_name] = forms.CharField(help_text=field.field_instructions, widget=forms.TextInput(attrs={'data-field-type':'file'}))
                 
-            
-            self.fields[field.field_short_name].required = field.field_is_required
+            if not field.field_type == 'boolean':
+                self.fields[field.field_short_name].required = field.field_is_required
             self.fields[field.field_short_name].field_collapsed_by_default = field.field_collapsed_by_default
             
                 

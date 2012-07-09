@@ -53,6 +53,7 @@ FIELD_TYPES = (('text', 'Text'),
                ('textarea', 'TextArea'), 
                ('datetime', 'DateTime'),
                ('date', 'Date'),
+               ('boolean', 'True/False'),
                ('select', 'Select Dropdown'),
                ('checkboxes', 'Checkboxes'),
                ('radiobuttons', 'Radio Buttons'),
@@ -60,7 +61,7 @@ FIELD_TYPES = (('text', 'Text'),
 
 class FieldForm(ModelForm):
     
-    maxlength = forms.IntegerField(help_text='The maximum number of characters allowed.', initial=128, required=False, widget=TextInput(attrs={'class':'input-small'}))
+    maxlength = forms.IntegerField(help_text='The maximum number of characters this field allows.', initial=128, required=False, widget=TextInput(attrs={'class':'input-small'}))
     field_choices = thunderchild.forms.TextToChoicesField(help_text='One choice per line. Minimum 2 choices.', required=False, widget=Textarea(attrs={'class':'input-large'}))
     
     def __init__(self, *args, **kwargs):
@@ -185,7 +186,7 @@ class TemplateForm(ModelForm):
             if self.instance.id:
                 #Find a Template with matching templategroup and template_short_name as specified in our cleaned_data. If this template is NOT
                 #the same as our instance then template_short_name is already assigned to a different Template in the same group and therefore can't be changed.
-                existing = models.Template.objects.filter(templategroup__exact=templategroup).filter(template_short_name__exact=template_short_name)
+                existing = models.Template.objects.filter(templategroup__exact=templategroup, template_short_name__exact=template_short_name)
                 if len(existing) == 0:
                     return cleaned_data
                 existing = existing[0]
@@ -205,7 +206,8 @@ class TemplateForm(ModelForm):
 class CategoryGroupForm(ModelForm):
     class Meta:
         model = models.CategoryGroup
-        widgets = {'categorygroup_name':TextInput(attrs={'class':'input-large'})}    
+        widgets = {'categorygroup_name':TextInput(attrs={'class':'input-large'}),
+                   'categorygroup_short_name':TextInput(attrs={'class':'input-large'})}    
     
 
 class CategoryForm(ModelForm):

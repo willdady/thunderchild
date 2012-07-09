@@ -105,12 +105,12 @@ class Field(models.Model):
     '''
     fieldgroup = models.ForeignKey('FieldGroup')
     field_type = models.CharField(max_length=20, verbose_name='Type')
-    field_name = models.CharField(max_length=80)
+    field_name = models.CharField(max_length=80, verbose_name='Name')
     field_short_name = models.SlugField(max_length=80, unique=True, verbose_name='Short name')
-    field_instructions = models.CharField(max_length=500, blank=True, verbose_name='Instructions')
+    field_instructions = models.CharField(max_length=500, blank=True, verbose_name='Instructions', help_text='Useful instructions on using this field.')
     field_is_required = models.BooleanField(default=True, choices=((False, 'No'),(True, 'Yes')))
     field_display_order = models.IntegerField(default=0, verbose_name='Display order', help_text='The display order of this field in relation to other fields in this group.')
-    field_collapsed_by_default = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Collapsed by default')
+    field_collapsed_by_default = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Collapsed by default', help_text='A collapsed field will show only the field name by default and requires a click to expand. Useful for non-required fields.')
     field_options = models.CharField(max_length=1000)
     
     def __unicode__(self):
@@ -186,7 +186,7 @@ class TemplateGroup(models.Model):
     
 class Template(models.Model):
     templategroup = models.ForeignKey('TemplateGroup')
-    template_short_name = models.CharField(max_length=125, verbose_name='Name', validators=[validate_lowercase, validate_urlchars])
+    template_short_name = models.CharField(max_length=125, verbose_name='Name', validators=[validate_lowercase, validate_urlchars], help_text="A URL friendly name containing only letters, numbers and/or the special characters -, _, $, ., +.")
     template_uid = models.CharField(max_length=255, unique=True)
     template_content_type = models.CharField(max_length=50, default='text/html', verbose_name='Content type')
     template_cache_timeout = models.IntegerField(default=0, verbose_name='Cache timeout', help_text='Number of seconds the rendered template should be cached for before being re-rendered. Recommended for templates that do not change often.')
@@ -198,7 +198,8 @@ class Template(models.Model):
                
                
 class CategoryGroup(models.Model):
-    categorygroup_name = models.CharField(max_length=255, unique=True, verbose_name='Name')
+    categorygroup_name = models.CharField(max_length=255, verbose_name='Name')
+    categorygroup_short_name = models.SlugField(max_length=255, unique=True, verbose_name='Short name')
     
     def __unicode__(self):
         return u'{}'.format(self.categorygroup_name)
@@ -206,8 +207,8 @@ class CategoryGroup(models.Model):
                
 class Category(models.Model):
     categorygroup = models.ForeignKey(CategoryGroup)
-    category_name = models.CharField(max_length=255, unique=True, verbose_name='Name')
-    category_short_name = models.SlugField(max_length=255, verbose_name='Short name')
+    category_name = models.CharField(max_length=255, verbose_name='Name')
+    category_short_name = models.SlugField(max_length=255, unique=True, verbose_name='Short name')
 
     def __unicode__(self):
         return u'{}'.format(self.category_name)
