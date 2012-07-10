@@ -57,6 +57,7 @@ FIELD_TYPES = (('text', 'Text'),
                ('select', 'Select Dropdown'),
                ('checkboxes', 'Checkboxes'),
                ('radiobuttons', 'Radio Buttons'),
+               ('color', 'Color'),
                ('file', 'File'))
 
 class FieldForm(ModelForm):

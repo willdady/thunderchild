@@ -2,6 +2,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}thunderchild/css/cupertino/jquery-ui-1.8.21.custom.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="{{ STATIC_URL }}thunderchild/css/farbtastic.css" type="text/css" media="screen"/>
 {% endblock %}
 
 {% block content %}
@@ -208,6 +209,7 @@
 {% block javascript %}
 <script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/jquery-ui-1.8.21.custom.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/farbtastic.js"></script>
 {% if debug %}
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/entry.js"></script>
@@ -257,5 +259,14 @@
 		e.preventDefault();
 	});
 	$("#tabs a:first").tab("show");
+	
+	// Activate color pickers
+	$('[data-field-type="color"]').each(function(i, el) {
+		console.log("OK");
+		var pickerID = "picker"+i;
+		var picker = $('<div id="'+pickerID+'" class="picker"></div>');
+		$(this).parent().append(picker)
+		$(picker).farbtastic($(this));
+	});
 </script>
 {% endblock %}
