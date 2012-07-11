@@ -8,6 +8,12 @@
 			<h1>Dashboard</h1>
 		</header>
 		
+		{% if user.first_name == '' or user.last_name == '' %}
+		<div class="alert">
+  			<strong>Warning!</strong> Your first and/or last name is not set for your account. Please fix by clicking 'Account' in the above header to edit your details.
+		</div>
+		{% endif %}
+		
 		<div class="row">
 			<section class="span6 dashboard-panel">blah1</section>
 			<section class="span6 dashboard-panel">blah2</section>
