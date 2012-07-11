@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 import thunderchild
-
+from thunderchild.validators import validate_color
 
 class DynamicForm(forms.Form):
     
@@ -38,7 +38,7 @@ class DynamicForm(forms.Form):
             if field.field_type == 'file':  
                 self.fields[field.field_short_name] = forms.CharField(help_text=field.field_instructions, widget=forms.TextInput(attrs={'data-field-type':'file'}))
             if field.field_type == 'color':  
-                self.fields[field.field_short_name] = forms.CharField(help_text=field.field_instructions, initial='#000000', widget=forms.TextInput(attrs={'data-field-type':'color'}))
+                self.fields[field.field_short_name] = forms.CharField(help_text=field.field_instructions, initial='#000000', validators=[validate_color], widget=forms.TextInput(attrs={'data-field-type':'color'}))
                 
             if not field.field_type == 'boolean':
                 self.fields[field.field_short_name].required = field.field_is_required
