@@ -57,7 +57,22 @@ In addition to the default settings provided when creating a project with Django
 1. Edit INSTALLED_APPS to add 'thunderchild' as the last item in the tuple.
 2. USE_TZ = True
 3. Edit TEMPLATE_LOADERS to add 'thunderchild.loaders.TemplateLoader'as the last item in the tuple.
-4. If you are installing in a development environment you should set DEBUG = True and must also add INTERNAL_IPS = ('127.0.0.1',). Remember to set Debug = False if deploying to a production environment.
+4. Add 'django.core.context_processors.request' to the [TEMPLATE_CONTEXT_PROCESSORS](https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors) tuple. This allows access to the request object within templates.
+
+	```
+	TEMPLATE_CONTEXT_PROCESSORS = (
+	    "django.contrib.auth.context_processors.auth",
+	    "django.core.context_processors.request",
+	    "django.core.context_processors.debug",
+	    "django.core.context_processors.i18n",
+	    "django.core.context_processors.media",
+	    "django.core.context_processors.static",
+	    "django.core.context_processors.tz",
+	    "django.contrib.messages.context_processors.messages"
+	)
+	```
+
+5. If you are installing in a development environment you should set DEBUG = True and must also add INTERNAL_IPS = ('127.0.0.1',). Remember to set Debug = False if deploying to a production environment.
 
 
 ## Templates

@@ -1,11 +1,11 @@
+from django.core.cache import cache
+from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.template import Template
+from django.template.context import RequestContext
+from django.template.loader import get_template
 from django.template.response import TemplateResponse
 from thunderchild.models import Template as TemplateModel
-from django.http import HttpResponse, Http404
-from django.template.context import RequestContext
-from django.core.cache import cache
-from django.template.loader import get_template
 
 def dynamic_view(request, path):
     context = {}
