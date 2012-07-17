@@ -16,8 +16,9 @@
 			<li><a href="#fields" data-toggle="tab">Fields</a></li>
 			<li><a href="#dates" data-toggle="tab">Dates</a></li>
 			<li><a href="#comments" data-toggle="tab">Comments</a></li>
+			{% if has_categorygroup %}
 			<li><a href="#categories" data-toggle="tab">Categories</a></li>
-			{% if has_categorygroup %}<li><a href="#categories" data-toggle="tab">Categories</a></li>{% endif %}
+			{% endif %}
 		</ul>
 		
 		<form action="{% url thunderchild.entry_views.create_entry entrytype_id %}" method="post">{% csrf_token %}

@@ -20,6 +20,11 @@ Utilities = (function() {
 		          dest.val(source.val().toLowerCase().replace(/[^_-a-zA-Z0-9\s]+/ig, "").replace(/\s+/g, "-"));
 		     });
 		},
+		autoAlphanumeric:function (source, dest) {
+		     source.keyup(function(e){
+		          dest.val(source.val().toLowerCase().replace(/[^_-a-zA-Z0-9\s]+/ig, "").replace(/\s+/g, "_"));
+		     });
+		},
 		insertAtCaret: function(areaId, text) {
 			var txtarea = document.getElementById(areaId);
 		    var scrollPos = txtarea.scrollTop;

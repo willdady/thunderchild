@@ -1,10 +1,12 @@
 body {
+  overflow-y: scroll;
   padding-top: 70px;
   background: url("images/bg.gif") #fcfcfc;
 }
 body.media-chooser {
   padding: 0;
   background: none;
+  overflow-y: visible;
 }
 input[type="text"].input-small,
 textarea.input-small,
@@ -106,7 +108,7 @@ h3 {
   top: 0px;
   height: 44px;
   width: 100%;
-  background: #0088cc;
+  background: #0088ee;
   z-index: 1029;
   -webkit-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.35);
   -moz-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.35);
@@ -125,6 +127,27 @@ div.ui-datepicker {
   -moz-box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.35);
   box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.35);
 }
+/* Hide only visually, but have it available for screenreaders: h5bp.com/v */
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+/* Extends the .visuallyhidden class to allow the element to be focusable when navigated to via the keyboard: h5bp.com/p */
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
 #login_form_holder {
   background: #fcfcfc;
   border: 1px solid #e5e5e5;
@@ -136,6 +159,28 @@ div.ui-datepicker {
 }
 #login_form_holder form {
   margin: 0;
+}
+#login_form_holder form.form-horizontal .control-label {
+  width: auto;
+}
+#login_form_holder form.form-horizontal .controls {
+  margin: 0;
+  float: right;
+}
+#login_form_holder .alert.alert-error ul {
+  margin: 0;
+  list-style: none;
+}
+#login-control-group {
+  margin: 0;
+}
+#login-control-group .controls {
+  width: 100%;
+}
+#login-control-group .controls label {
+  color: #999999;
+  width: auto;
+  float: left;
 }
 #group_pane,
 #template_pane {
@@ -167,7 +212,7 @@ div.ui-datepicker {
   cursor: pointer;
 }
 #group_pane ul li.selected {
-  background: #f1f1f1;
+  background: #d5edff;
 }
 #group_pane ul li i {
   width: 16px;
@@ -187,7 +232,7 @@ div.ui-datepicker {
   cursor: pointer;
 }
 #template_pane ul .selected {
-  background: #f1f1f1;
+  background: #d5edff;
 }
 #template_pane_controls {
   float: right;
@@ -228,6 +273,14 @@ div.ui-datepicker {
   -ms-user-select: none;
   user-select: none;
 }
+.field_label_holder label {
+  width: auto;
+  display: inline-block;
+}
+.field_label_holder .required {
+  color: #ff0000;
+  font-weight: bold;
+}
 .field_label_holder .alert-error {
   margin-top: 10px;
 }
@@ -250,6 +303,9 @@ div.ui-datepicker {
 }
 .accordion-group ul li label input {
   margin-right: 5px;
+}
+#categories ul li {
+  clear: both;
 }
 #user_group_form ul li {
   clear: both;
@@ -336,6 +392,46 @@ div.ui-datepicker {
   word-wrap: break-word;
   width: 130px;
   line-height: 1.3em;
+}
+.field_holder input[type="checkbox"] {
+  margin: 2px 5px 8px 0;
+}
+.field_holder input[data-field-type="color"] {
+  float: left;
+  margin-top: 83px;
+}
+.field_holder .picker {
+  float: left;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+.nav-tabs > .active > a,
+.nav-tabs > .active > a:hover {
+  background: url("images/bg.gif") #fcfcfc;
+}
+#entries_filter_form {
+  margin-bottom: 0px;
+}
+#entries_filter_form ul {
+  margin: 0;
+}
+#entries_filter_form ul li label {
+  margin: 4px 0px 0px 0px;
+}
+#entries_filter_form ul li select,
+#entries_filter_form ul li input {
+  margin-bottom: 0;
+}
+#entries_filter_form ul li select {
+  width: auto;
+  max-width: 220px;
+  min-width: 180px;
+}
+#comments_form ul {
+  margin: 0;
+}
+#comments_form ul select {
+  margin: 0;
 }
 #thumbnails_form {
   margin: 0;

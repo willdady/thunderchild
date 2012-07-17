@@ -58,20 +58,23 @@ def get_entries(context, entrytype_short_name, *args, **kwargs):
 @register.assignment_tag(name='entry')
 def get_entry(*args, **kwargs):
     """
+    Returns a single entry object matching the slug passed to this tag.
     
     Example:
-    {% entry slug='test' as my_entry %}
-    or
-    {% entry id=3 as my_entry %}
+    {% entry 'my_first_post' as my_first_post %}
     
     """
     id = kwargs.get('id')
     slug = kwargs.get('slug')
     try:
-        if id:
-            model = models.Entry.objects.get(pk=id)
-        elif slug:
+        if slug:
             model = models.Entry.objects.get(slug__exact=slug)
+        elif id:
+            model = models.Entry.objects.get(pk=id)
+        elif len(args) == 1:
+            model = models.Entry.objects.get(slug__exact=args[0])
+        else:
+            return None
     except models.Entry.DoesNotExist:
         return None
      
@@ -91,7 +94,7 @@ def get_template_url(*args, **kwargs):
     Returns the absolute URL of the supplied template. The template should be supplied as "<template group>/<template name>"
     
     Example:
-    {% template_url "staff/john-smith" %}
+    {% template_url "staff/all" %}
     """
     path = '/'.join(args)
     if path[0:5] == 'root/':
@@ -115,6 +118,24 @@ def get_media_asset(asset_id):
     # Replace the substring '{ MEDIA_URL }' with the value defined in settings. No effect if doesn't exist in string.
     return url.replace('{ MEDIA_URL }', settings.MEDIA_URL)
 
+
+@register.assignment_tag(name='categories')    
+def get_categories(*args, **kwargs):
+    """
+    Returns category names assigned to the given category group.
+    
+    Example:
+    {% categories "my_categories" as my_categories %}
+    """
+    if len(args) == 0:
+        return ''
+    id = kwargs.get('id')
+    if id:
+        return models.Category.objects.filter(categorygroup__exact=id)
+    categorygroup_short_name = args[0]
+    categories = models.Category.objects.filter(categorygroup__categorygroup_short_name__exact=categorygroup_short_name)
+    return categories
+    
 
 @register.assignment_tag(name='contact_form') 
 def get_contactform(*args, **kwargs):

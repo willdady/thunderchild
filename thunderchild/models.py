@@ -8,7 +8,7 @@ from django.forms.models import ModelForm
 from django.forms.widgets import Select, HiddenInput, RadioSelect, TextInput, \
     Textarea
 from django.utils.timezone import utc
-from thunderchild.validators import validate_lowercase, validate_urlchars
+from thunderchild.validators import validate_lowercase, validate_urlchars, validate_alphanumeric
 import json
 import os
 import thunderchild.forms
@@ -24,7 +24,7 @@ class EntryType(models.Model):
     fieldgroup = models.ForeignKey('FieldGroup', blank=True, null=True, on_delete=models.SET_NULL)
     categorygroup = models.ForeignKey('CategoryGroup', blank=True, null=True, on_delete=models.SET_NULL)
     entrytype_name = models.CharField(max_length=80, unique=True, verbose_name='Name')
-    entrytype_short_name = models.SlugField(max_length=80, unique=True, verbose_name='Short name')
+    entrytype_short_name = models.CharField(max_length=80, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric])
     
     def get_form(self, *args, **kwargs):
         if not self.fieldgroup:
@@ -106,7 +106,7 @@ class Field(models.Model):
     fieldgroup = models.ForeignKey('FieldGroup')
     field_type = models.CharField(max_length=20, verbose_name='Type')
     field_name = models.CharField(max_length=80, verbose_name='Name')
-    field_short_name = models.SlugField(max_length=80, unique=True, verbose_name='Short name')
+    field_short_name = models.CharField(max_length=80, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric,])
     field_instructions = models.CharField(max_length=500, blank=True, verbose_name='Instructions', help_text='Useful instructions on using this field.')
     field_is_required = models.BooleanField(default=True, choices=((False, 'No'),(True, 'Yes')))
     field_display_order = models.IntegerField(default=0, verbose_name='Display order', help_text='The display order of this field in relation to other fields in this group.')
@@ -199,7 +199,7 @@ class Template(models.Model):
                
 class CategoryGroup(models.Model):
     categorygroup_name = models.CharField(max_length=255, verbose_name='Name')
-    categorygroup_short_name = models.SlugField(max_length=255, unique=True, verbose_name='Short name')
+    categorygroup_short_name = models.CharField(max_length=255, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric])
     
     def __unicode__(self):
         return u'{}'.format(self.categorygroup_name)
@@ -208,7 +208,7 @@ class CategoryGroup(models.Model):
 class Category(models.Model):
     categorygroup = models.ForeignKey(CategoryGroup)
     category_name = models.CharField(max_length=255, verbose_name='Name')
-    category_short_name = models.SlugField(max_length=255, unique=True, verbose_name='Short name')
+    category_short_name = models.CharField(max_length=255, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric])
 
     def __unicode__(self):
         return u'{}'.format(self.category_name)
@@ -286,7 +286,7 @@ class MediaAsset(models.Model):
     
 class ContactForm(models.Model):
     contactform_name = models.CharField(max_length=255, unique=True, verbose_name='Name')
-    contactform_short_name = models.SlugField(max_length=255, unique=True, verbose_name='Short name')
+    contactform_short_name = models.CharField(max_length=255, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric])
     recipient_emails = models.CharField(max_length=1000, help_text="A comma separated list of recipient email addresses which will receive data submitted via this form.", verbose_name='Recipients')
     success_url = models.CharField(max_length=1000, verbose_name='Success URL', help_text="A URL to redirect the user to once they have successfully submitted the form. eg. /contact/success")
     error_url = models.CharField(max_length=1000, verbose_name='Error URL', help_text="A URL to redirect the user to if an error occurs while submitting the form.  eg. /contact/error")

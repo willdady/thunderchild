@@ -46,7 +46,7 @@
 
 {% block javascript %}
 <script type="text/javascript">
-	Utilities.autoSlug( $("#id_field_name"), $("#id_field_short_name") );
+	Utilities.autoAlphanumeric( $("#id_field_name"), $("#id_field_short_name") );
 	// This stops label elements from triggering their associated fields when clicked.
 	$(".field_label_holder label").click(function(e){
 		e.preventDefault();

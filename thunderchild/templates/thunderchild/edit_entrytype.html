@@ -48,7 +48,7 @@
 
 {% block javascript %}
 <script type="text/javascript">
-	Utilities.autoSlug( $("#id_entrytype_name"), $("#id_entrytype_short_name") );
+	Utilities.autoAlphanumeric( $("#id_entrytype_name"), $("#id_entrytype_short_name") );
 	
 	$("#confirm_delete_modal").modal().modal("hide");
 	

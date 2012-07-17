@@ -9,6 +9,8 @@ validate_lowercase = RegexValidator(lowercase_re, "Field must contain lowercase 
 urlchars_re = re.compile(r'^[a-z0-9-_$.+]*$')
 validate_urlchars = RegexValidator(urlchars_re, "Value must contain only letters, numbers and/or the special characters -, _, $, ., +.")
 
+alphanumeric_re = re.compile(r'^[a-z0-9_]*$')
+validate_alphanumeric = RegexValidator(alphanumeric_re, "Value must contain only lowercase letters, numbers or underscore.")
 
 def validate_color(value):
     color_re = re.compile(r'^#[0-9a-fA-F]{6}$')
