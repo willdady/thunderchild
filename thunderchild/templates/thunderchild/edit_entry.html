@@ -38,7 +38,7 @@
 					
 					<div class="accordion-group">
 							<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_title">
-								{% if form1.title.field.required %}<span class="required">* </span>{% endif %}<label for="">{{ form1.title.label }}</label>
+								{% if form1.title.field.required %}<span class="required">* </span>{% endif %}{{ form1.title.label_tag }}
 								{% if form1.title.errors %}<div class="alert alert-error">{{ form1.title.errors }}</div>{% endif %}
 							</div>
 							<div id="form1_fieldholder_title" class="collapse control-group field_holder {% if form1.title.errors %}error{% endif %} {% if not form1.title.field.field_collapsed_by_default %}in{% endif %}">
@@ -49,7 +49,7 @@
 					
 					<div class="accordion-group">
 							<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_slug">
-								{% if form1.slug.field.required %}<span class="required">* </span>{% endif %}<label for="">{{ form1.slug.label }}</label>
+								{% if form1.slug.field.required %}<span class="required">* </span>{% endif %}{{ form1.slug.label_tag }}
 								{% if form1.slug.errors %}<div class="alert alert-error">{{ form1.slug.errors }}</div>{% endif %}
 							</div>
 							<div id="form1_fieldholder_slug" class="collapse control-group field_holder {% if form1.slug.errors %}error{% endif %} {% if not form1.slug.field.field_collapsed_by_default %}in{% endif %}">
@@ -88,7 +88,7 @@
 					
 					<div class="accordion-group">
 							<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_is_published">
-								{% if form1.is_published.field.required %}<span class="required">* </span>{% endif %}<label for="">{{ form1.is_published.label }}</label>
+								{% if form1.is_published.field.required %}<span class="required">* </span>{% endif %}{{ form1.is_published.label_tag }}
 								{% if form1.is_published.errors %}<div class="alert alert-error">{{ form1.is_published.errors }}</div>{% endif %}
 							</div>
 							<div id="form1_fieldholder_is_published" class="collapse control-group field_holder {% if form1.is_published.errors %}error{% endif %} {% if not form1.is_published.field.field_collapsed_by_default %}in{% endif %}">
@@ -101,7 +101,7 @@
 				<div id="dates" class="tab-pane">
 					<div class="accordion-group">
 							<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_creation_date">
-								{% if form1.creation_date.field.required %}<span class="required">* </span>{% endif %}<label for="">{{ form1.creation_date.label }}</label>
+								{% if form1.creation_date.field.required %}<span class="required">* </span>{% endif %}{{ form1.creation_date.label_tag }}
 								{% if form1.creation_date.errors %}<div class="alert alert-error">{{ form1.creation_date.errors }}</div>{% endif %}
 							</div>
 							<div id="form1_fieldholder_creation_date" class="collapse control-group field_holder {% if form1.creation_date.errors %}error{% endif %} {% if not form1.creation_date.field.field_collapsed_by_default %}in{% endif %}">
@@ -112,7 +112,7 @@
 					
 					<div class="accordion-group">
 							<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_expiration_date">
-								{% if form1.expiration_date.field.required %}<span class="required">* </span>{% endif %}<label for="">{{ form1.expiration_date.label }}</label>
+								{% if form1.expiration_date.field.required %}<span class="required">* </span>{% endif %}{{ form1.expiration_date.label_tag }}
 								{% if form1.expiration_date.errors %}<div class="alert alert-error">{{ form1.expiration_date.errors }}</div>{% endif %}
 							</div>
 							<div id="form1_fieldholder_expiration_date" class="collapse control-group field_holder {% if form1.expiration_date.errors %}error{% endif %} {% if not form1.expiration_date.field.field_collapsed_by_default %}in{% endif %}">
@@ -125,7 +125,7 @@
 				<div id="comments" class="tab-pane">
 					<div class="accordion-group">
 						<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_comments_enabled">
-							{% if form1.comments_enabled.field.required %}<span class="required">* </span>{% endif %}<label for="">{{ form1.comments_enabled.label }}</label>
+							{% if form1.comments_enabled.field.required %}<span class="required">* </span>{% endif %}{{ form1.comments_enabled.label_tag }}
 							{% if form1.comments_enabled.errors %}<div class="alert alert-error">{{ form1.comments_enabled.errors }}</div>{% endif %}
 						</div>
 						<div id="form1_fieldholder_comments_enabled" class="collapse control-group field_holder {% if form1.comments_enabled.errors %}error{% endif %} {% if not form1.comments_enabled.field.field_collapsed_by_default %}in{% endif %}">
@@ -136,7 +136,7 @@
 					
 					<div class="accordion-group">
 						<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_comments_expiration_date">
-							{% if form1.comments_expiration_date.field.required %}<span class="required">* </span>{% endif %}<label for="">{{ form1.comments_expiration_date.label }}</label>
+							{% if form1.comments_expiration_date.field.required %}<span class="required">* </span>{% endif %}{{ form1.comments_expiration_date.label_tag }}
 							{% if form1.comments_expiration_date.errors %}<div class="alert alert-error">{{ form1.comments_expiration_date.errors }}</div>{% endif %}
 						</div>
 						<div id="form1_fieldholder_comments_expiration_date" class="collapse control-group field_holder {% if form1.comments_expiration_date.errors %}error{% endif %} {% if not form1.comments_expiration_date.field.field_collapsed_by_default %}in{% endif %}">
@@ -150,7 +150,7 @@
 				<div id="categories" class="tab-pane">
 					<div class="accordion-group">
 						<div class="field_label_holder" data-toggle="collapse" data-target="#form1_fieldholder_categories">
-							{% if form1.categories.field.required %}<span class="required">* </span>{% endif %}<label for="">{{ form1.categories.label }}</label>
+							{% if form1.categories.field.required %}<span class="required">* </span>{% endif %}{{ form1.categories.label_tag }}
 							{% if form1.categories.errors %}<div class="alert alert-error">{{ form1.categories.errors }}</div>{% endif %}
 						</div>
 						<div id="form1_fieldholder_categories" class="collapse control-group field_holder {% if form1.categories.errors %}error{% endif %} {% if not form1.categories.field.field_collapsed_by_default %}in{% endif %}">
