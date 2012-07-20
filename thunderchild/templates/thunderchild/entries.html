@@ -25,6 +25,7 @@
 					<th>Title</th>
 					<th>Slug</th>
 					<th>Author</th>
+					<th>Published</th>
 					<th>Entry type</th>
 					<th>Created</th>
 					<th>Last modified</th>
@@ -36,6 +37,7 @@
 					<td><a href="{% url thunderchild.entry_views.edit_entry entry.id %}">{{ entry.title }}</a></td>
 					<td>{{ entry.slug }}</td>
 					<td>{{ entry.author.first_name }} {{ entry.author.last_name }}</td>
+					<td>{{ entry.is_published }}</td>
 					<td>{{ entry.entrytype.entrytype_name }}</td>
 					<td>{{ entry.creation_date }}</td>
 					<td>{{ entry.last_modified_date }}</td>
