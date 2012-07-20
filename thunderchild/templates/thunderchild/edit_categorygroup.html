@@ -40,8 +40,7 @@
 			</div>
 		</form>
 		
-		{% url thunderchild.category_views.delete_categorygroup categorygroup_id as delete_url %}
-		{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this category group?" modal_delete_url=delete_url %}
+		{% include "thunderchild/includes/confirm_delete_modal2.html" with modal_message="Are you sure you want to <b>permanently</b> delete this category group?" action=delete_url id=categorygroup_id %}
 		
 {% endblock %}
 

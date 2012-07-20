@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from thunderchild import models
 from thunderchild import model_forms
+from django.http import HttpResponseNotAllowed
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -147,7 +148,8 @@ def edit_entry(request, entry_id):
                                                                     'form2':form2, 
                                                                     'entry_id':entry_id, 
                                                                     'entrytype_name':entrytype_model.entrytype_name,
-                                                                    'has_categorygroup':entrytype_model.categorygroup})
+                                                                    'has_categorygroup':entrytype_model.categorygroup,
+                                                                    'delete_url':reverse('thunderchild.entry_views.delete_entry')})
                 
         if form1.is_valid():
             form1.instance.author = request.user
@@ -174,7 +176,8 @@ def edit_entry(request, entry_id):
                                                                 'form2':form2, 
                                                                 'entry_id':entry_id, 
                                                                 'entrytype_name':entrytype_model.entrytype_name,
-                                                                'has_categorygroup':entrytype_model.categorygroup})
+                                                                'has_categorygroup':entrytype_model.categorygroup,
+                                                                'delete_url':reverse('thunderchild.entry_views.delete_entry')})
     else:
         data = entry_model.dict
         
@@ -190,6 +193,16 @@ def edit_entry(request, entry_id):
                                                                 'entry_id':entry_id, 
                                                                 'entrytype_name':entrytype_model.entrytype_name,
                                                                 'media_assets':media_assets,
-                                                                'has_categorygroup':entrytype_model.categorygroup})
+                                                                'has_categorygroup':entrytype_model.categorygroup,
+                                                                'delete_url':reverse('thunderchild.entry_views.delete_entry')})
+    
+    
+@login_required(login_url=reverse_lazy('thunderchild.views.login'))
+def delete_entry(request):
+    if request.method == 'POST':
+        models.Entry.objects.filter(pk=request.POST['id']).delete()
+        return redirect('thunderchild.entry_views.entries')
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
     
     

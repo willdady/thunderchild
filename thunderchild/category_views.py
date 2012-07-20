@@ -1,9 +1,8 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
-from thunderchild import models
-from thunderchild import forms
-from thunderchild import model_forms
+from django.http import HttpResponseNotAllowed
+from django.shortcuts import render, redirect, get_object_or_404
+from thunderchild import forms, model_forms, models
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))    
 def categorygroups(request):
@@ -42,16 +41,23 @@ def edit_categorygroup(request, categorygroup_id):
             form.save()
             return redirect('thunderchild.category_views.categorygroups')
         else:
-            return render(request, 'thunderchild/edit_categorygroup.html', {'form':form, 'categorygroup_id':categorygroup_id})
+            return render(request, 'thunderchild/edit_categorygroup.html', {'form':form, 
+                                                                            'categorygroup_id':categorygroup_id,
+                                                                            'delete_url':reverse('thunderchild.category_views.delete_categorygroup')})
     else:
         form = model_forms.CategoryGroupForm(instance=model)
-        return render(request, 'thunderchild/edit_categorygroup.html', {'form':form, 'categorygroup_id':categorygroup_id})
+        return render(request, 'thunderchild/edit_categorygroup.html', {'form':form, 
+                                                                        'categorygroup_id':categorygroup_id,
+                                                                        'delete_url':reverse('thunderchild.category_views.delete_categorygroup')})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login')) 
-def delete_categorygroup(request, categorygroup_id):
-    models.CategoryGroup.objects.filter(id__exact=categorygroup_id).delete()
-    return redirect('thunderchild.category_views.categorygroups') 
+def delete_categorygroup(request):
+    if request.method == 'POST':
+        models.CategoryGroup.objects.filter(id__exact=request.POST['id']).delete()
+        return redirect('thunderchild.category_views.categorygroups') 
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))   
@@ -80,16 +86,20 @@ def edit_category(request, categorygroup_id, category_id):
             return render(request, 'thunderchild/edit_category.html', {'form':form, 
                                                                        'categorygroup_id':categorygroup_id, 
                                                                        'category_id':category_id,
-                                                                       'delete_url':reverse('thunderchild.category_views.delete_category', args=[categorygroup_id, category_id])})
+                                                                       'delete_url':reverse('thunderchild.category_views.delete_category', args=[categorygroup_id])})
     else:
         form = model_forms.CategoryForm(instance=model)
         return render(request, 'thunderchild/edit_category.html', {'form':form, 
                                                                    'categorygroup_id':categorygroup_id, 
                                                                    'category_id':category_id,
-                                                                   'delete_url':reverse('thunderchild.category_views.delete_category', args=[categorygroup_id, category_id])})
+                                                                   'delete_url':reverse('thunderchild.category_views.delete_category', args=[categorygroup_id])})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))   
-def delete_category(request, categorygroup_id, category_id):
-    models.Category.objects.filter(id=category_id).delete()
-    return redirect('thunderchild.category_views.categorygroups')
+def delete_category(request, categorygroup_id):
+    if request.method == 'POST':
+        models.Category.objects.filter(id=request.POST['id']).delete()
+        return redirect('thunderchild.category_views.categorygroups')
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
+        
