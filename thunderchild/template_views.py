@@ -80,16 +80,17 @@ def edit_template(request, templategroup_id, template_id):
     model = get_object_or_404(models.Template, pk=template_id)
     if request.method == 'POST':
         form = model_forms.TemplateForm(request.POST, instance=model)
+        print request.POST['submit-button']
         if form.is_valid():
             form.save()
-            return redirect('thunderchild.template_views.templates')
-        else:
-            return render(request, 'thunderchild/edit_template.html', {'form':form, 
-                                                                  'templategroup_id':templategroup_id,
-                                                                  'templategroup_short_name':model.templategroup.templategroup_short_name, 
-                                                                  'template_id':template_id,
-                                                                  'is_index':model.template_short_name == 'index',
-                                                                  'delete_url':reverse('thunderchild.template_views.delete_template', args=[templategroup_id, template_id])})
+            if request.POST['submit-button'] == 'Save and finnish':
+                return redirect('thunderchild.template_views.templates')
+        return render(request, 'thunderchild/edit_template.html', {'form':form, 
+                                                              'templategroup_id':templategroup_id,
+                                                              'templategroup_short_name':model.templategroup.templategroup_short_name, 
+                                                              'template_id':template_id,
+                                                              'is_index':model.template_short_name == 'index',
+                                                              'delete_url':reverse('thunderchild.template_views.delete_template', args=[templategroup_id, template_id])})
     else:
         form = model_forms.TemplateForm(instance=model)
         return render(request, 'thunderchild/edit_template.html', {'form':form, 

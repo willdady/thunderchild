@@ -168,13 +168,13 @@ def edit_entry(request, entry_id):
                 if fielddata.value != form2.cleaned_data[field.field_short_name]:
                     fielddata.value = form2.cleaned_data[field.field_short_name]
                     fielddata.save()
-            return redirect('thunderchild.entry_views.entries')
-        else:
-            return render(request, 'thunderchild/edit_entry.html', {'form1':form1, 
-                                                                    'form2':form2, 
-                                                                    'entry_id':entry_id, 
-                                                                    'entrytype_name':entrytype_model.entrytype_name,
-                                                                    'has_categorygroup':entrytype_model.categorygroup})
+            if request.POST['submit-button'] == 'Save and finish':
+                return redirect('thunderchild.entry_views.entries')
+        return render(request, 'thunderchild/edit_entry.html', {'form1':form1, 
+                                                                'form2':form2, 
+                                                                'entry_id':entry_id, 
+                                                                'entrytype_name':entrytype_model.entrytype_name,
+                                                                'has_categorygroup':entrytype_model.categorygroup})
     else:
         data = entry_model.dict
         
