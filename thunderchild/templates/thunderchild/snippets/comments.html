@@ -1,0 +1,19 @@
+<ol class="comments-list">
+	{% for comment in entry.comments %}
+	<li>
+		<div class="comment">
+			<small class="comment-meta">
+				{% if comment.website %}
+					<a href="{{ comment.website|escape }}" target="_blank" rel="nofollow">{{ comment.name|escape }}</a>
+				{% else %}
+					{{ comment.name|escape }}
+				{% endif %}
+				 &ndash; {{ comment.date }}.
+			</small>
+			<div class="comment-body">
+				{{ comment.body|escape|linebreaks }}
+			</div>
+		</div>
+	</li>
+	{% endfor %}
+</ol>

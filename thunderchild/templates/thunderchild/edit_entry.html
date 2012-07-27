@@ -18,7 +18,6 @@
 		
 		<header>
 			<h1>Edit Entry</h1>
-			<h2>{{ entrytype_name }}</h2>
 		</header>
 		
 		
@@ -189,7 +188,7 @@
 			</div>
 		</script>
 		
-		{% include "thunderchild/includes/confirm_delete_modal2.html" with modal_message="Are you sure you want to <b>permanently</b> delete this entry?" action=delete_url id=entry_id %}
+		{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this entry?" action=delete_url id=entry_id %}
 		{% include 'thunderchild/includes/textarea_controls.html' %}
 		{% include 'thunderchild/includes/textarea_modal.html' %}
 {% endblock %}

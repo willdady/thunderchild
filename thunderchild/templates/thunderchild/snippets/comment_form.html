@@ -1,0 +1,8 @@
+<form action="{{ entry.comment_form.action }}" method="{{ entry.comment_form.method }}">{% csrf_token %}
+	<ul>
+		{{ entry.comment_form.form.as_ul }}
+		<input type="hidden" name="success" value="{% if success_url %}{{ success_url }}{% else %}/comment/thankyou{% endif %}" />
+		<input type="hidden" name="error" value="{% if error_url %}{{ error_url }}{% else %}/comment/error{% endif %}" />
+		<input type="submit" value="Post Comment" />
+	</ul>
+</form>

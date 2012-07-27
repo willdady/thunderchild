@@ -79,20 +79,26 @@ def edit_field(request, fieldgroup_id, field_id):
             form.save()
             return redirect('thunderchild.field_views.fieldgroups')
         else:
-            return render(request, 'thunderchild/edit_field.html', {'form':form, 'fieldgroup_id':fieldgroup_id, 'field_id':field_id, 'fieldgroup_name':model.fieldgroup.fieldgroup_name})
+            return render(request, 'thunderchild/edit_field.html', {'form':form, 
+                                                                    'fieldgroup_id':fieldgroup_id, 
+                                                                    'field_id':field_id, 
+                                                                    'fieldgroup_name':model.fieldgroup.fieldgroup_name,
+                                                                    'delete_url':reverse(delete_field, args=[model.fieldgroup.id])})
     else:
         form = model_forms.FieldForm(instance=model)
-        delete_url = reverse(delete_field, args=[model.fieldgroup.id, model.id])
         return render(request, 'thunderchild/edit_field.html', {'form':form, 
                                                                 'fieldgroup_id':fieldgroup_id, 
                                                                 'field_id':field_id, 
                                                                 'fieldgroup_name':model.fieldgroup.fieldgroup_name,
-                                                                'delete_url':delete_url})
+                                                                'delete_url':reverse(delete_field, args=[model.fieldgroup.id])})
     
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))    
-def delete_field(request, fieldgroup_id, field_id):
-    models.Field.objects.filter(id=field_id).delete()
-    models.FieldData.objects.filter(field=field_id).delete()
-    return redirect('thunderchild.field_views.fieldgroups')
+def delete_field(request, fieldgroup_id):
+    if request.method == 'POST':
+        models.Field.objects.filter(id=request.POST['id']).delete()
+        models.FieldData.objects.filter(field=request.POST['id']).delete()
+        return redirect('thunderchild.field_views.fieldgroups')
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
 

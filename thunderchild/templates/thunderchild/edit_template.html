@@ -58,7 +58,7 @@
 {% if is_index %}
 	{% include "thunderchild/includes/alert_modal.html" with modal_message="Deleting index templates is forbidden as each template group must have an index template." %}
 {% else %}
-	{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this Template?" modal_delete_url=delete_url %}
+	{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this Template?" action=delete_url id=template_id %}
 {% endif %}
 		
 {% endblock %}

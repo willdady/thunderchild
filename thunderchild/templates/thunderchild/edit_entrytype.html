@@ -41,7 +41,7 @@
 			
 		</form>
 		
-{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this entry type?" modal_delete_url=delete_url %}
+{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this entry type?" action=delete_url id=entrytype_id %}
 
 		
 {% endblock %}

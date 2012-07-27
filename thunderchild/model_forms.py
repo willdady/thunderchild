@@ -4,13 +4,8 @@ from django.forms.models import ModelForm
 from django.forms.widgets import TextInput, RadioSelect, HiddenInput, Textarea, \
     Select
 from thunderchild import models
-import thunderchild.forms
 import json
-
-
-class SiteSettingsForm(forms.ModelForm):
-    class Meta:
-        model = models.SiteSettings
+import thunderchild.forms
 
 
 class EntryTypeForm(ModelForm):

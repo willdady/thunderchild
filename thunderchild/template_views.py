@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from thunderchild import models
 from thunderchild import forms
 from thunderchild import model_forms
+from django.http import HttpResponseNotAllowed
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -37,19 +38,22 @@ def edit_templategroup(request, templategroup_id):
             return render(request, 'thunderchild/edit_templategroup.html', {'form':form, 
                                                                        'templategroup_id':templategroup_id,
                                                                        'is_root':model.templategroup_short_name == 'root',
-                                                                       'delete_url':reverse('thunderchild.template_views.delete_templategroup', args=[templategroup_id])})
+                                                                       'delete_url':reverse('thunderchild.template_views.delete_templategroup')})
     else:
         form = model_forms.TemplateGroupForm(instance=model)
         return render(request, 'thunderchild/edit_templategroup.html', {'form':form, 
                                                                    'templategroup_id':templategroup_id,
                                                                    'is_root':model.templategroup_short_name == 'root',
-                                                                   'delete_url':reverse('thunderchild.template_views.delete_templategroup', args=[templategroup_id])})
+                                                                   'delete_url':reverse('thunderchild.template_views.delete_templategroup')})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def delete_templategroup(request, templategroup_id):
-    models.TemplateGroup.objects.filter(id=templategroup_id).delete()
-    return redirect('thunderchild.template_views.templates')
+def delete_templategroup(request):
+    if request.method == 'POST':
+        models.TemplateGroup.objects.filter(id=request.POST['id']).delete()
+        return redirect('thunderchild.template_views.templates')
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -90,7 +94,7 @@ def edit_template(request, templategroup_id, template_id):
                                                               'templategroup_short_name':model.templategroup.templategroup_short_name, 
                                                               'template_id':template_id,
                                                               'is_index':model.template_short_name == 'index',
-                                                              'delete_url':reverse('thunderchild.template_views.delete_template', args=[templategroup_id, template_id])})
+                                                              'delete_url':reverse('thunderchild.template_views.delete_template', args=[templategroup_id])})
     else:
         form = model_forms.TemplateForm(instance=model)
         return render(request, 'thunderchild/edit_template.html', {'form':form, 
@@ -98,11 +102,14 @@ def edit_template(request, templategroup_id, template_id):
                                                               'templategroup_short_name':model.templategroup.templategroup_short_name,
                                                               'template_id':template_id,
                                                               'is_index':model.template_short_name == 'index',
-                                                              'delete_url':reverse('thunderchild.template_views.delete_template', args=[templategroup_id, template_id])})
+                                                              'delete_url':reverse('thunderchild.template_views.delete_template', args=[templategroup_id])})
     
     
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def delete_template(request, templategroup_id, template_id):
-    models.Template.objects.filter(id=template_id).delete()
-    return redirect('thunderchild.template_views.templates')
+def delete_template(request, templategroup_id):
+    if request.method == 'POST':
+        models.Template.objects.filter(id=request.POST['id']).delete()
+        return redirect('thunderchild.template_views.templates')
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
 

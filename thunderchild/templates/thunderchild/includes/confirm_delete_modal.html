@@ -4,7 +4,7 @@
 	$("#confirm_delete_modal").modal().modal("hide");
 {% endcomment %}
 
-<div id="confirm_delete_modal" class="modal">
+<div id="confirm_delete_modal" class="modal" style="display:none;">
 	<div class="modal-header">
 		<button class="close" data-dismiss="modal">×</button>
 		<h3>Confirm Delete</h3>
@@ -13,7 +13,10 @@
 		<p>{{ modal_message }}</p>
 	</div>
 	<div class="modal-footer">
-		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
-		<a href="{{ modal_delete_url }}" class="btn btn-danger"><i class="icon-trash icon-white"></i> Confirm Delete</a>
+		<form action="{{ action }}" method="POST">{% csrf_token %}
+			<input type="hidden" name="id" value="{{ id }}" />
+			<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+			<input type="submit" class="btn btn-danger" value="Confirm Delete" />
+		</form>
 	</div>
 </div>

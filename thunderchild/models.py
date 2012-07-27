@@ -15,10 +15,6 @@ import thunderchild.forms
 from django.contrib.sites.models import Site
 
 
-class SiteSettings(Site):
-    comment_success_url = models.CharField(default='/', max_length=200, help_text="A URL to redirect the user to after they successfully submit a comment.")
-    comment_error_url = models.CharField(default='/', max_length=200, help_text="A URL to redirect the user to if their comment submission contains errors. ie. Missing fields, malformed email etc.")
-
 
 class EntryType(models.Model):
     fieldgroup = models.ForeignKey('FieldGroup', blank=True, null=True, on_delete=models.SET_NULL)
@@ -48,7 +44,7 @@ class Entry(models.Model):
     comments_expiration_date = models.DateTimeField(verbose_name='Disallow comments after:', blank=True, null=True, help_text='A date from when new comments will no longer be accepted. Leave blank to allow comments indefinitely.')
 
     def get_comment_form(self, *args, **kwargs):
-        return thunderchild.forms.CommentForm(*args)
+        return thunderchild.forms.CommentForm(initial={'entry_id':self.id}, *args)
 
     @property
     def comment_form_dict(self):
@@ -56,7 +52,7 @@ class Entry(models.Model):
             self._comment_form_dict
         except AttributeError:
             self._comment_form_dict = {'form':self.get_comment_form(),
-                                        'action':reverse('thunderchild.comment_views.submit', args=[self.id]),
+                                        'action':reverse('thunderchild.comment_views.submit'),
                                         'method':'post'}
         return self._comment_form_dict
 
@@ -170,8 +166,8 @@ class Comment(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
     website = models.URLField(blank=True)
-    message = models.TextField(max_length=500)
-    created = models.DateField(auto_now_add=True)
+    body = models.TextField(max_length=500)
+    date = models.DateField(auto_now_add=True)
     ip_address = models.IPAddressField()
     is_approved = models.BooleanField(default=False)
     is_spam = models.BooleanField(default=False)

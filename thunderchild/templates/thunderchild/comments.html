@@ -33,7 +33,7 @@
 					<th>Name</th>
 					<th>Email</th>
 					<th>Website</th>
-					<th>Created</th>
+					<th>Date</th>
 					<th>Is Spam</th>
 					<th>Is Approved</th>
 					<th>Edit</th>
@@ -50,7 +50,7 @@
 					<td>{{ comment.name }}</td>
 					<td>{{ comment.email }}</td>
 					<td>{% if comment.website %}<a href="{{ comment.website }}" target="_blank">{{ comment.website }}</a>{% endif %}</td>
-					<td>{{ comment.created }}</td>
+					<td>{{ comment.date }}</td>
 					<td>{{ comment.is_spam }}</td>
 					<td>{{ comment.is_approved }}</td>
 					<td><a href="{% url thunderchild.comment_views.edit comment.id %}">Edit</a></td>

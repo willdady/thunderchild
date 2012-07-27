@@ -38,7 +38,7 @@
 			</div>
 		</form>
 		
-		{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this comment?" modal_delete_url=delete_url %}
+		{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this comment?" action=delete_url id=comment_id %}
 		
 {% endblock %}
 

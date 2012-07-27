@@ -33,12 +33,12 @@ def edit(request, comment_id):
             form.save()
             return redirect('thunderchild.comment_views.comments')
         else:
-            delete_url = reverse('thunderchild.comment_views.delete', args=[comment_id])
+            delete_url = reverse('thunderchild.comment_views.delete')
             return render(request, 'thunderchild/edit_comment.html', {'form':form, 
                                                                       'comment_id':comment_id,
                                                                       'delete_url':delete_url})
     else:
-        delete_url = reverse('thunderchild.comment_views.delete', args=[comment_id])
+        delete_url = reverse('thunderchild.comment_views.delete')
         form = model_forms.CommentModelForm(instance=comment_model)
         return render(request, 'thunderchild/edit_comment.html', {'form':form,
                                                                   'comment_id':comment_id,
@@ -46,10 +46,12 @@ def edit(request, comment_id):
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def delete(request, comment_id):
-    comment_model = get_object_or_404(models.Comment, pk=comment_id)
-    comment_model.delete()
-    return redirect('thunderchild.comment_views.comments')
+def delete(request):
+    if request.method == 'POST':
+        models.Comment.objects.filter(pk=request.POST['id']).delete()
+        return redirect('thunderchild.comment_views.comments')
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -79,27 +81,24 @@ def bulk_action(request):
         return HttpResponseNotAllowed(permitted_methods=['POST'])
 
 
-def submit(request, entry_id):
-    entry = get_object_or_404(models.Entry, pk=entry_id)
+def submit(request):
     if request.method == 'POST':
+        entry = get_object_or_404(models.Entry, pk=request.POST['entry_id'])
         form = entry.get_comment_form(request.POST)
         if form.is_valid():
             
             #TODO: Spam check here.
             
-            site_settings = get_object_or_404(models.SiteSettings, id=settings.SITE_ID)
-            
             comment = models.Comment(entry=entry, 
                                      name=form.cleaned_data['name'], 
                                      email=form.cleaned_data['email'], 
                                      website=form.cleaned_data['website'], 
-                                     message=form.cleaned_data['message'],
+                                     body=form.cleaned_data['body'],
                                      ip_address=request.META['REMOTE_ADDR'])
             comment.save()
-            
-            return redirect(site_settings.comment_success_url)
+            return redirect(request.POST['success'])
         else:
-            return redirect(site_settings.comment_error_url)
+            return redirect(request.POST['error'])
     else:
         return HttpResponseNotAllowed(permitted_methods=['POST'])
     

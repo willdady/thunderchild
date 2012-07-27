@@ -47,7 +47,7 @@
 {% if is_root %}
 	{% include "thunderchild/includes/alert_modal.html" with modal_message="Deletion of the root template group is forbidden." %}
 {% else %}
-	{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this template group?" modal_delete_url=delete_url %}
+	{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this template group?" action=delete_url id=templategroup_id %}
 {% endif %}	
 	
 {% endblock %}

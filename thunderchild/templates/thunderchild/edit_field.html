@@ -40,7 +40,7 @@
 			</div>
 		</form>
 		
-		{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this field? All data associated with this field will be deleted also." modal_delete_url=delete_url %}
+		{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this field? All data associated with this field will be deleted also." action=delete_url id=field_id %}
 		
 {% endblock %}
 

@@ -91,7 +91,8 @@ The last segment of the URL. In the above example segment_3 and last_segment wou
 
 ### Template tags
 
-Thunderchild comes with it's own set of template tags for retrieving entries from the system and rendering them. Thunderchild automatically adds the following load tag to new Templates.
+Thunderchild comes with it's own set of template tags for retrieving entries from the system and rendering them. Thunderchild automatically adds the 
+following [load tag](https://docs.djangoproject.com/en/1.4/ref/templates/builtins/#load) to new Templates.
 
 	{% load thunderchild_tags %}
 	
@@ -120,3 +121,29 @@ Usage:
 Usage:
 
 	{% template_url "staff/all" %}
+
+### Comments
+
+Thunderchild includes 2 template snippets to help rending comments in your template. They are "thunderchild/snippets/comment_form.html" for rending a comment submission form 
+and "thunderchild/snippets/comments.html" for rendering the (approved) comments for an Entry. Both snippets have classes set in their markup for styling but feel free to edit 
+these files if the markup is not to your liking. Each snippet can be included in your template using Django's standard 
+[include tag](https://docs.djangoproject.com/en/dev/ref/templates/builtins/?from=olddocs#include) and requires an Entry be passed via the entry variable.
+
+Example:
+
+	```
+	{% entry 'my_entry' as my_entry %}
+	
+	{% include "thunderchild/snippets/comments.html" with entry=my_entry only %}
+	
+	{% include "thunderchild/snippets/comment_form.html" with entry=my_entry only %}
+	```
+	
+By default the comment form will redirect users to "/comment/thankyou" on success and "/comment/error"	if there is an error processing the form (such as an invalid email address). Be sure
+to create templates at these locations. Alternatively, you may set the success and error URL's explicitly.
+
+Example:
+
+	{% include "thunderchild/snippets/comment_form.html" with entry=my_entry success_url="/my/custom/success/url" error_url="/my/custom/error/url" only %}
+	
+	

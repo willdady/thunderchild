@@ -129,8 +129,9 @@ class ContactForm(forms.Form):
 
 
 class CommentForm(forms.Form):
+    entry_id = forms.IntegerField(widget=forms.HiddenInput)
     name = forms.CharField()
     email = forms.EmailField(max_length=100)
     website = forms.URLField(required=False)
-    message = forms.CharField(max_length=500, widget=forms.Textarea)    
+    body = forms.CharField(max_length=500, widget=forms.Textarea)    
 

@@ -56,21 +56,4 @@ def users(request):
     users = User.objects.all()
     return render(request, 'thunderchild/users.html', {'users':users})
 
-
-@login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def site_settings(request):
-    try:
-        settings_model = models.SiteSettings.objects.get(id=settings.SITE_ID)
-    except models.SiteSettings.DoesNotExist:
-        return HttpResponseNotFound()
-    
-    if request.method == 'POST':
-        form = model_forms.SiteSettingsForm(request.POST, instance=settings_model)
-        if form.is_valid():
-            form.save()
-    else:
-        form = model_forms.SiteSettingsForm(instance=settings_model)
-    return render(request, 'thunderchild/site_settings.html', {'form':form})
-    
-    
     

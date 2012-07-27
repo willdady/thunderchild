@@ -40,18 +40,21 @@ def edit_entrytype(request, entrytype_id):
         else:
             return render(request, 'thunderchild/edit_entrytype.html', {'form':form, 
                                                                    'entrytype_id':entrytype_id,
-                                                                   'delete_url':reverse('thunderchild.entry_views.delete_entrytype', args=[entrytype_id])})
+                                                                   'delete_url':reverse('thunderchild.entry_views.delete_entrytype')})
     else:
         form = model_forms.EntryTypeForm(instance=model)
         return render(request, 'thunderchild/edit_entrytype.html', {'form':form, 
                                                                'entrytype_id':entrytype_id,
-                                                               'delete_url':reverse('thunderchild.entry_views.delete_entrytype', args=[entrytype_id])})
+                                                               'delete_url':reverse('thunderchild.entry_views.delete_entrytype')})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def delete_entrytype(request, entrytype_id):
-    models.EntryType.objects.filter(pk=entrytype_id).delete()
-    return redirect('thunderchild.entry_views.entrytypes')
+def delete_entrytype(request):
+    if request.method == 'POST':
+        models.EntryType.objects.filter(pk=request.POST['id']).delete()
+        return redirect('thunderchild.entry_views.entrytypes')
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
