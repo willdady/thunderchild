@@ -2,9 +2,9 @@
 
 {% block javascript %}
 	{% if debug %}
-		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/templates.js"></script>
+		<script src="{{ STATIC_URL }}thunderchild/js_src/templates.js"></script>
 	{% else %}
-		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/templates.js"></script>
+		<script src="{{ STATIC_URL }}thunderchild/js/templates.js"></script>
 	{% endif %}
 {% endblock %}
 

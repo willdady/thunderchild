@@ -85,7 +85,7 @@
 {% endblock %}
 
 {% block javascript %}
-<script type="text/javascript">
+<script>
 	var goButton = $("#go_button");
 	$("#entry_type_select").change(function(){
 		goButton.attr( "href", "/backend/entries/create/"+$(this).val() );

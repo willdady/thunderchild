@@ -1,5 +1,8 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 	
 	<head>
 		<meta charset="utf-8">
@@ -11,11 +14,12 @@
 		<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" type="text/css" media="screen"/>
 		{% if debug %}
 		<link rel="stylesheet/less" href="{{ STATIC_URL }}thunderchild/css_src/thunderchild.less" type="text/css" media="screen"/>
-		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/less-1.3.0.min.js"></script>
+		<script src="{{ STATIC_URL }}thunderchild/js/less-1.3.0.min.js"></script>
 		{% else %}
 		<link rel="stylesheet" href="{{ STATIC_URL }}thunderchild/css/thunderchild.less" type="text/css" media="screen"/>
 		{% endif %}
 		
+		<script src="{{ STATIC_URL }}thunderchild/js/modernizr-2.5.3.min.js"></script>
 	</head>
 	
 	<body>		
@@ -58,8 +62,12 @@
 				</div>
 			</div>
 		</section>
-		<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/jquery-1.7.2.min.js"></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+		
+		<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="{{ STATIC_URL }}thunderchild/js/jquery-1.7.2.min.js"><\/script>')</script>
+		
+		<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
 	</body>
 	
 </html>
