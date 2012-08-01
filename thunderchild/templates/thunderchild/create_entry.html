@@ -9,7 +9,6 @@
 		
 		<header>
 			<h1>Create Entry</h1>
-			<h2>{{ entrytype_name }}</h2>
 		</header>
 		
 		<ul class="nav nav-tabs" id="tabs">
@@ -185,10 +184,8 @@
 <script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/farbtastic.js"></script>
 {% if debug %}
-	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js_src/entry.js"></script>
 {% else %}
-	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/utilities-min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}thunderchild/js/entry-min.js"></script>
 {% endif %}
 <script type="text/javascript">
@@ -197,10 +194,6 @@
 		e.preventDefault();
 	});
 	Utilities.autoSlug( $("#id_title"), $("#id_slug") );
-	
-	// Make our field holders collapsible
-	$(".control-group .field_holder").collapse();
-	
 	// Initialize date and datetime pickers
 	$('[data-field-type="datetime"]').datetimepicker({
 		dateFormat:'yy-mm-dd',
@@ -210,13 +203,11 @@
 	$('[data-field-type="date"]').datepicker({
 		dateFormat:'yy-mm-dd',
 	});
-	
 	var appModel = new window.AppModel();
 	var mediaChooserModal = new window.MediaChooserModalView({el:$("#media_chooser_modal"), model:appModel});
 	$('[data-field-type="file"]').each(function() {
 		new window.MediaChooserWidgetView({el:$(this), model:appModel});
 	});
-	
 	// Convert all textareas to rich textareas. Note the textearea in the textarea modal will not create a fullscreen button
 	$('textarea').each(function() {
 		el = $(this)
