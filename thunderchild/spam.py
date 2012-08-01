@@ -27,8 +27,9 @@ class BodyTest():
 
     def spam_words(self, comment):
         count = 0
+        body_lower = comment['body'].lower()
         for word in SPAM_WORDS:
-            if word in comment['body']:
+            if word in body_lower:
                 count+=1
         return count
 
@@ -48,8 +49,9 @@ class BodyTest():
             score -= 1
         # Count number of spam words
         num_spam_words = self.spam_words(comment)
+        print 'num spam words', num_spam_words
         if num_spam_words > 0:
-            score -= num_spam_words
+            score -= num_spam_words * 2 # -2 per spam word
         return score
 
 
@@ -65,8 +67,9 @@ class URLTest():
 
     def url_words(self, comment):
         count = 0
+        website_lower = comment['website'].lower()
         for word in URL_WORDS:
-            if word in comment['website']:
+            if word in website_lower:
                 count+=1
         return count
     
@@ -90,5 +93,6 @@ def get_spam_score(comment):
     score = 0
     for test in tests:
         score += test(comment)
+    print 'score', score
     return score
 
