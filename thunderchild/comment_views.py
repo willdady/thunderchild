@@ -1,15 +1,16 @@
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import HttpResponseNotAllowed, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from thunderchild import models, model_forms
-from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse_lazy, reverse
-from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
+from thunderchild.spam import get_spam_score
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def comments(request):
-    comments = models.Comment.objects.all()
+    comments = models.Comment.objects.all().order_by('-date')
     
     paginator = Paginator(comments, 30)
     
@@ -86,15 +87,19 @@ def submit(request):
         entry = get_object_or_404(models.Entry, pk=request.POST['entry_id'])
         form = entry.get_comment_form(request.POST)
         if form.is_valid():
-            
-            #TODO: Spam check here.
-            
             comment = models.Comment(entry=entry, 
                                      name=form.cleaned_data['name'], 
                                      email=form.cleaned_data['email'], 
                                      website=form.cleaned_data['website'], 
                                      body=form.cleaned_data['body'],
                                      ip_address=request.META['REMOTE_ADDR'])
+            # Get the spam score. Scores < 0 will be marked as spam. Scores <= -10 will NOT saved, the user/spammer will still be redirected to the success/awaiting moderation page.
+            spam_score = get_spam_score(form.cleaned_data)
+            if spam_score < 0:
+                comment.is_spam = True
+            if spam_score <= -10:
+                return redirect(request.POST['success'])
+            # Save comment
             comment.save()
             return redirect(request.POST['success'])
         else:

@@ -167,7 +167,7 @@ class Comment(models.Model):
     email = models.EmailField(max_length=100)
     website = models.URLField(blank=True)
     body = models.TextField(max_length=500)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
     ip_address = models.IPAddressField()
     is_approved = models.BooleanField(default=False)
     is_spam = models.BooleanField(default=False)

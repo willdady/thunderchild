@@ -77,19 +77,30 @@ hr {
   margin-bottom:15px;
 }
 table {
-  background: @white;
+  background: none;
   margin-bottom:9px;
   width:100%;
+  border:none;
   thead {
-    background: @table-header-color;
-    th {
-      color: @grayLighter;
-      padding: 3px 3px 5px 3px;
+    tr {
+      border-bottom:1px solid #999;
+      th {
+        border:none;
+        padding:5px;
+        text-align:left;
+      }
     }
   }
   tbody {
-    td {
-      text-align:center;
+    tr {
+      border-bottom:1px solid #CCC;
+      td {
+        border:none;
+        padding:5px;
+      }
+      &:last-child {
+        border:none;    
+      }
     }
   }
 }

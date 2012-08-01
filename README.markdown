@@ -132,11 +132,11 @@ these files if the markup is not to your liking. Each snippet can be included in
 Example:
 
 	```
-	{% entry 'my_entry' as my_entry %}
+	{% entry 'my-entry' as my_entry %}
 	
-	{% include "thunderchild/snippets/comments.html" with entry=my_entry only %}
+	{% include "thunderchild/snippets/comments.html" with entry=my_entry %}
 	
-	{% include "thunderchild/snippets/comment_form.html" with entry=my_entry only %}
+	{% include "thunderchild/snippets/comment_form.html" with entry=my_entry %}
 	```
 	
 By default the comment form will redirect users to "/comment/thankyou" on success and "/comment/error"	if there is an error processing the form (such as an invalid email address). Be sure
