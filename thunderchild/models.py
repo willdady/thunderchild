@@ -204,7 +204,7 @@ class CategoryGroup(models.Model):
 class Category(models.Model):
     categorygroup = models.ForeignKey(CategoryGroup)
     category_name = models.CharField(max_length=255, verbose_name='Name')
-    category_short_name = models.CharField(max_length=255, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric])
+    category_short_name = models.CharField(max_length=255, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric])
 
     def __unicode__(self):
         return u'{}'.format(self.category_name)

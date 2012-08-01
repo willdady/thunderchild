@@ -215,6 +215,19 @@ class CategoryForm(ModelForm):
                    'category_short_name':TextInput(attrs={'class':'input-large'})
                    }
         
+    def clean(self):
+        # We make sure the Category doesn't contain the same short name as existing Category within the same Category Group.
+        cleaned_data = super(CategoryForm, self).clean()
+        category_short_name = cleaned_data.get('category_short_name')
+        categorygroup = cleaned_data.get('categorygroup')
+        if category_short_name and categorygroup:
+            # We check whether we have a Category in the parent group with the same name
+            category_exists = models.Category.objects.filter(category_short_name__exact=category_short_name, categorygroup__exact=categorygroup).exists()
+            if category_exists:
+                self._errors['category_short_name'] = self.error_class([u"A Category with this short name already exists within the parent Category Group."])
+                del cleaned_data['category_short_name']
+        return cleaned_data
+        
 
 class EntriesFilterForm(forms.Form):
     entrytype = forms.ChoiceField(choices=[], required=False, label="Entry type")
