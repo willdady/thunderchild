@@ -4,13 +4,6 @@
 
 AssetModel = Backbone.Model.extend({selected:false})
 
-AssetCollection = Backbone.Collection.extend
-
-  model:AssetModel
-  
-  url:assetsURL # Note assetsURL must be defined in the global scope
-
-
 AppModel = Backbone.Model.extend
 
   showUploadModal: ->
@@ -54,15 +47,7 @@ DeleteSelectedModalView = Backbone.View.extend
     'click #modal_confirm_delete_button':'confirmDeleteButtonHandler'
     
   confirmDeleteButtonHandler:(e) ->
-    assetCollection = @model.get("assetCollection")
-    models_to_delete = []
-    for model in assetCollection.models
-      if model.get("selected")
-        models_to_delete.push(model)
-    _.each models_to_delete, (model) ->
-      model.destroy()
-    @$el.modal("hide")
-    @model.set("numCheckedAssets", 0)
+    $("#thumbnails_form").submit()
     e.preventDefault()
     
   show: ->
@@ -115,7 +100,7 @@ UploadModalView = Backbone.View.extend
   
   uploadCompleteHandler: ->
     @$el.modal("hide")
-    window.location.replace(window.location.href) # We reload the page (without url parameters, taking us to the first page)
+    window.location.replace(mediaURL) # We reload the page (without url parameters, taking us to the first page)
 
   uploadNameConflictHandler: (response) ->
     @model.set("uploadResponse", response) # Store the response in the app model so we can retrieve it later.
@@ -144,7 +129,7 @@ UploadModalView = Backbone.View.extend
   dontReplaceFileClickHandler:(e) ->
     if !@replaceAssetControlsDisabled
       @$el.modal("hide")
-      window.location.replace(window.location.href) # We reload the page (without url parameters, taking us to the first page)
+      window.location.replace(mediaURL) # We reload the page (without url parameters, taking us to the first page)
     e.preventDefault()
 
 AssetItemView = Backbone.View.extend
@@ -174,7 +159,7 @@ AssetItemView = Backbone.View.extend
     else
       @model.set("selected", false)
       @trigger "selection_change", false
-      
+    
   destroyHandler: ->
     @$el.remove()
     @off() # Removes all event callbacks
@@ -199,12 +184,11 @@ AssetItemsView = Backbone.View.extend
                            
       asset = new AssetItemView({el:el, model:m, appModel:@model})
       asset.on "selection_change", @assetSelectionChangeHandler, @
-      @collection.add m
       
   assetSelectionChangeHandler:(isSelected) ->
     numCheckedAssets = $(".thumbnail input[type='checkbox']:checked").length
     @model.set("numCheckedAssets", numCheckedAssets)
-    
+      
 
 AppView = Backbone.View.extend
 
@@ -255,8 +239,7 @@ AppView = Backbone.View.extend
 
 
 $ ->
-  assetCollection = new AssetCollection()
-  model = new AppModel({assetCollection:assetCollection})
+  model = new AppModel()
   uploadService = new window.MediaUploadService()
   
   uploadModal = new UploadModalView({model:model, uploadService:uploadService})
@@ -264,7 +247,7 @@ $ ->
   previewModal = new PreviewModalView({model:model})
   appView = new AppView({model:model})
 
-  assetItemsView = new AssetItemsView({collection:assetCollection, model:model})
+  assetItemsView = new AssetItemsView({model:model})
   
   
 

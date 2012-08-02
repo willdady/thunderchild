@@ -15,24 +15,26 @@
 
 	<hr />
 
-	<form id="thumbnails_form">
-		<ul id="thumbnails_list" class="thumbnails">
-			{% for media_asset in media_assets %}
-			<li class="span2">
-				<a href="{{ media_asset.url }}" target="_blank">
-					<div class="thumbnail" data-id="{{ media_asset.id }}" data-is-image="{{ media_asset.is_image }}" data-url="{{ media_asset.url }}" data-filename="{{ media_asset.filename }}">
-							<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" data-width="{{ media_asset.width }}" data-height="{{ media_asset.height }}" />
-							<ul>
-								<li><label for="thumbnail_{{ media_asset.id }}_checkbox">{{ media_asset.filename }}</label></li>
-								<li class="size">{{ media_asset.size|filesizeformat }}</li>
-								<li><input id="thumbnail_{{ media_asset.id }}_checkbox" type="checkbox" data-id="{{ media_asset.id }}" /></li>
-							</ul>
-					</div>
-				</a>
-			</li>
-			{% endfor %}
-		</ul>
-	</form>
+	<div class="container">
+		<form id="thumbnails_form" action="{{ delete_url }}" method="post">{% csrf_token %}
+			<ul id="thumbnails_list" class="thumbnails">
+				{% for media_asset in media_assets %}
+				<li>
+					<a href="{{ media_asset.url }}" target="_blank">
+						<div class="thumbnail" data-id="{{ media_asset.id }}" data-is-image="{{ media_asset.is_image }}" data-url="{{ media_asset.url }}" data-filename="{{ media_asset.filename }}">
+								<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" data-width="{{ media_asset.width }}" data-height="{{ media_asset.height }}" />
+								<ul>
+									<li><label for="thumbnail_{{ media_asset.id }}_checkbox">{{ media_asset.filename }}</label></li>
+									<li class="size">{{ media_asset.size|filesizeformat }}</li>
+									<li><input id="thumbnail_{{ media_asset.id }}_checkbox" type="checkbox" name="media_asset" value="{{ media_asset.id }}" data-id="{{ media_asset.id }}" /></li>
+								</ul>
+						</div>
+					</a>
+				</li>
+				{% endfor %}
+			</ul>
+		</form>
+	</div>
 	
 	{% if media_assets.paginator.num_pages > 1 %}
 	<hr />
@@ -96,6 +98,7 @@
 
 {% block javascript %}
 <script>
+	var mediaURL = "{% url thunderchild.media_views.media %}";
 	var uploadURL = "{% url thunderchild.media_views.upload %}";
 	var replaceURL = "{% url thunderchild.media_views.replace %}";
 	var assetsURL = "{% url thunderchild.media_views.assets %}";

@@ -8,57 +8,55 @@
 		</header>
 		
 		<form id="comments_form" action="{% url thunderchild.comment_views.bulk_action %}" method="post">{% csrf_token %}
-		<ul>
-			<li>
-				<select name="action">
-					<option value="approve">Approve selected</option>
-					<option value="unapprove">Unapprove selected</option>
-					<option value="delete">Delete selected</option>
-				</select>
-			</li>
-			<li><input type="submit" value="Go" class="btn" /></li>
-		</ul>
-	
-		<hr />
+			<ul>
+				<li>
+					<select name="action">
+						<option value="approve">Approve selected</option>
+						<option value="unapprove">Unapprove selected</option>
+						<option value="delete">Delete selected</option>
+					</select>
+				</li>
+				<li><input type="submit" value="Go" class="btn" /></li>
+			</ul>
 		
-		<div class="row">
-			<table class="span12" border="1">
-			<thead>
-				<tr>
-					<th>
-						<label for="select_all_checkbox" class="visuallyhidden">Select All</label>
-						<input id="select_all_checkbox" name="select_all_checkbox" type="checkbox" value="0" />
-					</th>
-					<th>Entry</th>
-					<th>Name</th>
-					<th>Email</th>
-					<th>Website</th>
-					<th>Date</th>
-					<th>Is Spam</th>
-					<th>Is Approved</th>
-					<th>Edit</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for comment in comments %}
-				<tr>
-					<td>
-						<label for="comment_{{ comment.id }}_checkbox" class="visuallyhidden">Comment {{ comment.id }} checkbox</label>
-						<input id="comment_{{ comment.id }}_checkbox" name="comment" value="{{ comment.id }}" type="checkbox" data-comment-id="{{ comment.id }}" />
-					</td>
-					<td>{{ comment.entry.title }}</td>
-					<td>{{ comment.name }}</td>
-					<td>{{ comment.email }}</td>
-					<td>{% if comment.website %}<a href="{{ comment.website }}" target="_blank">{{ comment.website }}</a>{% endif %}</td>
-					<td>{{ comment.date }}</td>
-					<td>{{ comment.is_spam }}</td>
-					<td>{{ comment.is_approved }}</td>
-					<td><a href="{% url thunderchild.comment_views.edit comment.id %}">Edit</a></td>
-				</tr>
-				{% endfor %}
-			</tbody>
+			<hr />
+			
+			<table>
+				<thead>
+					<tr>
+						<th>
+							<label for="select_all_checkbox" class="visuallyhidden">Select All</label>
+							<input id="select_all_checkbox" name="select_all_checkbox" type="checkbox" value="0" />
+						</th>
+						<th>Entry</th>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Website</th>
+						<th>Date</th>
+						<th>Is Spam</th>
+						<th>Is Approved</th>
+						<th>Edit</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for comment in comments %}
+					<tr>
+						<td>
+							<label for="comment_{{ comment.id }}_checkbox" class="visuallyhidden">Comment {{ comment.id }} checkbox</label>
+							<input id="comment_{{ comment.id }}_checkbox" name="comment" value="{{ comment.id }}" type="checkbox" data-comment-id="{{ comment.id }}" />
+						</td>
+						<td>{{ comment.entry.title }}</td>
+						<td>{{ comment.name }}</td>
+						<td>{{ comment.email }}</td>
+						<td>{% if comment.website %}<a href="{{ comment.website }}" target="_blank">{{ comment.website }}</a>{% endif %}</td>
+						<td>{{ comment.date }}</td>
+						<td>{{ comment.is_spam }}</td>
+						<td>{{ comment.is_approved }}</td>
+						<td><a href="{% url thunderchild.comment_views.edit comment.id %}">Edit</a></td>
+					</tr>
+					{% endfor %}
+				</tbody>
 			</table>
-		</div>
 		</form>
 		
 		{% if comments.paginator.num_pages > 1 %}

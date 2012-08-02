@@ -1,12 +1,8 @@
 (function() {
-  var AppModel, AppView, AssetCollection, AssetItemView, AssetItemsView, AssetModel, DeleteSelectedModalView, PreviewModalView, UploadModalView;
+  var AppModel, AppView, AssetItemView, AssetItemsView, AssetModel, DeleteSelectedModalView, PreviewModalView, UploadModalView;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   AssetModel = Backbone.Model.extend({
     selected: false
-  });
-  AssetCollection = Backbone.Collection.extend({
-    model: AssetModel,
-    url: assetsURL
   });
   AppModel = Backbone.Model.extend({
     showUploadModal: function() {
@@ -43,21 +39,7 @@
       'click #modal_confirm_delete_button': 'confirmDeleteButtonHandler'
     },
     confirmDeleteButtonHandler: function(e) {
-      var assetCollection, model, models_to_delete, _i, _len, _ref;
-      assetCollection = this.model.get("assetCollection");
-      models_to_delete = [];
-      _ref = assetCollection.models;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        model = _ref[_i];
-        if (model.get("selected")) {
-          models_to_delete.push(model);
-        }
-      }
-      _.each(models_to_delete, function(model) {
-        return model.destroy();
-      });
-      this.$el.modal("hide");
-      this.model.set("numCheckedAssets", 0);
+      $("#thumbnails_form").submit();
       return e.preventDefault();
     },
     show: function() {
@@ -108,7 +90,7 @@
     },
     uploadCompleteHandler: function() {
       this.$el.modal("hide");
-      return window.location.replace(window.location.href);
+      return window.location.replace(mediaURL);
     },
     uploadNameConflictHandler: function(response) {
       this.model.set("uploadResponse", response);
@@ -139,7 +121,7 @@
     dontReplaceFileClickHandler: function(e) {
       if (!this.replaceAssetControlsDisabled) {
         this.$el.modal("hide");
-        window.location.replace(window.location.href);
+        window.location.replace(mediaURL);
       }
       return e.preventDefault();
     }
@@ -198,8 +180,7 @@
           model: m,
           appModel: this.model
         });
-        asset.on("selection_change", this.assetSelectionChangeHandler, this);
-        return this.collection.add(m);
+        return asset.on("selection_change", this.assetSelectionChangeHandler, this);
       }, this));
     },
     assetSelectionChangeHandler: function(isSelected) {
@@ -261,11 +242,8 @@
     }
   });
   $(function() {
-    var appView, assetCollection, assetItemsView, deleteSelectedModal, model, previewModal, uploadModal, uploadService;
-    assetCollection = new AssetCollection();
-    model = new AppModel({
-      assetCollection: assetCollection
-    });
+    var appView, assetItemsView, deleteSelectedModal, model, previewModal, uploadModal, uploadService;
+    model = new AppModel();
     uploadService = new window.MediaUploadService();
     uploadModal = new UploadModalView({
       model: model,
@@ -281,7 +259,6 @@
       model: model
     });
     return assetItemsView = new AssetItemsView({
-      collection: assetCollection,
       model: model
     });
   });

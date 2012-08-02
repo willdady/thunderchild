@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
-from django.core.paginator import Paginator, PageNotAnInteger
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse, HttpResponseNotFound
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -18,16 +18,24 @@ import os
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def media(request):
-
-    media_assets_list = models.MediaAsset.objects.all().order_by('-created')
-    paginator = Paginator(media_assets_list, 24) # Create paginator with 24 items per page
-    
-    page = request.GET.get('page')
-    try:
-        media_assets = paginator.page(page)
-    except PageNotAnInteger:
-        media_assets = paginator.page(1)
-    return render(request, 'thunderchild/media.html', {'media_assets':media_assets})
+    if request.method == 'POST':
+        media_assets = request.POST.getlist('media_asset')
+        if media_assets:
+            models.MediaAsset.objects.filter(id__in=media_assets).delete()
+        return redirect(request.get_full_path())
+    else:
+        media_assets_list = models.MediaAsset.objects.all().order_by('-created')
+        paginator = Paginator(media_assets_list, 24) # Create paginator with 24 items per page
+        page = request.GET.get('page')
+        try:
+            media_assets = paginator.page(page)
+        except PageNotAnInteger:
+            media_assets = paginator.page(1)
+        except EmptyPage:
+            url = '{}?page={}'.format(request.path, paginator.num_pages)
+            return redirect(url)
+        return render(request, 'thunderchild/media.html', {'media_assets':media_assets,
+                                                           'delete_url':request.get_full_path()})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -52,7 +60,6 @@ def upload(request):
                 resp['name_conflict'] = name_conflict
         #Save the file to disk
         disk_path = fs.save(filename, f)
-        print disk_path
         #Save a thumbnail to disk
         width, height = None, None
         try:
@@ -88,7 +95,7 @@ def upload(request):
         resp['size'] = fs.size(filename)
         
         return HttpResponse(json.dumps(resp), content_type="text/json")
-    return render(request, 'thunderchild/media.html', {})
+    return HttpResponseNotAllowed(permitted_methods=['POST'])
   
   
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
