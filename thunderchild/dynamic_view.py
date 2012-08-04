@@ -1,6 +1,6 @@
 from django.core.cache import cache
 from django.http import HttpResponse, Http404
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.template import Template
 from django.template.context import RequestContext
 from django.template.loader import get_template
@@ -33,6 +33,12 @@ def dynamic_view(request, path):
     except TemplateModel.DoesNotExist:
         template_name = '{}/index'.format(segments[0])
         model = get_object_or_404(TemplateModel, template_uid__exact=template_name)
+        
+    if model.is_redirected:
+        if model.template_redirect_type == 301:
+            return redirect(model.template_redirect_url, permanent=True)
+        if model.template_redirect_type == 302:
+            return redirect(model.template_redirect_url)
         
     # If the template is private return 404
     if model.template_is_private:

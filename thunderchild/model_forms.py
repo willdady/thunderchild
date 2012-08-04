@@ -147,7 +147,11 @@ TEMPLATE_CONTENT_TYPES = (('text/html', 'HTML - text/html'),
                           ('text/csv', 'CSV - text/csv'),  
                           ('application/soap+xml', 'SOAP - application/soap+xml'), 
                           ('text/vcard', 'vCard - text/vcard'),
-                          ('text/plain', 'Text - text/plain'))  
+                          ('text/plain', 'Text - text/plain'))
+
+TEMPLATE_REDIRECT_TYPES = (('','No redirect'),
+                           ('301','Permanent'),
+                           ('302','Temporary'))  
 
 class TemplateForm(ModelForm):
     class Meta:
@@ -158,6 +162,8 @@ class TemplateForm(ModelForm):
                     'templategroup':HiddenInput(),
                     'template_short_name':TextInput(attrs={'class':'input-large'}),
                     'template_is_private':RadioSelect(),
+                    'template_redirect_type':Select(choices=TEMPLATE_REDIRECT_TYPES),
+                    'template_redirect_url':TextInput(attrs={'class':'input-large'}),
                     'template_content':Textarea(attrs={'class':'input-large'})
         }
     

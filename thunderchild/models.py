@@ -185,9 +185,17 @@ class Template(models.Model):
     template_short_name = models.CharField(max_length=125, verbose_name='Name', validators=[validate_lowercase, validate_urlchars], help_text="A URL friendly name containing only letters, numbers and/or the special characters -, _, $, ., +.")
     template_uid = models.CharField(max_length=255, unique=True)
     template_content_type = models.CharField(max_length=50, default='text/html', verbose_name='Content type')
-    template_cache_timeout = models.IntegerField(default=0, verbose_name='Cache timeout', help_text='Number of seconds the rendered template should be cached for before being re-rendered. Recommended for templates that do not change often.')
+    template_cache_timeout = models.IntegerField(default=0, verbose_name='Cache timeout', help_text='Number of seconds the rendered template should be cached before being re-rendered. Recommended for templates that do not change often.')
     template_is_private = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Is private?', help_text="Private templates are not publicly accessible. They're intended for use as base templates to extend from or as fragments for including in other templates.")
+    template_redirect_type = models.IntegerField(blank=True, null=True, verbose_name='Redirect')
+    template_redirect_url = models.URLField(max_length=500, blank=True, verbose_name='Redirect URL')
     template_content = models.TextField(default='{% load thunderchild_tags %}', verbose_name='Content')
+    
+    @property
+    def is_redirected(self):
+        if self.template_redirect_type == 302 or self.template_redirect_type == 301:
+            return True
+        return False
                
     def __unicode__(self):
         return u'{}/{}'.format(self.templategroup.templategroup_short_name, self.template_short_name)
