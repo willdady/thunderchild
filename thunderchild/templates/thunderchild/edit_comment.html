@@ -1,20 +1,17 @@
 {% extends "thunderchild/base.html" %}
 
-{% block content %}
+{% block title %}Edit Comment{% endblock %}
+{% block title_bar_title %}Edit Comment{% endblock %}
 
-		<ul class="breadcrumb">
-			<li>
-				<a href="{% url thunderchild.comment_views.comments %}">Comments</a> <span class="divider">/</span>
-			</li>
-			<li class="active">
-				Edit Comment
-			</li>
-		</ul>
-		
-		<header>
-			<h1>Edit Comment</h1>
-		</header>
-		
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>
+		<a href="{% url thunderchild.comment_views.comments %}">Comments</a> <span class="divider">/</span>
+	</li>
+</ul>
+{% endblock %}
+
+{% block content %}
 		<form action="{% url thunderchild.comment_views.edit comment_id %}" method="post">{% csrf_token %}
 			{% for field in form %}
 				{% if not field.is_hidden %}

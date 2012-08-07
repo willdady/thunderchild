@@ -1,11 +1,13 @@
 {% extends "thunderchild/base.html" %}
 
+{% block title %}Entry Types{% endblock %}
+{% block title_bar_title %}Entry Types{% endblock %}
+
+{% block action_bar %}
+<a class="btn btn-primary pull-right" href="{% url thunderchild.entry_views.create_entrytype %}">Create entry type</a>
+{% endblock %}
+
 {% block content %}
-		
-		<header>
-			<h1>Entry Types</h1>
-		</header>
-		
 		{% if entrytypes %}
 		<table border="1">
 			<thead>
@@ -26,9 +28,4 @@
 		{% else %}
 		<p>There are currently no entry types defined. Click 'Create entry type' below to create one.</p>
 		{% endif %}
-		
-		<div class="row">
-			<a class="btn pull-right" href="{% url thunderchild.entry_views.create_entrytype %}">Create entry type</a>
-		</div>
-		
 {% endblock %}

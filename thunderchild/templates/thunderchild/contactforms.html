@@ -1,36 +1,29 @@
 {% extends "thunderchild/base.html" %}
 
+{% block title %}Contact Forms{% endblock %}
+{% block title_bar_title %}Contact Forms{% endblock %}
+
+{% block action_bar %}
+<a href="{% url thunderchild.form_views.create_contactform %}" class="btn btn-primary pull-right">Create contact form</a>
+{% endblock %}
+
 {% block content %}
-	
-	<header>	
-		<h1>Contact forms</h1>
-	</header>
-	
-	<div class="row">
-			<table class="span12" border="1">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Short name</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for cf in contactforms %}
-				<tr>
-					<td><a href="{% url thunderchild.form_views.edit_contactform cf.id %}">{{ cf.contactform_name }}</a></td>
-					<td>{{ cf.contactform_short_name }}</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-			</table>
-	</div>
-	<hr />
-	<div class="row">
-		<div id="create_controls" class="pull-right">
-			<a href="{% url thunderchild.form_views.create_contactform %}" class="btn">Create contact form</a>
-		</div>
-	</div>
-	
+	<table border="1">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Short name</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for cf in contactforms %}
+			<tr>
+				<td><a href="{% url thunderchild.form_views.edit_contactform cf.id %}">{{ cf.contactform_name }}</a></td>
+				<td>{{ cf.contactform_short_name }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 	{% if contactforms.paginator.num_pages > 1 %}
 	<hr />
 	<div class="pagination pagination-centered">

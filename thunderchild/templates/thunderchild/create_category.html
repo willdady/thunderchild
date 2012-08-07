@@ -1,20 +1,17 @@
 {% extends "thunderchild/base.html" %}
 
-{% block content %}
+{% block title %}Create Category{% endblock %}
+{% block title_bar_title %}Create Category{% endblock %}
 
-		<ul class="breadcrumb">
-			<li>
-				<a href="{% url thunderchild.category_views.categorygroups %}">Category Groups</a> <span class="divider">/</span>
-			</li>
-			<li class="active">
-				Create Category
-			</li>
-		</ul>
-		
-		<header>
-			<h1>Create Category</h1>
-		</header>
-		
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>
+		<a href="{% url thunderchild.category_views.categorygroups %}">Category Groups</a> <span class="divider">/</span>
+	</li>
+</ul>
+{% endblock %}
+
+{% block content %}
 		<form action="{% url thunderchild.category_views.create_category categorygroup_id %}" method="post">{% csrf_token %}
 			{% for field in form %}
 				{% if not field.is_hidden %}

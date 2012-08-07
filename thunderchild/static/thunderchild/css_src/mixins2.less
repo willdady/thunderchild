@@ -1,0 +1,12 @@
+.six-color-gradient(@color1, @color1Percent, @color2, @color2Percent, @color3, @color3Percent, @color4, @color4Percent, @color5, @color5Percent, @color6, @color6Percent) {
+    background: @color1; /* Old browsers */
+    background: -moz-linear-gradient(top, @color1 @color1Percent, @color2 @color2Percent, @color3 @color3Percent, @color4 @color4Percent, @color5 @color5Percent, @color6 @color6Percent); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(@color1Percent, @color1), color-stop(@color2Percent, @color2), color-stop(@color3Percent, @color3), color-stop(@color4Percent, @color4), color-stop(@color5Percent, @color5), color-stop(@color6Percent, @color6)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, @color1 @color1Percent, @color2 @color2Percent, @color3 @color3Percent, @color4 @color4Percent, @color5 @color5Percent, @color6 @color6Percent); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, @color1 @color1Percent, @color2 @color2Percent, @color3 @color3Percent, @color4 @color4Percent, @color5 @color5Percent, @color6 @color6Percent); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, @color1 @color1Percent, @color2 @color2Percent, @color3 @color3Percent, @color4 @color4Percent, @color5 @color5Percent, @color6 @color6Percent); /* IE10+ */
+    background: linear-gradient(top bottom, @color1 @color1Percent, @color2 @color2Percent, @color3 @color3Percent, @color4 @color4Percent, @color5 @color5Percent, @color6 @color6Percent); /* W3C */
+}
+.navbar-gradient() {
+  .six-color-gradient(#434e56, 1%, #47525b, 10%, #47525b, 47%, #39424b, 53%, #39424b, 91%, #313b44, 100%);
+}

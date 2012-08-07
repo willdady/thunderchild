@@ -1,20 +1,17 @@
 {% extends "thunderchild/base.html" %}
 
+{% block title %}Create Template{% endblock %}
+{% block title_bar_title %}Create Template{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>
+		<a href="{% url thunderchild.template_views.templates %}">Templates</a> <span class="divider">/</span>
+	</li>
+</ul>
+{% endblock %}
+
 {% block content %}
-		
-		<ul class="breadcrumb">
-			<li>
-				<a href="{% url thunderchild.template_views.templates %}">Templates</a> <span class="divider">/</span>
-			</li>
-			<li class="active">
-				Create Template
-			</li>
-		</ul>
-		
-		<header>
-			<h1>Create Template</h1>
-		</header>
-		
 		<form action="{% url thunderchild.template_views.create_template templategroup_id %}" method="post">{% csrf_token %}
 			{% for field in form %}
 				{% if not field.is_hidden %}

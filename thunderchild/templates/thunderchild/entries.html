@@ -1,11 +1,10 @@
 {% extends "thunderchild/base.html" %}
 
-{% block content %}
-	
-	<header>	
-		<h1>Entries</h1>
-	</header>
-	
+{% block title %}Entries{% endblock %}
+{% block title_bar_title %}Entries{% endblock %}
+
+{% block action_bar %}
+<div class="pull-left">
 	<form id="entries_filter_form" action="{% url thunderchild.entry_views.entries %}" method="get">
 		<ul>
 			{% for field in form %}
@@ -15,8 +14,21 @@
 			<li><input type="submit" value="Filter" class="btn" /></li>
 		</ul>
 	</form>
-	
-	<hr />
+</div>
+<div id="create_controls" class="pull-right">
+	<label for="entry_type_select">Create a new</label>
+	<select id="entry_type_select">
+		{% for entry_type in entry_types %}
+		<option value="{{ entry_type.id }}">{{ entry_type.entrytype_name }}</option>
+		{% endfor %}
+	</select>
+	{% with entry_types|first as first_entry_type %}
+	<a id="go_button" href="/backend/entries/create/{{ first_entry_type.id }}" class="btn btn-primary">Go</a>
+	{% endwith %}
+</div>
+{% endblock %}
+
+{% block content %}
 	
 		<table>
 			<thead>
@@ -44,20 +56,6 @@
 				{% endfor %}
 			</tbody>
 		</table>
-	<hr />
-	<div class="row">
-		<div id="create_controls" class="pull-right">
-			<label for="entry_type_select">Create a new</label>
-			<select id="entry_type_select">
-				{% for entry_type in entry_types %}
-				<option value="{{ entry_type.id }}">{{ entry_type.entrytype_name }}</option>
-				{% endfor %}
-			</select>
-			{% with entry_types|first as first_entry_type %}
-			<a id="go_button" href="/backend/entries/create/{{ first_entry_type.id }}" class="btn">Go</a>
-			{% endwith %}
-		</div>
-	</div>
 	
 	{% if page.paginator.num_pages > 1 %}
 	<hr />

@@ -1,20 +1,17 @@
 {% extends "thunderchild/base.html" %}
 
-{% block content %}
+{% block title %}Edit Field Group{% endblock %}
+{% block title_bar_title %}Edit Field Group{% endblock %}
 
-		<ul class="breadcrumb">
-			<li>
-				<a href="{% url thunderchild.field_views.fieldgroups %}">Field Groups</a> <span class="divider">/</span>
-			</li>
-			<li class="active">
-				Edit Field Group
-			</li>
-		</ul>
-		
-		<header>
-			<h1>Edit Field Group</h1>
-		</header>
-		
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>
+		<a href="{% url thunderchild.field_views.fieldgroups %}">Field Groups</a> <span class="divider">/</span>
+	</li>
+</ul>
+{% endblock %}
+
+{% block content %}
 		<form action="{% url thunderchild.field_views.edit_fieldgroup fieldgroup_id %}" method="post">{% csrf_token %}
 			{% for field in form %}
 				{% if not field.is_hidden %}
@@ -40,20 +37,8 @@
 			</div>
 			
 		</form>
-		
-		<div id="confirm_delete_modal" class="modal">
-			<div class="modal-header">
-				<button class="close" data-dismiss="modal">×</button>
-				<h3>Confirm Delete</h3>
-			</div>
-			<div class="modal-body">
-				<p>Are you sure you want to <b>permanently</b> delete this field group?<br />All fields within this group will be deleted.</p>
-			</div>
-			<div class="modal-footer">
-				<a href="#" class="btn" data-dismiss="modal">Cancel</a>
-				<a href="{% url thunderchild.field_views.delete_fieldgroup fieldgroup_id %}" class="btn btn-danger"><i class="icon-trash icon-white"></i> Confirm Delete</a>
-			</div>
-		</div>
+				
+		{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this field group?" action=delete_url id=fieldgroup_id %}
 		
 {% endblock %}
 

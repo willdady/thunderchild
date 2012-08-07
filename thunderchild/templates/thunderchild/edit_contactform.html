@@ -1,42 +1,45 @@
 {% extends "thunderchild/base.html" %}
 
-{% block content %}
+{% block title %}Edit Contact Form{% endblock %}
+{% block title_bar_title %}Edit Contact Form{% endblock %}
 
-		<ul class="breadcrumb">
-			<li>
-				<a href="{% url thunderchild.form_views.contactforms %}">Contact Forms</a> <span class="divider">/</span>
-			</li>
-			<li class="active">
-				Edit Contact Form
-			</li>
-		</ul>
-		
-		<header>
-			<h1>Edit Contact Form</h1>
-		</header>
-		
-		<form action="{% url thunderchild.form_views.edit_contactform contactform_id %}" method="post">{% csrf_token %}
-			{% for field in form %}
-				{% if not field.is_hidden %}
-				<div class="accordion-group">
-						<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
-							{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
-							{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
-						</div>
-						<div id="form_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
-							{{ field }}
-							{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
-						</div>
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>
+		<a href="{% url thunderchild.form_views.contactforms %}">Contact Forms</a> <span class="divider">/</span>
+	</li>
+</ul>
+{% endblock %}
+
+{% block pre_contact_bar %}
+<form action="{% url thunderchild.form_views.edit_contactform contactform_id %}" method="post">{% csrf_token %}
+{% endblock %}
+
+{% block action_bar %}
+<input class="btn btn-primary pull-right" type="submit" value="Save" />
+{% endblock %}
+
+{% block content %}
+	{% for field in form %}
+		{% if not field.is_hidden %}
+		<div class="accordion-group">
+				<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
+					{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
+					{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
 				</div>
-				{% else %}
+				<div id="form_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
 					{{ field }}
-				{% endif %}
-			{% endfor %}
-			<div class="row">
-				<input class="btn pull-right" type="submit" value="Save" />
-			</div>
-		</form>
-		
+					{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
+				</div>
+		</div>
+		{% else %}
+			{{ field }}
+		{% endif %}
+	{% endfor %}
+{% endblock %}
+
+{% block post_content %}
+</form>
 {% endblock %}
 
 {% block javascript %}

@@ -1,17 +1,31 @@
-@linkColor:#08e;
-@grayDark:#333;
-@textColor:@grayDark;
-@red:#F00;
+@textColor:#444;
 
+@baseColor:#25826d;
 
-@off-white: #FCFCFC;
-@grayLight: #999;  
-@grayLighter: #EEE;
+@pageBackgroundColor:#ecf0f1;
+
+@linkColor:@baseColor;
+@linkColorHover:darken(@linkColor, 10%);
+@btnPrimaryBackground:lighten(@baseColor,18%);
+@btnPrimaryBackgroundHighlight:darken(@btnPrimaryBackground, 9%);
+
+@dropdownMenuBackgroundColor:#39424b;
+@dropdownMenuHoverBackgroundColor:#47525b;
+
+@breadcrumbBarBackgroundColor:@baseColor;
+@breadcrumbBarTextColor:lighten(spin(@baseColor, 5), 25%);
+@breadcrumbBarLinkColor:@breadcrumbBarTextColor;
+
+@navbarLinkColor:darken(@white, 30%);
+@navbarLinkHoverColor:@white;
+
+@titleBarBackgroundColor:desaturate(lighten(spin(@baseColor, -10), 30%), 5%);
+@actionBarBackgroundColor:darken(spin(@pageBackgroundColor, 10), 4%);
+
 @white: #FFF;
-@gray: #555;
-@tableBorder: #DDD;
-@navBarStrip: @linkColor;
-@group-color: #F1F1F1;
-@group-border-color: #E5E5E5;
-@table-header-color: #2C2C2C;
-@errorBorder: #B94A48;
+@groupBackgroundColor: darken(spin(@pageBackgroundColor, 10), 2%);
+@groupBorderColor: darken(@groupBackgroundColor, 5%);
+
+@tableBorderColor: #DDD;
+@tableHeaderColor: #2C2C2C;
+@errorBorderColor: #B94A48;

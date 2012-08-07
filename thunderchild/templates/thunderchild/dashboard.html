@@ -1,12 +1,9 @@
 {% extends "thunderchild/base.html" %}
 
 {% block title %}Dashboard{% endblock %}
+{% block title_bar_title %}Dashboard{% endblock %}
 
 {% block content %}
-		
-		<header>
-			<h1>Dashboard</h1>
-		</header>
 		
 		{% if user.first_name == '' or user.last_name == '' %}
 		<div class="alert">

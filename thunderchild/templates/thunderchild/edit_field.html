@@ -1,20 +1,17 @@
 {% extends "thunderchild/base.html" %}
 
+{% block title %}Edit Field{% endblock %}
+{% block title_bar_title %}Edit Field{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>
+		<a href="{% url thunderchild.field_views.fieldgroups %}">Field Groups</a> <span class="divider">/</span>
+	</li>
+</ul>
+{% endblock %}
+
 {% block content %}
-		
-		<ul class="breadcrumb">
-			<li>
-				<a href="{% url thunderchild.field_views.fieldgroups %}">Field Groups</a> <span class="divider">/</span>
-			</li>
-			<li class="active">
-				Edit Field
-			</li>
-		</ul>
-		
-		<header>
-			<h1>Edit Field</h1>
-		</header>
-		
 		<form action="{% url thunderchild.field_views.edit_field fieldgroup_id field_id %}" method="post">{% csrf_token %}
 			{% for field in form %}
 				{% if not field.is_hidden %}

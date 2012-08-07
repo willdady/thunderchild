@@ -1,20 +1,17 @@
 {% extends "thunderchild/base.html" %}
 
+{% block title %}Edit Template{% endblock %}
+{% block title_bar_title %}Edit Template{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>
+		<a href="{% url thunderchild.template_views.templates %}">Templates</a> <span class="divider">/</span>
+	</li>
+</ul>
+{% endblock %}
+
 {% block content %}
-		
-		<ul class="breadcrumb">
-			<li>
-				<a href="{% url thunderchild.template_views.templates %}">Templates</a> <span class="divider">/</span>
-			</li>
-			<li class="active">
-				Edit Template
-			</li>
-		</ul>
-		
-		<header>
-			<h1>Edit Template</h1>
-		</header>
-		
 		<form action="{% url thunderchild.template_views.edit_template templategroup_id template_id %}" method="post">{% csrf_token %}
 			{% if is_index %}
 				<div class="accordion-group">

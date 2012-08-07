@@ -1,10 +1,9 @@
 {% extends "thunderchild/base.html" %}
 
+{% block title %}Field Groups{% endblock %}
+{% block title_bar_title %}Field Groups{% endblock %}
+
 {% block content %}
-		
-		<header>
-			<h1>Field Groups</h1>
-		</header>
 		
 		{% if field_list %}
 			{% for obj in field_list %}

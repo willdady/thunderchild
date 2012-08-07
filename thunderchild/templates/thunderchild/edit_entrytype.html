@@ -1,49 +1,49 @@
 {% extends "thunderchild/base.html" %}
 
+{% block title %}Edit Entry Type{% endblock %}
+{% block title_bar_title %}Edit Entry Type{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>
+		<a href="{% url thunderchild.entry_views.entrytypes %}">Entry Types</a> <span class="divider">/</span>
+	</li>
+</ul>
+{% endblock %}
+
+{% block pre_action_bar %}
+<form action="{% url thunderchild.entry_views.edit_entrytype entrytype_id %}" method="post">{% csrf_token %}
+{% endblock %}
+
+{% block action_bar %}
+<ul class="pull-right">
+	<li><a class="btn btn-danger" data-toggle="modal" href="#confirm_delete_modal"><i class="icon-trash icon-white"></i> Delete</a></li>
+	<li><input class="btn" type="submit" value="Save" /></li>
+</ul>
+{% endblock %}
+
 {% block content %}
-
-		<ul class="breadcrumb">
-			<li>
-				<a href="{% url thunderchild.entry_views.entrytypes %}">Entry Types</a> <span class="divider">/</span>
-			</li>
-			<li class="active">
-				Edit Entry Type
-			</li>
-		</ul>
-		
-		<header>
-			<h1>Edit Entry Type</h1>
-		</header>
-		
-		<form action="{% url thunderchild.entry_views.edit_entrytype entrytype_id %}" method="post">{% csrf_token %}
-			
-			{% for field in form %}
-				{% if not field.is_hidden %}
-				<div class="accordion-group">
-						<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
-							{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
-							{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
-						</div>
-						<div id="form_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
-							{{ field }}
-							{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
-						</div>
+	{% for field in form %}
+		{% if not field.is_hidden %}
+		<div class="accordion-group">
+				<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
+					{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
+					{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
 				</div>
-				{% else %}
+				<div id="form_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
 					{{ field }}
-				{% endif %}
-			{% endfor %}
-			
-			<div class="pull-right">
-				<a class="btn btn-danger" data-toggle="modal" href="#confirm_delete_modal"><i class="icon-trash icon-white"></i> Delete</a>
-				<input class="btn" type="submit" value="Save" />
-			</div>
-			
-		</form>
-		
-{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this entry type?" action=delete_url id=entrytype_id %}
+					{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
+				</div>
+		</div>
+		{% else %}
+			{{ field }}
+		{% endif %}
+	{% endfor %}
+{% endblock %}
 
-		
+{% block post_content %}
+</form>
+{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this entry type?" action=delete_url id=entrytype_id %}
 {% endblock %}
 
 {% block javascript %}

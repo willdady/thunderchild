@@ -1,20 +1,17 @@
 {% extends "thunderchild/base.html" %}
 
-{% block content %}
+{% block title %}Create Field Group{% endblock %}
+{% block title_bar_title %}Create Field Group{% endblock %}
 
-		<ul class="breadcrumb">
-			<li>
-				<a href="{% url thunderchild.field_views.fieldgroups %}">Field Groups</a> <span class="divider">/</span>
-			</li>
-			<li class="active">
-				Create Field Group
-			</li>
-		</ul>
-		
-		<header>
-			<h1>Create Field Group</h1>
-		</header>
-		
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>
+		<a href="{% url thunderchild.field_views.fieldgroups %}">Field Groups</a> <span class="divider">/</span>
+	</li>
+</ul>
+{% endblock %}
+
+{% block content %}
 		<form action="{% url thunderchild.field_views.create_fieldgroup %}" method="post">{% csrf_token %}
 			{% for field in form %}
 				{% if not field.is_hidden %}

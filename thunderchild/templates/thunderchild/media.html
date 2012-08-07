@@ -1,20 +1,19 @@
 {% extends "thunderchild/base.html" %}
 
+{% block title %}Media{% endblock %}
+{% block title_bar_title %}Media{% endblock %}
+
+{% block action_bar %}
+<ul class="pull-right">
+	<li><a id="select_all_button" href="#" class="btn">Select All</a></li>
+	<li><a id="deselect_button" href="#" class="btn disabled">Deselect All</a></li>
+	<li><a id="delete_button" href="#" class="btn btn-danger disabled"><i class="icon-trash icon-white"></i> Delete Selected</a></li>
+	<li><a id="upload_button" href="#" class="btn btn-primary"><i class="icon-arrow-up icon-white"></i> Upload</a></li>
+</ul>
+{% endblock %}
+
 {% block content %}
-
-	<header>
-		<h1>Media</h1>
-	</header>
 	
-	<a id="upload_button" href="#" class="btn">Upload</a>
-	<div class="pull-right">
-		<a id="select_all_button" href="#" class="btn">Select All</a>
-		<a id="deselect_button" href="#" class="btn disabled">Deselect All</a>
-		<a id="delete_button" href="#" class="btn btn-danger disabled"><i class="icon-trash icon-white"></i> Delete Selected</a>
-	</div>
-
-	<hr />
-
 	<div class="container">
 		<form id="thumbnails_form" action="{{ delete_url }}" method="post">{% csrf_token %}
 			<ul id="thumbnails_list" class="thumbnails">

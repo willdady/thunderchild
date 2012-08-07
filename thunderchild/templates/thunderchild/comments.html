@@ -1,26 +1,27 @@
 {% extends "thunderchild/base.html" %}
 
+{% block title %}Comments{% endblock %}
+{% block title_bar_title %}Comments{% endblock %}
+
+
+<form id="comments_form" action="{% url thunderchild.comment_views.bulk_action %}" method="post">{% csrf_token %}
+{% block action_bar %}
+<div class="pull-right">
+	<ul>
+		<li>
+			<select name="action">
+				<option value="approve">Approve selected</option>
+				<option value="unapprove">Unapprove selected</option>
+				<option value="delete">Delete selected</option>
+			</select>
+		</li>
+		<li><input type="submit" value="Go" class="btn btn-primary" /></li>
+	</ul>
+</div>
+{% endblock %}
+
 {% block content %}
 		
-		
-		<header>
-			<h1>Comments</h1>
-		</header>
-		
-		<form id="comments_form" action="{% url thunderchild.comment_views.bulk_action %}" method="post">{% csrf_token %}
-			<ul>
-				<li>
-					<select name="action">
-						<option value="approve">Approve selected</option>
-						<option value="unapprove">Unapprove selected</option>
-						<option value="delete">Delete selected</option>
-					</select>
-				</li>
-				<li><input type="submit" value="Go" class="btn" /></li>
-			</ul>
-		
-			<hr />
-			
 			<table>
 				<thead>
 					<tr>
@@ -57,8 +58,7 @@
 					{% endfor %}
 				</tbody>
 			</table>
-		</form>
-		
+</form>		
 		{% if comments.paginator.num_pages > 1 %}
 		<hr />
 		<div class="pagination pagination-centered">
