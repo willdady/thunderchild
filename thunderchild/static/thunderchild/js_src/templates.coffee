@@ -1,152 +1,220 @@
+templateRoot = '/backend/api/templates/template'
+templateGroupRoot = '/backend/api/templates/group'
+
+# Models
+
 AppModel = Backbone.Model.extend
-  selectedGroupItem:null
-  selectedTemplateItem:null
 
-GroupItemView = Backbone.View.extend
-  
+  selectedTemplate: (model) ->
+    if model
+      @set("selectedTemplate", model)
+    return @get("selectedTemplate")
+    
+  openNewTemplateModal: (group_id) ->
+    @trigger "openNewTemplateModal", group_id
+
+
+TemplateModel = Backbone.Model.extend {urlRoot:templateRoot}
+
+TemplateCollection = Backbone.Collection.extend {model:TemplateModel, url:templateRoot}
+
+# Views
+
+ActionBarView = Backbone.View.extend
+
+  events:
+    "click #create-templategroup-button":"createTemplateGroupClickHandler",
+    "click #delete-template-button":"deleteTemplateClickHandler",
+    "click #save-template-button":"saveTemplateClickHandler"
+    
+  createTemplateGroupClickHandler: (e) ->
+    log("createTemplateGroupClickHandler")
+    e.preventDefault()
+    
+  deleteTemplateClickHandler: (e) ->
+    log("deleteTemplateClickHandler")
+    e.preventDefault()
+    
+  saveTemplateClickHandler:(e) ->
+    log("saveTemplateClickHandler")
+    e.preventDefault()
+
+NewTemplateModalView = Backbone.View.extend
+
   initialize: ->
-    @templatePane = @options.templatePane
-    @id = @$el.attr("data-id")
-    @groupName = @$el.attr("data-group")
-    @editButton = @$el.find ".edit-button"
-    @icon = @$el.find(".icon-folder-close")
+    @model.on "openNewTemplateModal", @open, @
     
   events:
-    "click":"clickHandler"
-  
-  clickHandler: (e) ->
-    @select()
-    e.stopPropagation()
-    target = e.target
-    if $(e.target).attr("href") == "#"
-      e.preventDefault()
+    "click #create-template-button":"createTemplateButtonClickHandler"
     
-  select: ->
-    @$el.addClass "selected"
-    @model.set selectedGroupItem:@
-    @editButton.show()
-    if @groupName != "root"
-      @icon.addClass "icon-folder-open"
+  open: (group_id) ->
+    $("#id2_templategroup").val(group_id)
+    # We clean up the modal by removing any previously entered values and error alerts
+    @$el.find(".alert").remove()
+    @$el.find(".error").removeClass("error")
+    @$el.find("form").each -> this.reset()
+    # Show the modal
+    @$el.modal("show")
+    # Give the first input focus
+    $("#id2_template_short_name").focus()
     
-  deselect: ->
-    @$el.removeClass "selected"
-    @editButton.hide()
-    if @groupName != "root"
-      @icon.removeClass "icon-folder-open"
-
-
-GroupPaneView = Backbone.View.extend
+  close: ->
+    @$el.modal("hide")
   
-  el: "#group_pane"
-  
+  createTemplateButtonClickHandler: (e) ->
+    formData = @$el.find("form").serializeObject()
+    formData.template_cache_timeout = 0 # This value is not part of the form but is required so we set it here.
+    @temp_model = new TemplateModel(formData)
+    @temp_model.save {},
+      success: (model, response) =>
+        @collection.add(model)
+        @close()
+      error: (model, response) ->
+        if response.status == 400
+          resp = $.parseJSON(response.responseText)
+          errors_html = ''
+          # Loop over each field in the errors object. The errors object contains fields in the format {<field name>:["error", "error", ...], ...}
+          _.each resp.errors, (value, key) ->
+            # As there can be multiple errors for a field we loop over the errors too.
+            _.each value, (el, i) ->
+              errors_html += _.template("<li><%= error %></li>", {error:el})
+            $("#id2_"+key).before( _.template($("#form-error-template").text(), {errors:errors_html}) )
+            $("#id2_"+key).parent().addClass("error")
+    e.preventDefault()
+    
+
+TemplateGroupView = Backbone.View.extend
+
   initialize: ->
-    @groups = []
+    @id = parseInt(@$el.attr("data-id"))
+    # Instantiate a TemplateListItemView for each Template belonging to this group
     @$el.find("ul li").each (i, el) =>
-      groupItem = new GroupItemView 
-        el:el
-        model:@model 
-      @groups.push groupItem
-    @model.on "change:selectedGroupItem", @selectedGroupItemChangeHandler, @
-
-  selectedGroupItemChangeHandler: ->
-    _.each @groups, (item) =>
-      if item != @model.get "selectedGroupItem"
-        item.deselect()
-    
-        
-  selectItem: (groupName) ->
-    for item in @groups
-      if item.groupName == groupName
-        item.select()
-
-TemplateItemView = Backbone.View.extend
-  
-  initialize: ->
-    @id = @$el.attr("data-id")
-    @groupName = @$el.attr("data-group")
-    @editButton = @$el.find ".edit-button"
-    @editButton.hide()
-    
+      model = new TemplateModel {id:$(el).attr("data-id"), templategroup:@id}
+      new TemplateListItemView {el:el, model:model, appModel:@model}
+      # Add the model to the global template collection
+      @collection.add(model, {silent:true})
+    # Listen for newly created templates added to the collection
+    @collection.on "add", @templateAddedHandler, @
+      
   events:
-    "click":"clickHandler"
-  
-  clickHandler: (e) ->
-    @select()
-    @model.set selectedTemplateItem:@
-    e.stopPropagation();
-    if $(e.target).attr("href") == "#"
-      e.preventDefault()
+    "click .new-template-button":"newTemplateButtonClickHandler"
     
-  show: ->
-    @$el.show()
+  newTemplateButtonClickHandler: (e) ->
+    @model.openNewTemplateModal(@id)
+    e.stopPropagation()
+    e.preventDefault()
     
-  hide: ->
-    @$el.hide()
-    
-  select: ->
-    @$el.addClass "selected"
-    @editButton.show()
-    
-  deselect: ->
-    @$el.removeClass "selected"
-    @editButton.hide()
+  templateAddedHandler: (templateModel) ->
+    # If the newly created template belongs to this group instantiate it's view and add a new element to the DOM.
+    if templateModel.get("templategroup") == @id
+      el = $(_.template( $("#template-list-item-template").text(), templateModel.toJSON()))
+      @$el.find("ul").prepend(el)
+      @$el.find("ul>li").tsort() # <- TinySort plugin
+      templateView = new TemplateListItemView {el:el, model:templateModel, appModel:@model}
+      templateView.modelPopulated = true # Since we have a complete model returned from the server we set this flag true so we don't do another request for the data on selection.
+      @model.selectedTemplate(templateModel)
 
+TemplateListItemView = Backbone.View.extend
 
-TemplatePaneView = Backbone.View.extend
-  
-  el: "#template_pane"
-  
   initialize: ->
-    @templates = []
-    @$el.find("ul li").each (i,el) =>
-      @templates.push new TemplateItemView
-        el:el
-        model:@model
-    @model.on "change:selectedGroupItem", @selectedGroupItemChangeHandler, @
-    @model.on "change:selectedTemplateItem", @selectedTemplateItemChangeHandler, @
+    @modelPopulated = false
+    @options.appModel.on "change:selectedTemplate", @selectedTemplateChangeHandler, @
+    @model.on "change", @modelChangeHandler, @
 
-  selectedGroupItemChangeHandler: ->
-    selectedGroupItem = @model.get "selectedGroupItem"
-    @model.set selectedTemplateItem:null
-    @filter selectedGroupItem.groupName
-  
-  selectedTemplateItemChangeHandler: ->
-    templateItem = @model.get "selectedTemplateItem"
-    _.each @templates, (template) ->
-      if template != templateItem
-        template.deselect()
-  
-  filter: (groupName) ->
-    templatesToShow = _.filter @templates, (template) -> template.groupName == groupName
-    templatesToHide = _.reject @templates, (template) -> template.groupName == groupName
-    _.each templatesToShow, (template) -> template.show()
-    _.each templatesToHide, (template) -> 
-      template.hide() 
-      template.deselect()
-    templatesToShow[0].select()
+  events:
+    'click a':'clickHandler'
     
+  modelChangeHandler: ->
+    @modelPopulated = true
+    
+  clickHandler:(e) ->
+    @options.appModel.selectedTemplate(@model)
+    # If the model has not been populated with data we do a fetch
+    if not @modelPopulated
+      @model.fetch()
+    e.preventDefault()
+    
+  selectedTemplateChangeHandler: ->
+    if @options.appModel.get("selectedTemplate") == @model
+      @$el.addClass("active")
+    else
+      @$el.removeClass("active")
+      
+    
+TemplateEditorView = Backbone.View.extend
 
-TemplatePaneControlsView = Backbone.View.extend
-
-  el: "#template_pane_controls"
-  
   initialize: ->
-    @createTemplateButton = $("#create_template_button")
-    @model.on "change:selectedGroupItem", @selectedGroupItemChangeHandler, @
+    @editor = ace.edit("editor")
+    @editor.setTheme("ace/theme/twilight")
+    @editor.setShowPrintMargin(false)
+    @setMode("ace/mode/html")
     
-  selectedGroupItemChangeHandler: ->
-    groupItem = @model.get "selectedGroupItem"
-    url = _.template "templates/group/<%= group_id %>/create", group_id:groupItem.id
-    @createTemplateButton.attr "href", url
+    
+    @model.on "change:selectedTemplate", @selectedTemplateChangeHandler, @
+    
+  selectedTemplateChangeHandler: ->
+    # If we have a reference to an existing template remove event callback
+    if @templateModel
+        @templateModel.off "change", @populateFromModel, @
+    # Add event callback to newly selected template
+    @templateModel = @model.get("selectedTemplate")
+    @templateModel.on "change", @populateFromModel, @
+    @populateFromModel()
+    
+  populateFromModel: ->
+    text = @templateModel.get("template_content")
+    if text
+      @editor.getSession().getDocument().setValue(text)
+    
+  setMode: (mode) ->
+    M = require(mode).Mode
+    @editor.getSession().setMode( new M() )
+    
+    
+SettingsView = Backbone.View.extend
 
-GroupPaneControlsView = Backbone.View.extend
-
-  el: "#group_pane_controls"
+  initialize: ->
+    @model.on "change:selectedTemplate", @selectedTemplateChangeHandler, @
+    
+  selectedTemplateChangeHandler: ->
+    # If we have a reference to an existing template remove event callback
+    if @templateModel
+        @templateModel.off "change", @populateFromModel, @
+    # Add event callback to newly selected template
+    @templateModel = @model.get("selectedTemplate")
+    @templateModel.on "change", @populateFromModel, @
+    @populateFromModel()
+    
+  populateFromModel: ->
+    if @templateModel.get("template_short_name")
+      $("#id_template_short_name").val( @templateModel.get("template_short_name") )
+      $("#id_template_content_type").val ( @templateModel.get("template_content_type") )
+      $("#id_template_cache_timeout").val( @templateModel.get("template_cache_timeout") )
+      $("#id_template_redirect_type").val( @templateModel.get("template_redirect_type") )
+      $("#id_template_redirect_url").val( @templateModel.get("template_redirect_url") )
+      
+      $("input:radio[name=template_is_private][value='True']").attr("checked", @templateModel.get("template_is_private"))
+      $("input:radio[name=template_is_private][value='False']").attr("checked", !@templateModel.get("template_is_private"))
 
 $ ->
   appModel = new AppModel()
-  templatePane = new TemplatePaneView model:appModel
-  templatePaneControls = new TemplatePaneControlsView model:appModel
-  groupPane = new GroupPaneView model:appModel
   
-  groupPane.selectItem "root"
+  templateCollection = new TemplateCollection()
+  
+  actionBarView = new ActionBarView {el:$(".action-bar"), model:appModel}
+  
+  templateEditorView = new TemplateEditorView {el:$("#editor-pane"), model:appModel}
+  
+  settingsView = new SettingsView {el:$("#settings-pane"), model:appModel}
+  
+  newTemplateModal = new NewTemplateModalView {el:$("#create-template-modal"), model:appModel, collection:templateCollection}
+  
+  $("#template-browser > ul > li").each (i, el) ->
+    new TemplateGroupView {el:el, model:appModel, collection:templateCollection}
+  
+  # Activate tabs
+  $("#tabs a").click (e) ->
+    $(this).tab("show")
+    e.preventDefault()
+  $("#tabs a:first").tab("show")
+  

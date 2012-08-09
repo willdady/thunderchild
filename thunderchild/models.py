@@ -189,7 +189,22 @@ class Template(models.Model):
     template_is_private = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Is private?', help_text="Private templates are not publicly accessible. They're intended for use as base templates to extend from or as fragments for including in other templates.")
     template_redirect_type = models.IntegerField(blank=True, null=True, verbose_name='Redirect')
     template_redirect_url = models.URLField(max_length=500, blank=True, verbose_name='Redirect URL')
-    template_content = models.TextField(default='{% load thunderchild_tags %}', verbose_name='Content')
+    template_content = models.TextField(default='{% load thunderchild_tags %}', blank=True, verbose_name='Content')
+    
+    def asDict(self):
+        data = {
+                'id':self.id,
+                'templategroup':self.templategroup.id,
+                'template_short_name':self.template_short_name,
+                'template_uid':self.template_uid,
+                'template_content_type':self.template_content_type,
+                'template_cache_timeout':self.template_cache_timeout,
+                'template_is_private':self.template_is_private,
+                'template_redirect_type':self.template_redirect_type,
+                'template_redirect_url':self.template_redirect_url,
+                'template_content':self.template_content
+                }
+        return data
     
     @property
     def is_redirected(self):

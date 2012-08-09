@@ -1,193 +1,253 @@
 (function() {
-  var AppModel, GroupItemView, GroupPaneControlsView, GroupPaneView, TemplateItemView, TemplatePaneControlsView, TemplatePaneView;
+  var ActionBarView, AppModel, NewTemplateModalView, SettingsView, TemplateCollection, TemplateEditorView, TemplateGroupView, TemplateListItemView, TemplateModel, templateGroupRoot, templateRoot;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  templateRoot = '/backend/api/templates/template';
+  templateGroupRoot = '/backend/api/templates/group';
   AppModel = Backbone.Model.extend({
-    selectedGroupItem: null,
-    selectedTemplateItem: null
-  });
-  GroupItemView = Backbone.View.extend({
-    initialize: function() {
-      this.templatePane = this.options.templatePane;
-      this.id = this.$el.attr("data-id");
-      this.groupName = this.$el.attr("data-group");
-      this.editButton = this.$el.find(".edit-button");
-      return this.icon = this.$el.find(".icon-folder-close");
-    },
-    events: {
-      "click": "clickHandler"
-    },
-    clickHandler: function(e) {
-      var target;
-      this.select();
-      e.stopPropagation();
-      target = e.target;
-      if ($(e.target).attr("href") === "#") {
-        return e.preventDefault();
+    selectedTemplate: function(model) {
+      if (model) {
+        this.set("selectedTemplate", model);
       }
+      return this.get("selectedTemplate");
     },
-    select: function() {
-      this.$el.addClass("selected");
-      this.model.set({
-        selectedGroupItem: this
-      });
-      this.editButton.show();
-      if (this.groupName !== "root") {
-        return this.icon.addClass("icon-folder-open");
-      }
-    },
-    deselect: function() {
-      this.$el.removeClass("selected");
-      this.editButton.hide();
-      if (this.groupName !== "root") {
-        return this.icon.removeClass("icon-folder-open");
-      }
+    openNewTemplateModal: function(group_id) {
+      return this.trigger("openNewTemplateModal", group_id);
     }
   });
-  GroupPaneView = Backbone.View.extend({
-    el: "#group_pane",
+  TemplateModel = Backbone.Model.extend({
+    urlRoot: templateRoot
+  });
+  TemplateCollection = Backbone.Collection.extend({
+    model: TemplateModel,
+    url: templateRoot
+  });
+  ActionBarView = Backbone.View.extend({
+    events: {
+      "click #create-templategroup-button": "createTemplateGroupClickHandler",
+      "click #delete-template-button": "deleteTemplateClickHandler",
+      "click #save-template-button": "saveTemplateClickHandler"
+    },
+    createTemplateGroupClickHandler: function(e) {
+      log("createTemplateGroupClickHandler");
+      return e.preventDefault();
+    },
+    deleteTemplateClickHandler: function(e) {
+      log("deleteTemplateClickHandler");
+      return e.preventDefault();
+    },
+    saveTemplateClickHandler: function(e) {
+      log("saveTemplateClickHandler");
+      return e.preventDefault();
+    }
+  });
+  NewTemplateModalView = Backbone.View.extend({
     initialize: function() {
-      this.groups = [];
+      return this.model.on("openNewTemplateModal", this.open, this);
+    },
+    events: {
+      "click #create-template-button": "createTemplateButtonClickHandler"
+    },
+    open: function(group_id) {
+      $("#id2_templategroup").val(group_id);
+      this.$el.find(".alert").remove();
+      this.$el.find(".error").removeClass("error");
+      this.$el.find("form").each(function() {
+        return this.reset();
+      });
+      this.$el.modal("show");
+      return $("#id2_template_short_name").focus();
+    },
+    close: function() {
+      return this.$el.modal("hide");
+    },
+    createTemplateButtonClickHandler: function(e) {
+      var formData;
+      formData = this.$el.find("form").serializeObject();
+      formData.template_cache_timeout = 0;
+      this.temp_model = new TemplateModel(formData);
+      this.temp_model.save({}, {
+        success: __bind(function(model, response) {
+          this.collection.add(model);
+          return this.close();
+        }, this),
+        error: function(model, response) {
+          var errors_html, resp;
+          if (response.status === 400) {
+            resp = $.parseJSON(response.responseText);
+            errors_html = '';
+            return _.each(resp.errors, function(value, key) {
+              _.each(value, function(el, i) {
+                return errors_html += _.template("<li><%= error %></li>", {
+                  error: el
+                });
+              });
+              $("#id2_" + key).before(_.template($("#form-error-template").text(), {
+                errors: errors_html
+              }));
+              return $("#id2_" + key).parent().addClass("error");
+            });
+          }
+        }
+      });
+      return e.preventDefault();
+    }
+  });
+  TemplateGroupView = Backbone.View.extend({
+    initialize: function() {
+      this.id = parseInt(this.$el.attr("data-id"));
       this.$el.find("ul li").each(__bind(function(i, el) {
-        var groupItem;
-        groupItem = new GroupItemView({
-          el: el,
-          model: this.model
+        var model;
+        model = new TemplateModel({
+          id: $(el).attr("data-id"),
+          templategroup: this.id
         });
-        return this.groups.push(groupItem);
+        new TemplateListItemView({
+          el: el,
+          model: model,
+          appModel: this.model
+        });
+        return this.collection.add(model, {
+          silent: true
+        });
       }, this));
-      return this.model.on("change:selectedGroupItem", this.selectedGroupItemChangeHandler, this);
-    },
-    selectedGroupItemChangeHandler: function() {
-      return _.each(this.groups, __bind(function(item) {
-        if (item !== this.model.get("selectedGroupItem")) {
-          return item.deselect();
-        }
-      }, this));
-    },
-    selectItem: function(groupName) {
-      var item, _i, _len, _ref, _results;
-      _ref = this.groups;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        item = _ref[_i];
-        _results.push(item.groupName === groupName ? item.select() : void 0);
-      }
-      return _results;
-    }
-  });
-  TemplateItemView = Backbone.View.extend({
-    initialize: function() {
-      this.id = this.$el.attr("data-id");
-      this.groupName = this.$el.attr("data-group");
-      this.editButton = this.$el.find(".edit-button");
-      return this.editButton.hide();
+      return this.collection.on("add", this.templateAddedHandler, this);
     },
     events: {
-      "click": "clickHandler"
+      "click .new-template-button": "newTemplateButtonClickHandler"
+    },
+    newTemplateButtonClickHandler: function(e) {
+      this.model.openNewTemplateModal(this.id);
+      e.stopPropagation();
+      return e.preventDefault();
+    },
+    templateAddedHandler: function(templateModel) {
+      var el, templateView;
+      if (templateModel.get("templategroup") === this.id) {
+        el = $(_.template($("#template-list-item-template").text(), templateModel.toJSON()));
+        this.$el.find("ul").prepend(el);
+        this.$el.find("ul>li").tsort();
+        templateView = new TemplateListItemView({
+          el: el,
+          model: templateModel,
+          appModel: this.model
+        });
+        templateView.modelPopulated = true;
+        return this.model.selectedTemplate(templateModel);
+      }
+    }
+  });
+  TemplateListItemView = Backbone.View.extend({
+    initialize: function() {
+      this.modelPopulated = false;
+      this.options.appModel.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
+      return this.model.on("change", this.modelChangeHandler, this);
+    },
+    events: {
+      'click a': 'clickHandler'
+    },
+    modelChangeHandler: function() {
+      return this.modelPopulated = true;
     },
     clickHandler: function(e) {
-      this.select();
-      this.model.set({
-        selectedTemplateItem: this
-      });
-      e.stopPropagation();
-      if ($(e.target).attr("href") === "#") {
-        return e.preventDefault();
+      this.options.appModel.selectedTemplate(this.model);
+      if (!this.modelPopulated) {
+        this.model.fetch();
+      }
+      return e.preventDefault();
+    },
+    selectedTemplateChangeHandler: function() {
+      if (this.options.appModel.get("selectedTemplate") === this.model) {
+        return this.$el.addClass("active");
+      } else {
+        return this.$el.removeClass("active");
+      }
+    }
+  });
+  TemplateEditorView = Backbone.View.extend({
+    initialize: function() {
+      this.editor = ace.edit("editor");
+      this.editor.setTheme("ace/theme/twilight");
+      this.editor.setShowPrintMargin(false);
+      this.setMode("ace/mode/html");
+      return this.model.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
+    },
+    selectedTemplateChangeHandler: function() {
+      if (this.templateModel) {
+        this.templateModel.off("change", this.populateFromModel, this);
+      }
+      this.templateModel = this.model.get("selectedTemplate");
+      this.templateModel.on("change", this.populateFromModel, this);
+      return this.populateFromModel();
+    },
+    populateFromModel: function() {
+      var text;
+      text = this.templateModel.get("template_content");
+      if (text) {
+        return this.editor.getSession().getDocument().setValue(text);
       }
     },
-    show: function() {
-      return this.$el.show();
-    },
-    hide: function() {
-      return this.$el.hide();
-    },
-    select: function() {
-      this.$el.addClass("selected");
-      return this.editButton.show();
-    },
-    deselect: function() {
-      this.$el.removeClass("selected");
-      return this.editButton.hide();
+    setMode: function(mode) {
+      var M;
+      M = require(mode).Mode;
+      return this.editor.getSession().setMode(new M());
     }
   });
-  TemplatePaneView = Backbone.View.extend({
-    el: "#template_pane",
+  SettingsView = Backbone.View.extend({
     initialize: function() {
-      this.templates = [];
-      this.$el.find("ul li").each(__bind(function(i, el) {
-        return this.templates.push(new TemplateItemView({
-          el: el,
-          model: this.model
-        }));
-      }, this));
-      this.model.on("change:selectedGroupItem", this.selectedGroupItemChangeHandler, this);
-      return this.model.on("change:selectedTemplateItem", this.selectedTemplateItemChangeHandler, this);
+      return this.model.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
     },
-    selectedGroupItemChangeHandler: function() {
-      var selectedGroupItem;
-      selectedGroupItem = this.model.get("selectedGroupItem");
-      this.model.set({
-        selectedTemplateItem: null
-      });
-      return this.filter(selectedGroupItem.groupName);
+    selectedTemplateChangeHandler: function() {
+      if (this.templateModel) {
+        this.templateModel.off("change", this.populateFromModel, this);
+      }
+      this.templateModel = this.model.get("selectedTemplate");
+      this.templateModel.on("change", this.populateFromModel, this);
+      return this.populateFromModel();
     },
-    selectedTemplateItemChangeHandler: function() {
-      var templateItem;
-      templateItem = this.model.get("selectedTemplateItem");
-      return _.each(this.templates, function(template) {
-        if (template !== templateItem) {
-          return template.deselect();
-        }
-      });
-    },
-    filter: function(groupName) {
-      var templatesToHide, templatesToShow;
-      templatesToShow = _.filter(this.templates, function(template) {
-        return template.groupName === groupName;
-      });
-      templatesToHide = _.reject(this.templates, function(template) {
-        return template.groupName === groupName;
-      });
-      _.each(templatesToShow, function(template) {
-        return template.show();
-      });
-      _.each(templatesToHide, function(template) {
-        template.hide();
-        return template.deselect();
-      });
-      return templatesToShow[0].select();
+    populateFromModel: function() {
+      if (this.templateModel.get("template_short_name")) {
+        $("#id_template_short_name").val(this.templateModel.get("template_short_name"));
+        $("#id_template_content_type").val(this.templateModel.get("template_content_type"));
+        $("#id_template_cache_timeout").val(this.templateModel.get("template_cache_timeout"));
+        $("#id_template_redirect_type").val(this.templateModel.get("template_redirect_type"));
+        $("#id_template_redirect_url").val(this.templateModel.get("template_redirect_url"));
+        $("input:radio[name=template_is_private][value='True']").attr("checked", this.templateModel.get("template_is_private"));
+        return $("input:radio[name=template_is_private][value='False']").attr("checked", !this.templateModel.get("template_is_private"));
+      }
     }
-  });
-  TemplatePaneControlsView = Backbone.View.extend({
-    el: "#template_pane_controls",
-    initialize: function() {
-      this.createTemplateButton = $("#create_template_button");
-      return this.model.on("change:selectedGroupItem", this.selectedGroupItemChangeHandler, this);
-    },
-    selectedGroupItemChangeHandler: function() {
-      var groupItem, url;
-      groupItem = this.model.get("selectedGroupItem");
-      url = _.template("templates/group/<%= group_id %>/create", {
-        group_id: groupItem.id
-      });
-      return this.createTemplateButton.attr("href", url);
-    }
-  });
-  GroupPaneControlsView = Backbone.View.extend({
-    el: "#group_pane_controls"
   });
   $(function() {
-    var appModel, groupPane, templatePane, templatePaneControls;
+    var actionBarView, appModel, newTemplateModal, settingsView, templateCollection, templateEditorView;
     appModel = new AppModel();
-    templatePane = new TemplatePaneView({
+    templateCollection = new TemplateCollection();
+    actionBarView = new ActionBarView({
+      el: $(".action-bar"),
       model: appModel
     });
-    templatePaneControls = new TemplatePaneControlsView({
+    templateEditorView = new TemplateEditorView({
+      el: $("#editor-pane"),
       model: appModel
     });
-    groupPane = new GroupPaneView({
+    settingsView = new SettingsView({
+      el: $("#settings-pane"),
       model: appModel
     });
-    return groupPane.selectItem("root");
+    newTemplateModal = new NewTemplateModalView({
+      el: $("#create-template-modal"),
+      model: appModel,
+      collection: templateCollection
+    });
+    $("#template-browser > ul > li").each(function(i, el) {
+      return new TemplateGroupView({
+        el: el,
+        model: appModel,
+        collection: templateCollection
+      });
+    });
+    $("#tabs a").click(function(e) {
+      $(this).tab("show");
+      return e.preventDefault();
+    });
+    return $("#tabs a:first").tab("show");
   });
 }).call(this);

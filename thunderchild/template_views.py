@@ -4,7 +4,78 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from thunderchild import models
 from thunderchild import forms
 from thunderchild import model_forms
-from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotAllowed, HttpResponse,\
+    HttpResponseBadRequest
+from django.core import serializers
+import json
+
+
+@login_required(login_url=reverse_lazy('thunderchild.views.login'))
+def templates(request):
+    templategroups = models.TemplateGroup.objects.all()
+    templates = models.Template.objects.all()
+    return render(request, 'thunderchild/templates.html', {'templategroups':templategroups, 
+                                                           'templates':templates,
+                                                           'form':model_forms.TemplateForm,
+                                                           'new_template_form':model_forms.TemplateForm(auto_id="id2_%s")})
+
+
+@login_required(login_url=reverse_lazy('thunderchild.views.login'))
+def template_create(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except ValueError:
+            return HttpResponseBadRequest()
+        data['template_content'] = '{% load thunderchild_tags %}' # As we are creating a new template populate the content field with thunderchild's custom template tags.
+        form = model_forms.TemplateForm(data)
+        if form.is_valid():
+            model = form.instance
+            model.template_uid = '{}/{}'.format(models.TemplateGroup.objects.get(pk=data['templategroup']).templategroup_short_name, data['template_short_name'])
+            model.save()
+            return HttpResponse(json.dumps(model.asDict()), content_type="application/json")
+        else:
+            return HttpResponseBadRequest(json.dumps({'errors':form.errors}), content_type="application/json")
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
+
+
+@login_required(login_url=reverse_lazy('thunderchild.views.login'))
+def template(request, id):
+    if request.method == 'PUT':
+        pass
+    elif request.method == 'DELETE':
+        pass
+    elif request.method == 'GET':
+        model = models.Template.objects.filter(pk=id)[0]
+        return HttpResponse(json.dumps(model.asDict()), content_type="application/json")
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST', 'PUT', 'DELETE'])
+    
+
+@login_required(login_url=reverse_lazy('thunderchild.views.login'))
+def group_create(request):
+    if request.method == 'POST':
+        pass
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
+
+
+@login_required(login_url=reverse_lazy('thunderchild.views.login'))
+def group(request, id):
+    if request.method == 'PUT':
+        pass
+    elif request.method == 'DELETE':
+        pass
+    elif request.method == 'GET':
+        data = serializers.serialize('json', models.TemplateGroup.objects.filter(pk=id))
+        return HttpResponse(data, content_type="application/json")
+    else:
+        pass
+
+
+
+
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -54,13 +125,6 @@ def delete_templategroup(request):
         return redirect('thunderchild.template_views.templates')
     else:
         return HttpResponseNotAllowed(permitted_methods=['POST'])
-
-
-@login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def templates(request):
-    templategroups = models.TemplateGroup.objects.all()
-    templates = models.Template.objects.all()
-    return render(request, 'thunderchild/templates.html', {'templategroups':templategroups, 'templates':templates})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))

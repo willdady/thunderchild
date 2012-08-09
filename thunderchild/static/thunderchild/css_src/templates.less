@@ -1,54 +1,87 @@
-#group_pane, #template_pane {
+#template-browser {
+  position:absolute;
+  left:20px;
+  top:20px;
+  bottom:20px;
+  right:81%;
   overflow:auto;
-  ul {
-     margin:0;
-     padding:0;
-     list-style:none;
-     font-size:14px;
-     li {
-       padding:6px 8px 8px 8px;
-     }
+  .btn-primary {
+    margin-top:5px;
+    margin-bottom:22px;
   }
-}
-#group_pane_controls, #template_pane_controls {
-  margin-top:10px;
-}
-#group_pane {
-  float:left;
-  background:@white;
-  width:20%;
-  height:500px;
-  border:solid 1px @groupBorderColor;
   ul {
-    cursor:pointer;
+    list-style:none;
+    margin:0;
+    background:@white;
     li {
-	    &.selected {
-	      background: lighten(@linkColor, 45%);
-	    }
-	    i {
-	    	width:16px;
-	    }
+      &.active {
+        background:lighten(@baseColor, 50%);
+      }
+      a {
+        display:block;
+        padding:3px 6px;
+        &:hover {
+          text-decoration:none;
+          color:@linkColor;
+        }
+      }
+      .group-header {
+        font-weight:bold;
+        background:@baseColor;
+        color:@white;
+        padding:3px 6px;
+        h3 {
+          float:left;
+          margin:0;
+          font-size:13px;
+          line-height:19px;
+        }
+        a {
+          padding:0;
+          i {
+            margin-top:2px;
+          }
+        }
+      }
     }
   }
 }
-#group_pane_controls {
-  float:left;
-  width:20%;
-}
-#template_pane {
-  float:right;
-  background:@white;
-  width:79%;
-  height:500px;
-  border:solid 1px @groupBorderColor;
-  ul {
-    cursor:pointer;
-    .selected {
-      background: lighten(@linkColor, 45%);
+#template-view {
+  position:absolute;
+  left:20%;
+  right:20px;
+  top:20px;
+  bottom:20px;
+  .tab-content {
+    position:absolute;
+    left:0;
+    right:0;
+    top:54px;
+    bottom:0;
+    overflow:visible;
+    #editor {
+      margin:0;
+      padding:0;
+      border:none;
+      .border-radius(0);
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      bottom:0;
     }
   }
 }
-#template_pane_controls {
-  float:right;
-  width:79%;
+#create-template-modal {
+  label {
+    font-weight:bold;
+  }
+  input[type="text"] {
+    &.input-large {
+      width:520px;
+    }
+  }
+  .alert {
+    margin-bottom:10px;
+  }
 }

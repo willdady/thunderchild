@@ -3,8 +3,7 @@
 @import "mixins2.less";
 
 body {
-  overflow-y:scroll;
-  padding-top:186px;
+  overflow:hidden;
   background:@pageBackgroundColor;
   &.media-chooser {
     padding:0;
@@ -269,6 +268,13 @@ a {
   }
 }
 #content_container {
+  position:absolute;
+  left:0;
+  right:0;
+  top:160px;
+  bottom:0;
+  overflow-y:scroll;
+  padding-top:20px;
   header {
     margin-bottom:15px;
     h1, h2 {
