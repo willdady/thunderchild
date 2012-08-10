@@ -1,5 +1,5 @@
 (function() {
-  var ActionBarView, AppModel, ConfirmDeleteModalView, NewTemplateModalView, SettingsView, TemplateCollection, TemplateEditorView, TemplateGroupModel, TemplateGroupView, TemplateListItemView, TemplateModel, templateGroupRoot, templateRoot;
+  var ActionBarView, AppModel, ConfirmDeleteModalView, NewTemplateGroupModalView, NewTemplateModalView, SettingsView, TemplateCollection, TemplateEditorView, TemplateGroupModel, TemplateGroupView, TemplateListItemView, TemplateModel, templateGroupRoot, templateRoot;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   templateRoot = '/backend/api/templates/template';
   templateGroupRoot = '/backend/api/templates/group';
@@ -12,6 +12,9 @@
     },
     openNewTemplateModal: function(templateGroupModel) {
       return this.trigger("openNewTemplateModal", templateGroupModel);
+    },
+    openNewTemplateGroupModal: function() {
+      return this.trigger("openNewTemplateGroupModal");
     },
     openConfirmDeleteModal: function() {
       return this.trigger("openConfirmDeleteModal");
@@ -64,7 +67,7 @@
       }
     },
     createTemplateGroupClickHandler: function(e) {
-      log("createTemplateGroupClickHandler");
+      this.model.openNewTemplateGroupModal();
       return e.preventDefault();
     },
     deleteTemplateClickHandler: function(e) {
@@ -152,6 +155,53 @@
             });
           }
         }, this)
+      });
+      return e.preventDefault();
+    }
+  });
+  NewTemplateGroupModalView = Backbone.View.extend({
+    initialize: function() {
+      return this.model.on("openNewTemplateGroupModal", this.open, this);
+    },
+    events: {
+      "click #create-templategroup-button": "createTemplateGroupButtonClickHandler"
+    },
+    open: function() {
+      this.removeErrors();
+      this.$el.find("form").each(function() {
+        return this.reset();
+      });
+      this.$el.modal("show");
+      return $("#id_templategroup_short_name").focus();
+    },
+    removeErrors: function() {
+      this.$el.find(".alert").remove();
+      return this.$el.find(".error").removeClass("error");
+    },
+    close: function() {
+      return this.$el.modal("hide");
+    },
+    createTemplateGroupButtonClickHandler: function(e) {
+      var formData;
+      formData = this.$el.find("form").serializeObject();
+      $.post(templateGroupRoot, JSON.stringify(formData), __bind(function(data, textStatus, jqXHR) {
+        var model, template_element, templategroup, templategroup_element;
+        if (jqXHR.status === 200) {
+          templategroup_element = $(_.template($("#templategroup-list-item-template").text(), data.templategroup));
+          template_element = $(_.template($("#template-list-item-template").text(), data.template));
+          templategroup_element.find("ul").append(template_element);
+          $("#template-browser > ul").prepend(templategroup_element);
+          model = new TemplateGroupModel(data.templategroup);
+          templategroup = new TemplateGroupView({
+            el: templategroup_element,
+            model: model,
+            collection: this.collection,
+            appModel: this.model
+          });
+          return this.close();
+        }
+      }, this), "json").error(function() {
+        return log("ERROR", data);
       });
       return e.preventDefault();
     }
@@ -322,7 +372,7 @@
     }
   });
   $(function() {
-    var actionBarView, appModel, confirmDeleteModal, newTemplateModal, settingsView, templateCollection, templateEditorView;
+    var actionBarView, appModel, confirmDeleteModal, newTemplateGroupModal, newTemplateModal, settingsView, templateCollection, templateEditorView;
     appModel = new AppModel();
     templateCollection = new TemplateCollection();
     actionBarView = new ActionBarView({
@@ -339,6 +389,11 @@
     });
     newTemplateModal = new NewTemplateModalView({
       el: $("#create-template-modal"),
+      model: appModel,
+      collection: templateCollection
+    });
+    newTemplateGroupModal = new NewTemplateGroupModalView({
+      el: $("#create-templategroup-modal"),
       model: appModel,
       collection: templateCollection
     });

@@ -174,10 +174,17 @@ class Comment(models.Model):
     
     
 class TemplateGroup(models.Model):
-    templategroup_short_name = models.CharField(max_length=125, unique=True, verbose_name='Name', validators=[validate_lowercase, validate_urlchars], error_messages={'unique':'A template group already exists with that name'})
+    templategroup_short_name = models.CharField(max_length=125, unique=True, verbose_name='Name', validators=[validate_lowercase, validate_urlchars], error_messages={'unique':'A template group already exists with that name'}, help_text="A URL friendly name containing only letters, numbers and/or the special characters -, _, $, ., +.")
     
     def __unicode__(self):
         return u'{}'.format(self.templategroup_short_name)
+    
+    def asDict(self):
+        data = {
+                'id':self.id,
+                'templategroup_short_name':self.templategroup_short_name
+               }
+        return data
     
     
 class Template(models.Model):

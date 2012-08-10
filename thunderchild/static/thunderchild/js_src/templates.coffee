@@ -13,6 +13,9 @@ AppModel = Backbone.Model.extend
   openNewTemplateModal: (templateGroupModel) ->
     @trigger "openNewTemplateModal", templateGroupModel
     
+  openNewTemplateGroupModal: () ->
+    @trigger "openNewTemplateGroupModal"
+    
   openConfirmDeleteModal: ->
     @trigger "openConfirmDeleteModal"
 
@@ -61,7 +64,7 @@ ActionBarView = Backbone.View.extend
       $("#delete-template-button").removeClass("disabled")
     
   createTemplateGroupClickHandler: (e) ->
-    log("createTemplateGroupClickHandler")
+    @model.openNewTemplateGroupModal()
     e.preventDefault()
     
   deleteTemplateClickHandler: (e) ->
@@ -142,6 +145,50 @@ NewTemplateModalView = Backbone.View.extend
               errors_html += _.template("<li><%= error %></li>", {error:el})
             $("#id2_"+key).before( _.template($("#form-error-template").text(), {errors:errors_html}) )
             $("#id2_"+key).parent().addClass("error")
+    e.preventDefault()
+    
+    
+NewTemplateGroupModalView = Backbone.View.extend
+
+  initialize: ->
+    @model.on "openNewTemplateGroupModal", @open, @
+    
+  events:
+    "click #create-templategroup-button":"createTemplateGroupButtonClickHandler"
+    
+  open: ->
+    # We clean up the modal by removing any previously entered values and error alerts
+    @removeErrors()
+    @$el.find("form").each -> this.reset()
+    # Show the modal
+    @$el.modal("show")
+    # Give the first input focus
+    $("#id_templategroup_short_name").focus()
+    
+  removeErrors: ->
+    @$el.find(".alert").remove()
+    @$el.find(".error").removeClass("error")
+    
+  close: ->
+    @$el.modal("hide")
+  
+  createTemplateGroupButtonClickHandler: (e) ->
+    formData = @$el.find("form").serializeObject()
+    $.post(templateGroupRoot, JSON.stringify(formData), (data, textStatus, jqXHR) =>
+      if jqXHR.status == 200
+        # Create new DOM elements from the data received.
+        templategroup_element = $(_.template($("#templategroup-list-item-template").text(), data.templategroup))
+        template_element = $(_.template($("#template-list-item-template").text(), data.template))
+        templategroup_element.find("ul").append(template_element)
+        # Add the new template group element to the DOM
+        $("#template-browser > ul").prepend( templategroup_element )
+        # Instantiate the Backbone model and view for handling the new elements
+        model = new TemplateGroupModel(data.templategroup)
+        templategroup = new TemplateGroupView {el:templategroup_element, model:model, collection:@collection, appModel:@model}
+        @close()
+    ,"json"
+    ).error ->
+      log("ERROR", data)
     e.preventDefault()
     
 
@@ -296,6 +343,7 @@ $ ->
   settingsView = new SettingsView {el:$("#settings-pane"), model:appModel}
   
   newTemplateModal = new NewTemplateModalView {el:$("#create-template-modal"), model:appModel, collection:templateCollection}
+  newTemplateGroupModal = new NewTemplateGroupModalView {el:$("#create-templategroup-modal"), model:appModel, collection:templateCollection}
   
   confirmDeleteModal = new ConfirmDeleteModalView {el:$("#delete-template-modal"), model:appModel}
   

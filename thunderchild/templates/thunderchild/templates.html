@@ -47,6 +47,15 @@
 			{% endfor %}
 		</ul>
 	</div>
+	<script id="templategroup-list-item-template" type="text/html">
+		<li data-id="<%= id %>">
+			<div class="group-header clearfix" data-toggle="collapse" data-target="#template-group-<%= id %>">
+				<h3><%= templategroup_short_name %></h3>
+				<a href="#" class="new-template-button"><i class="icon-plus icon-white pull-right"></i></a>
+			</div>
+			<ul id="template-group-<%= id %>" class="collapse in"></ul>
+		</li>
+	</script>
 	<script id="template-list-item-template" type="text/html">
 		<li data-id="<%= id %>"><a href="#"><%= template_short_name %></a></li>
 	</script>
@@ -62,7 +71,7 @@
 			</div>
 			<div id="settings-pane" class="tab-pane">
 				<form id="settings-form">
-					{% for field in form %}
+					{% for field in template_form %}
 						{% if not field.is_hidden %}
 						<div class="accordion-group">
 								<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
@@ -131,6 +140,26 @@
 	<div class="modal-footer">
 		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
 		<a href="#" class="btn btn-danger" id="confirm-delete-template-button">Delete</a>
+	</div>
+</div>
+
+<div class="modal hide" id="create-templategroup-modal">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>Create Template Group</h3>
+	</div>
+	<div class="modal-body">
+		<form>
+			<div class="field-holder">
+				{{ new_templategroup_form.templategroup_short_name.label_tag }}
+				{{ new_templategroup_form.templategroup_short_name }}
+				<p class="help_text">{{ new_templategroup_form.templategroup_short_name.help_text }}</p>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="#" class="btn btn-primary" id="create-templategroup-button">Create</a>
 	</div>
 </div>
 {% endblock %}

@@ -28,8 +28,9 @@ def templates(request):
         templates_list.append({'templategroup':templategroup, 'templates':_templates})
     
     return render(request, 'thunderchild/templates.html', {'templates':templates_list,
-                                                           'form':model_forms.TemplateForm,
-                                                           'new_template_form':model_forms.TemplateForm(auto_id="id2_%s")})
+                                                           'template_form':model_forms.TemplateForm,
+                                                           'new_template_form':model_forms.TemplateForm(auto_id="id2_%s"),
+                                                           'new_templategroup_form':model_forms.TemplateGroupForm})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -69,7 +70,20 @@ def template(request, id):
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def group_create(request):
     if request.method == 'POST':
-        pass
+        try:
+            data = json.loads(request.body)
+        except ValueError:
+            return HttpResponseBadRequest()
+        form = model_forms.TemplateGroupForm(data)
+        if form.is_valid():
+            form.save()
+            # We automatically create an index templage within this group
+            index = models.Template(templategroup=form.instance, template_short_name='index', template_uid='{}/{}'.format(form.instance.templategroup_short_name, 'index'))
+            index.save()
+            data = {'templategroup':form.instance.asDict(), 'template':index.asDict()}
+            return HttpResponse(json.dumps(data), content_type="application/json")
+        else:
+            return HttpResponseBadRequest(json.dumps({'errors':form.errors}), content_type="application/json")
     else:
         return HttpResponseNotAllowed(permitted_methods=['POST'])
 
