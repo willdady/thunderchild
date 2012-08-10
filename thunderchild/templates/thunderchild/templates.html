@@ -30,13 +30,17 @@
 				</div>
 				<ul id="template-group-{{ t.templategroup.id }}" class="collapse in">
 				{% for template in t.templates %}
-					<li data-id="{{ template.id }}">
+					{% spaceless %}
 					{% if template.template_short_name == 'index' %}
+					<li data-id="{{ template.id }}" data-is-index="1">
 						<a href="#"><em>{{ template.template_short_name }}</em></a>
-					{% else %}
-						<a href="#">{{ template.template_short_name }}</a>
-					{% endif %}
 					</li>
+					{% else %}
+					<li data-id="{{ template.id }}">
+						<a href="#">{{ template.template_short_name }}</a>
+					</li>
+					{% endif %}
+					{% endspaceless %}
 				{% endfor %}
 				</ul>
 			</li>

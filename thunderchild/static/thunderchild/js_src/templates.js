@@ -189,12 +189,16 @@
       e.stopPropagation();
       return e.preventDefault();
     },
+    sort: function() {
+      this.$el.find("ul>li").tsort();
+      return this.$el.find("ul").prepend(this.$el.find("[data-is-index=1]"));
+    },
     templateAddedHandler: function(templateModel) {
       var el, templateView;
       if (templateModel.get("templategroup") === this.model.id) {
         el = $(_.template($("#template-list-item-template").text(), templateModel.toJSON()));
         this.$el.find("ul").prepend(el);
-        this.$el.find("ul>li").tsort();
+        this.sort();
         templateView = new TemplateListItemView({
           el: el,
           model: templateModel,

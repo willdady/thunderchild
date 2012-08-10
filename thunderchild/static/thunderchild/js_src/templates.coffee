@@ -169,12 +169,16 @@ TemplateGroupView = Backbone.View.extend
     e.stopPropagation()
     e.preventDefault()
     
+  sort: ->
+    @$el.find("ul>li").tsort() # <- TinySort plugin
+    @$el.find("ul").prepend( @$el.find("[data-is-index=1]") ) # Keep the index template always first
+    
   templateAddedHandler: (templateModel) ->
     # If the newly created template belongs to this group instantiate it's view and add a new element to the DOM.
     if templateModel.get("templategroup") == @model.id
       el = $(_.template( $("#template-list-item-template").text(), templateModel.toJSON()))
       @$el.find("ul").prepend(el)
-      @$el.find("ul>li").tsort() # <- TinySort plugin
+      @sort()
       templateView = new TemplateListItemView {el:el, model:templateModel, appModel:@options.appModel}
       templateView.modelPopulated = true # Since we have a complete model returned from the server we set this flag true so we don't do another request for the data on selection.
       @options.appModel.selectedTemplate(templateModel)
