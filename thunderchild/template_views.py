@@ -12,10 +12,22 @@ import json
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def templates(request):
-    templategroups = models.TemplateGroup.objects.all()
-    templates = models.Template.objects.all()
-    return render(request, 'thunderchild/templates.html', {'templategroups':templategroups, 
-                                                           'templates':templates,
+    templategroups = models.TemplateGroup.objects.all().order_by('templategroup_short_name')
+    templates = models.Template.objects.all().order_by('template_short_name')
+    # Taking the above 2 querysets we loop over them building a list in this format [{'templategroup':TemplateGroup, 'templates':[Template, Template, ...]}, ...]
+    # Note the TemplateGroup's index template is set to the first item in the templates list. All subsequent templates ordered on 'template_short_name'
+    templates_list = []
+    for templategroup in templategroups:
+        _templates = []
+        for template in templates:
+            if template.templategroup == templategroup:
+                if template.template_short_name == 'index':
+                    _templates.insert(0, template)
+                else:
+                    _templates.append(template)
+        templates_list.append({'templategroup':templategroup, 'templates':_templates})
+    
+    return render(request, 'thunderchild/templates.html', {'templates':templates_list,
                                                            'form':model_forms.TemplateForm,
                                                            'new_template_form':model_forms.TemplateForm(auto_id="id2_%s")})
 
@@ -45,7 +57,8 @@ def template(request, id):
     if request.method == 'PUT':
         pass
     elif request.method == 'DELETE':
-        pass
+        models.Template.objects.filter(pk=id).delete()
+        return HttpResponse("OK")
     elif request.method == 'GET':
         model = models.Template.objects.filter(pk=id)[0]
         return HttpResponse(json.dumps(model.asDict()), content_type="application/json")

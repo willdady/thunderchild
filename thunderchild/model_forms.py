@@ -164,7 +164,7 @@ class TemplateForm(ModelForm):
                     'template_is_private':RadioSelect(),
                     'template_redirect_type':Select(choices=TEMPLATE_REDIRECT_TYPES),
                     'template_redirect_url':TextInput(attrs={'class':'input-large'}),
-                    'template_content':Textarea(attrs={'class':'input-large'})
+                    'template_content':HiddenInput()
         }
     
     def __init__(self, *args, **kwargs):

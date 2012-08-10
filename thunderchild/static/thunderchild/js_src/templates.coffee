@@ -10,11 +10,34 @@ AppModel = Backbone.Model.extend
       @set("selectedTemplate", model)
     return @get("selectedTemplate")
     
-  openNewTemplateModal: (group_id) ->
-    @trigger "openNewTemplateModal", group_id
+  openNewTemplateModal: (templateGroupModel) ->
+    @trigger "openNewTemplateModal", templateGroupModel
+    
+  openConfirmDeleteModal: ->
+    @trigger "openConfirmDeleteModal"
 
 
-TemplateModel = Backbone.Model.extend {urlRoot:templateRoot}
+TemplateGroupModel = Backbone.Model.extend
+
+  indexTemplateModel: (model) ->
+    if model
+      @_indexTemplateModel = model
+    return @_indexTemplateModel
+
+
+TemplateModel = Backbone.Model.extend
+
+  urlRoot:templateRoot
+  
+  initialFetch: ->
+    @fetch success: =>
+      @trigger "initialFetchComplete"
+      
+  templateGroupModel: (model) ->
+    if model
+      @_templateGroupModel = model
+    return @_templateGroupModel
+    
 
 TemplateCollection = Backbone.Collection.extend {model:TemplateModel, url:templateRoot}
 
@@ -22,22 +45,57 @@ TemplateCollection = Backbone.Collection.extend {model:TemplateModel, url:templa
 
 ActionBarView = Backbone.View.extend
 
+  initialize: ->
+    @model.on "change:selectedTemplate", @selectedTemplateChangeHandler, @
+
   events:
     "click #create-templategroup-button":"createTemplateGroupClickHandler",
     "click #delete-template-button":"deleteTemplateClickHandler",
     "click #save-template-button":"saveTemplateClickHandler"
+    
+  selectedTemplateChangeHandler: ->
+    selectedTemplate = @model.get("selectedTemplate")
+    if selectedTemplate.get("template_short_name") == "index"
+      $("#delete-template-button").addClass("disabled")
+    else
+      $("#delete-template-button").removeClass("disabled")
     
   createTemplateGroupClickHandler: (e) ->
     log("createTemplateGroupClickHandler")
     e.preventDefault()
     
   deleteTemplateClickHandler: (e) ->
-    log("deleteTemplateClickHandler")
+    if !$("#delete-template-button").hasClass("disabled")
+      @model.openConfirmDeleteModal()
     e.preventDefault()
     
   saveTemplateClickHandler:(e) ->
     log("saveTemplateClickHandler")
     e.preventDefault()
+
+
+ConfirmDeleteModalView = Backbone.View.extend
+
+  initialize: ->
+    @model.on "openConfirmDeleteModal", @open, @
+
+  events:
+    "click #confirm-delete-template-button":"confirmDeleteHandler"
+
+  open: ->
+    @$el.modal("show")
+    
+  close: ->
+    @$el.modal("hide")
+    
+  confirmDeleteHandler: (e) ->
+    templateModel = @model.get("selectedTemplate")
+    templateModel.destroy()
+    @close()
+    # Select the index template of the group the deleted template belonged to
+    @model.selectedTemplate( templateModel.templateGroupModel().indexTemplateModel() )
+    e.preventDefault()
+
 
 NewTemplateModalView = Backbone.View.extend
 
@@ -47,16 +105,19 @@ NewTemplateModalView = Backbone.View.extend
   events:
     "click #create-template-button":"createTemplateButtonClickHandler"
     
-  open: (group_id) ->
-    $("#id2_templategroup").val(group_id)
+  open: (templateGroupModel) ->
+    $("#id2_templategroup").val(templateGroupModel.id)
     # We clean up the modal by removing any previously entered values and error alerts
-    @$el.find(".alert").remove()
-    @$el.find(".error").removeClass("error")
+    @removeErrors()
     @$el.find("form").each -> this.reset()
     # Show the modal
     @$el.modal("show")
     # Give the first input focus
     $("#id2_template_short_name").focus()
+    
+  removeErrors: ->
+    @$el.find(".alert").remove()
+    @$el.find(".error").removeClass("error")
     
   close: ->
     @$el.modal("hide")
@@ -69,7 +130,8 @@ NewTemplateModalView = Backbone.View.extend
       success: (model, response) =>
         @collection.add(model)
         @close()
-      error: (model, response) ->
+      error: (model, response) =>
+        @removeErrors()
         if response.status == 400
           resp = $.parseJSON(response.responseText)
           errors_html = ''
@@ -86,13 +148,16 @@ NewTemplateModalView = Backbone.View.extend
 TemplateGroupView = Backbone.View.extend
 
   initialize: ->
-    @id = parseInt(@$el.attr("data-id"))
+    @name = @$el.find(".group-header h3").text()
     # Instantiate a TemplateListItemView for each Template belonging to this group
     @$el.find("ul li").each (i, el) =>
-      model = new TemplateModel {id:$(el).attr("data-id"), templategroup:@id}
-      new TemplateListItemView {el:el, model:model, appModel:@model}
+      model = new TemplateModel {id:$(el).attr("data-id"), templategroup:@model.id, template_short_name:$.trim( $(el).text() )}
+      model.templateGroupModel(@model)
+      templateListItemView = new TemplateListItemView {el:el, model:model, appModel:@options.appModel}
       # Add the model to the global template collection
       @collection.add(model, {silent:true})
+      if model.get("template_short_name") == "index"
+        @model.indexTemplateModel(model)
     # Listen for newly created templates added to the collection
     @collection.on "add", @templateAddedHandler, @
       
@@ -100,45 +165,49 @@ TemplateGroupView = Backbone.View.extend
     "click .new-template-button":"newTemplateButtonClickHandler"
     
   newTemplateButtonClickHandler: (e) ->
-    @model.openNewTemplateModal(@id)
+    @options.appModel.openNewTemplateModal(@model)
     e.stopPropagation()
     e.preventDefault()
     
   templateAddedHandler: (templateModel) ->
     # If the newly created template belongs to this group instantiate it's view and add a new element to the DOM.
-    if templateModel.get("templategroup") == @id
+    if templateModel.get("templategroup") == @model.id
       el = $(_.template( $("#template-list-item-template").text(), templateModel.toJSON()))
       @$el.find("ul").prepend(el)
       @$el.find("ul>li").tsort() # <- TinySort plugin
-      templateView = new TemplateListItemView {el:el, model:templateModel, appModel:@model}
+      templateView = new TemplateListItemView {el:el, model:templateModel, appModel:@options.appModel}
       templateView.modelPopulated = true # Since we have a complete model returned from the server we set this flag true so we don't do another request for the data on selection.
-      @model.selectedTemplate(templateModel)
+      @options.appModel.selectedTemplate(templateModel)
+      
+  getIndexModel: ->
+    templates = @collection.where({templategroup:@model.id})
+    return _.find templates, (model) -> return model.get("template_short_name") == 'index'
+
 
 TemplateListItemView = Backbone.View.extend
 
   initialize: ->
-    @modelPopulated = false
     @options.appModel.on "change:selectedTemplate", @selectedTemplateChangeHandler, @
-    @model.on "change", @modelChangeHandler, @
+    @model.on "destroy", @modelDestroyHandler, @
 
   events:
     'click a':'clickHandler'
     
-  modelChangeHandler: ->
-    @modelPopulated = true
-    
   clickHandler:(e) ->
     @options.appModel.selectedTemplate(@model)
-    # If the model has not been populated with data we do a fetch
-    if not @modelPopulated
-      @model.fetch()
     e.preventDefault()
     
   selectedTemplateChangeHandler: ->
-    if @options.appModel.get("selectedTemplate") == @model
+    model = @options.appModel.get("selectedTemplate")
+    if model == @model
+      if not @model.has("template_content")
+        @model.initialFetch()
       @$el.addClass("active")
     else
       @$el.removeClass("active")
+      
+  modelDestroyHandler: ->
+    @$el.remove()
       
     
 TemplateEditorView = Backbone.View.extend
@@ -147,34 +216,44 @@ TemplateEditorView = Backbone.View.extend
     @editor = ace.edit("editor")
     @editor.setTheme("ace/theme/twilight")
     @editor.setShowPrintMargin(false)
+    @editor.getSession().on "change", _.bind @editorChangeHandler, @
     @setMode("ace/mode/html")
-    
-    
     @model.on "change:selectedTemplate", @selectedTemplateChangeHandler, @
     
-  selectedTemplateChangeHandler: ->
-    # If we have a reference to an existing template remove event callback
-    if @templateModel
-        @templateModel.off "change", @populateFromModel, @
-    # Add event callback to newly selected template
+  editorChangeHandler: ->
     @templateModel = @model.get("selectedTemplate")
-    @templateModel.on "change", @populateFromModel, @
-    @populateFromModel()
+    @templateModel.set("template_content", @editor.getSession().getValue(), {silent:true})
     
-  populateFromModel: ->
+  selectedTemplateChangeHandler: ->
+    if @templateModel
+      @templateModel.off "change", @templateModelChangeHandler, @
+    @templateModel = @model.get("selectedTemplate")
+    @templateModelChangeHandler()
+    @templateModel.on "change", @templateModelChangeHandler, @
+      
+  templateModelChangeHandler: ->
+    @templateModel = @model.get("selectedTemplate")
     text = @templateModel.get("template_content")
     if text
-      @editor.getSession().getDocument().setValue(text)
+      @editor.getSession().setValue(text)
     
   setMode: (mode) ->
-    M = require(mode).Mode
-    @editor.getSession().setMode( new M() )
+    @editor.getSession().setMode(mode)
     
     
 SettingsView = Backbone.View.extend
 
   initialize: ->
     @model.on "change:selectedTemplate", @selectedTemplateChangeHandler, @
+    
+  events:
+    "change :input":"inputChangeHander"
+    
+  inputChangeHander: ->
+    formData = @$el.find("form").serializeObject()
+    if @templateModel
+      @templateModel.set(formData)
+    log("input change", @templateModel)
     
   selectedTemplateChangeHandler: ->
     # If we have a reference to an existing template remove event callback
@@ -195,6 +274,11 @@ SettingsView = Backbone.View.extend
       
       $("input:radio[name=template_is_private][value='True']").attr("checked", @templateModel.get("template_is_private"))
       $("input:radio[name=template_is_private][value='False']").attr("checked", !@templateModel.get("template_is_private"))
+      # As index templates are forbidden from being renamed we hide the input
+      if @templateModel.get("template_short_name") == 'index'
+        $("#id_template_short_name").parent().parent().hide()
+      else
+        $("#id_template_short_name").parent().parent().show()
 
 $ ->
   appModel = new AppModel()
@@ -209,8 +293,14 @@ $ ->
   
   newTemplateModal = new NewTemplateModalView {el:$("#create-template-modal"), model:appModel, collection:templateCollection}
   
+  confirmDeleteModal = new ConfirmDeleteModalView {el:$("#delete-template-modal"), model:appModel}
+  
   $("#template-browser > ul > li").each (i, el) ->
-    new TemplateGroupView {el:el, model:appModel, collection:templateCollection}
+    model = new TemplateGroupModel({ id:parseInt($(el).attr("data-id")) })
+    templategroup = new TemplateGroupView {el:el, model:model, collection:templateCollection, appModel:appModel}
+    if templategroup.name == 'root'
+      indexModel = templategroup.getIndexModel()
+      appModel.selectedTemplate( indexModel )
   
   # Activate tabs
   $("#tabs a").click (e) ->

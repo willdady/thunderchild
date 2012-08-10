@@ -19,19 +19,24 @@
 
 {% block content %}
 		
+		
 	<div id="template-browser">
 		<ul>
-			{% for tg in templategroups %}
-			<li data-id="{{ tg.id }}">
-				<div class="group-header clearfix" data-toggle="collapse" data-target="#template-group-{{ tg.id }}">
-					<h3>{{ tg.templategroup_short_name }}</h3>
+			{% for t in templates %}
+			<li data-id="{{ t.templategroup.id }}">
+				<div class="group-header clearfix" data-toggle="collapse" data-target="#template-group-{{ t.templategroup.id }}">
+					<h3>{{ t.templategroup.templategroup_short_name }}</h3>
 					<a href="#" class="new-template-button"><i class="icon-plus icon-white pull-right"></i></a>
 				</div>
-				<ul id="template-group-{{ tg.id }}" class="collapse in">
-				{% for t in templates %}
-					{% ifequal t.templategroup tg %}
-					<li data-id="{{ t.id }}"><a href="#">{{ t.template_short_name }}</a></li>
-					{% endifequal %}
+				<ul id="template-group-{{ t.templategroup.id }}" class="collapse in">
+				{% for template in t.templates %}
+					<li data-id="{{ template.id }}">
+					{% if template.template_short_name == 'index' %}
+						<a href="#"><em>{{ template.template_short_name }}</em></a>
+					{% else %}
+						<a href="#">{{ template.template_short_name }}</a>
+					{% endif %}
+					</li>
 				{% endfor %}
 				</ul>
 			</li>
@@ -110,12 +115,26 @@
 		<a href="#" class="btn btn-primary" id="create-template-button">Create</a>
 	</div>
 </div>
+
+<div class="modal hide" id="delete-template-modal">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>Confirm Delete</h3>
+	</div>
+	<div class="modal-body">
+		<p>Are you sure you want to <b>permanently</b> delete this template?</p>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="#" class="btn btn-danger" id="confirm-delete-template-button">Delete</a>
+	</div>
+</div>
 {% endblock %}
 
 {% block javascript %}
-	<script src="{{ STATIC_URL }}thunderchild/js/ace-0.2.0/src/ace.js"></script>
-	<script src="{{ STATIC_URL }}thunderchild/js/ace-0.2.0/src/theme-twilight.js"></script>
-	<script src="{{ STATIC_URL }}thunderchild/js/ace-0.2.0/src/mode-html.js"></script>
+	<script src="{{ STATIC_URL }}thunderchild/js/ace/ace.js"></script>
+	<script src="{{ STATIC_URL }}thunderchild/js/ace/theme-twilight.js"></script>
+	<script src="{{ STATIC_URL }}thunderchild/js/ace/mode-html.js"></script>
 	{% if debug %}
 		<script src="{{ STATIC_URL }}thunderchild/js_src/templates.js"></script>
 	{% else %}
