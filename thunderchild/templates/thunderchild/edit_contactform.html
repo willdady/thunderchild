@@ -11,7 +11,7 @@
 </ul>
 {% endblock %}
 
-{% block pre_contact_bar %}
+{% block pre_action_bar %}
 <form action="{% url thunderchild.form_views.edit_contactform contactform_id %}" method="post">{% csrf_token %}
 {% endblock %}
 
