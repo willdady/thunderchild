@@ -9,7 +9,10 @@
 @btnPrimaryBackground:lighten(@baseColor,18%);
 @btnPrimaryBackgroundHighlight:darken(@btnPrimaryBackground, 9%);
 
-@dropdownMenuBackgroundColor:#39424b;
+@navbarBackgroundColor:#323636;
+@navbarHighlightColor:lighten(spin(@navbarBackgroundColor, 8), 3%);
+
+@dropdownMenuBackgroundColor:@navbarBackgroundColor;
 @dropdownMenuHoverBackgroundColor:#47525b;
 
 @breadcrumbBarBackgroundColor:@baseColor;

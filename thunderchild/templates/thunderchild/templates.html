@@ -25,7 +25,11 @@
 			{% for t in templates %}
 			<li data-id="{{ t.templategroup.id }}">
 				<div class="group-header clearfix" data-toggle="collapse" data-target="#template-group-{{ t.templategroup.id }}">
+					{% if t.templategroup.templategroup_short_name == "root" %}
+					<h3><em>{{ t.templategroup.templategroup_short_name }}</em></h3>
+					{% else %}
 					<h3>{{ t.templategroup.templategroup_short_name }}</h3>
+					{% endif %}
 					<ul class="controls pull-right">
 						<li><a href="#" class="edit-templategroup-button"><i class="icon-cog icon-white"></i></a></li>
 						<li><a href="#" class="new-template-button"><i class="icon-plus icon-white"></i></a></li>

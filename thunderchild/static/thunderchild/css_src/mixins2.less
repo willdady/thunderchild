@@ -8,5 +8,10 @@
     background: linear-gradient(top bottom, @color1 @color1Percent, @color2 @color2Percent, @color3 @color3Percent, @color4 @color4Percent, @color5 @color5Percent, @color6 @color6Percent); /* W3C */
 }
 .navbar-gradient() {
-  .six-color-gradient(#434e56, 1%, #47525b, 10%, #47525b, 47%, #39424b, 53%, #39424b, 91%, #313b44, 100%);
+  .six-color-gradient(lighten(@navbarHighlightColor, 10%), 1%, 
+                      @navbarHighlightColor, 10%, 
+                      lighten(@navbarHighlightColor, 2%), 47%,
+                      @navbarBackgroundColor, 53%, 
+                      @navbarBackgroundColor, 91%, 
+                      darken(@navbarBackgroundColor, 2%), 100%);
 }
