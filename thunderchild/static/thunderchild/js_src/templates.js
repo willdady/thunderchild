@@ -10,6 +10,12 @@
       }
       return this.get("selectedTemplate");
     },
+    rootTemplateGroup: function(model) {
+      if (model) {
+        this.set("rootTemplateGroup", model);
+      }
+      return this.get("rootTemplateGroup");
+    },
     openNewTemplateModal: function(templateGroupModel) {
       return this.trigger("openNewTemplateModal", templateGroupModel);
     },
@@ -381,6 +387,7 @@
             collection: this.collection,
             appModel: this.model
           });
+          this.model.selectedTemplate(model.indexTemplateModel());
           return this.close();
         }
       }, this), "json").error(function(jqXHR) {
@@ -470,6 +477,7 @@
     confirmDeleteHandler: function(e) {
       this.templateGroupModel.destroy();
       this.close();
+      this.model.selectTemplate(this.model.rootTemplateGroup().getIndexModel());
       return e.preventDefault();
     }
   });
@@ -523,9 +531,10 @@
         collection: templateCollection,
         appModel: appModel
       });
-      if (templategroup.name === 'root') {
+      if (model.get("templategroup_short_name") === 'root') {
         indexModel = templategroup.getIndexModel();
-        return appModel.selectedTemplate(indexModel);
+        appModel.selectedTemplate(indexModel);
+        return appModel.rootTemplateGroup(model);
       }
     });
     $("#tabs a").click(function(e) {

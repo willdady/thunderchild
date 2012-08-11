@@ -12,6 +12,11 @@ AppModel = Backbone.Model.extend
       @set("selectedTemplate", model)
     return @get("selectedTemplate")
     
+  rootTemplateGroup: (model) ->
+    if model
+      @set("rootTemplateGroup", model)
+    return @get("rootTemplateGroup")
+    
   openNewTemplateModal: (templateGroupModel) ->
     @trigger "openNewTemplateModal", templateGroupModel
     
@@ -69,6 +74,7 @@ ActionBarView = Backbone.View.extend
     "click #save-template-button":"saveTemplateClickHandler"
     
   selectedTemplateChangeHandler: ->
+    # Disable the delete button if an index template becomes selected. Index templates cannot be deleted.
     selectedTemplate = @model.get("selectedTemplate")
     if selectedTemplate.get("template_short_name") == "index"
       $("#delete-template-button").addClass("disabled")
@@ -350,6 +356,8 @@ NewTemplateGroupModalView = Backbone.View.extend
         # Instantiate the Backbone model and view for handling the new elements
         model = new TemplateGroupModel(data.templategroup)
         templategroup = new TemplateGroupView {el:templategroup_element, model:model, collection:@collection, appModel:@model}
+        # Select the index template of this newly create group
+        @model.selectedTemplate(model.indexTemplateModel())
         @close()
     ,"json"
     ).error (jqXHR) ->
@@ -430,6 +438,8 @@ ConfirmDeleteTemplateGroupModalView = Backbone.View.extend
   confirmDeleteHandler: (e) ->
     @templateGroupModel.destroy()
     @close()
+    # Select the root/index template
+    @model.selectTemplate( @model.rootTemplateGroup().getIndexModel() )
     e.preventDefault()    
 
 $ ->
@@ -453,9 +463,11 @@ $ ->
   $("#template-browser > ul > li").each (i, el) ->
     model = new TemplateGroupModel({ id:parseInt($(el).attr("data-id")), templategroup_short_name:$(el).find(".group-header h3").text() })
     templategroup = new TemplateGroupView {el:el, model:model, collection:templateCollection, appModel:appModel}
-    if templategroup.name == 'root'
+    # Store a reference to the root template group in our AppModel and select it's index template by default
+    if model.get("templategroup_short_name") == 'root'
       indexModel = templategroup.getIndexModel()
       appModel.selectedTemplate( indexModel )
+      appModel.rootTemplateGroup( model )
   
   # Activate tabs
   $("#tabs a").click (e) ->
