@@ -30,7 +30,8 @@ def templates(request):
     return render(request, 'thunderchild/templates.html', {'templates':templates_list,
                                                            'template_form':model_forms.TemplateForm,
                                                            'new_template_form':model_forms.TemplateForm(auto_id="id2_%s"),
-                                                           'new_templategroup_form':model_forms.TemplateGroupForm})
+                                                           'new_templategroup_form':model_forms.TemplateGroupForm,
+                                                           'edit_templategroup_form':model_forms.TemplateGroupForm(auto_id="id2_%s")})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -46,7 +47,7 @@ def template_create(request):
             model = form.instance
             model.template_uid = '{}/{}'.format(models.TemplateGroup.objects.get(pk=data['templategroup']).templategroup_short_name, data['template_short_name'])
             model.save()
-            return HttpResponse(json.dumps(model.asDict()), content_type="application/json")
+            return HttpResponse(json.dumps(model.as_dict()), content_type="application/json")
         else:
             return HttpResponseBadRequest(json.dumps({'errors':form.errors}), content_type="application/json")
     else:
@@ -62,7 +63,7 @@ def template(request, id):
         return HttpResponse("OK")
     elif request.method == 'GET':
         model = models.Template.objects.filter(pk=id)[0]
-        return HttpResponse(json.dumps(model.asDict()), content_type="application/json")
+        return HttpResponse(json.dumps(model.as_dict()), content_type="application/json")
     else:
         return HttpResponseNotAllowed(permitted_methods=['POST', 'PUT', 'DELETE'])
     
@@ -80,7 +81,7 @@ def group_create(request):
             # We automatically create an index templage within this group
             index = models.Template(templategroup=form.instance, template_short_name='index', template_uid='{}/{}'.format(form.instance.templategroup_short_name, 'index'))
             index.save()
-            data = {'templategroup':form.instance.asDict(), 'template':index.asDict()}
+            data = {'templategroup':form.instance.as_dict(), 'template':index.as_dict()}
             return HttpResponse(json.dumps(data), content_type="application/json")
         else:
             return HttpResponseBadRequest(json.dumps({'errors':form.errors}), content_type="application/json")
@@ -91,14 +92,25 @@ def group_create(request):
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def group(request, id):
     if request.method == 'PUT':
-        pass
+        model = get_object_or_404(models.TemplateGroup, pk=id)
+        try:
+            data = json.loads(request.body)
+        except ValueError:
+            return HttpResponseBadRequest()
+        form = model_forms.TemplateGroupForm(data, instance=model)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(json.dumps(model.as_dict()), content_type="application/json")
+        else:
+            return HttpResponseBadRequest(json.dumps({'errors':form.errors}), content_type="application/json")
     elif request.method == 'DELETE':
-        pass
+        models.TemplateGroup.objects.filter(pk=id).delete()
+        return HttpResponse("OK")
     elif request.method == 'GET':
         data = serializers.serialize('json', models.TemplateGroup.objects.filter(pk=id))
         return HttpResponse(data, content_type="application/json")
     else:
-        pass
+        return HttpResponseNotAllowed(permitted_methods=['PUT', 'DELETE', 'GET'])
 
 
 

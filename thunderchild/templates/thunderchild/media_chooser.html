@@ -75,9 +75,11 @@
 		<script src="{{ STATIC_URL }}thunderchild/js/plugins.js"></script>
 		
 		{% if debug %}
+		<script src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
 		<script src="{{ STATIC_URL }}thunderchild/js_src/media-upload-service.js"></script>
 		<script src="{{ STATIC_URL }}thunderchild/js_src/media-chooser.js"></script>
 		{% else %}
+		<script src="{{ STATIC_URL }}thunderchild/js/utilities-min.js"></script>
 		<script src="{{ STATIC_URL }}thunderchild/js/media-upload-service-min.js"></script>
 		<script src="{{ STATIC_URL }}thunderchild/js/media-chooser-min.js"></script>
 		{% endif %}
