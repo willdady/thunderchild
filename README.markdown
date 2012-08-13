@@ -122,7 +122,7 @@ Usage:
 
 	{% template_url "staff/all" %}
 
-### Comments
+## Comments
 
 Thunderchild includes 2 template snippets to help rending comments in your template. They are "thunderchild/snippets/comment_form.html" for rending a comment submission form 
 and "thunderchild/snippets/comments.html" for rendering the (approved) comments for an Entry. Both snippets have classes set in their markup for styling but feel free to edit 

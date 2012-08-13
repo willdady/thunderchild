@@ -18,8 +18,6 @@
 
 
 {% block content %}
-		
-		
 	<div id="template-browser">
 		<ul>
 			{% for t in templates %}
@@ -27,15 +25,22 @@
 				<div class="group-header clearfix" data-toggle="collapse" data-target="#template-group-{{ t.templategroup.id }}">
 					{% if t.templategroup.templategroup_short_name == "root" %}
 					<h3><em>{{ t.templategroup.templategroup_short_name }}</em></h3>
+					<ul class="controls pull-right">
+						<li><a href="#" class="new-template-button"><i class="icon-plus icon-white"></i></a></li>
+					</ul>
 					{% else %}
 					<h3>{{ t.templategroup.templategroup_short_name }}</h3>
-					{% endif %}
 					<ul class="controls pull-right">
 						<li><a href="#" class="edit-templategroup-button"><i class="icon-cog icon-white"></i></a></li>
 						<li><a href="#" class="new-template-button"><i class="icon-plus icon-white"></i></a></li>
 					</ul>
+					{% endif %}
 				</div>
+				{% if t.templategroup.templategroup_short_name == "root" %}
 				<ul id="template-group-{{ t.templategroup.id }}" class="collapse in">
+				{% else %}
+				<ul id="template-group-{{ t.templategroup.id }}" class="collapse">
+				{% endif %}
 				{% for template in t.templates %}
 					{% spaceless %}
 					{% if template.template_short_name == 'index' %}
@@ -94,7 +99,9 @@
 								</div>
 						</div>
 						{% else %}
+							{% if field.label != 'Content' %}
 							{{ field }}
+							{% endif %}
 						{% endif %}
 					{% endfor %}
 				</form>

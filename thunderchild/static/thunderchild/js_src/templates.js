@@ -1,5 +1,5 @@
 (function() {
-  var ActionBarView, AppModel, ConfirmDeleteTemplateGroupModalView, ConfirmDeleteTemplateModalView, EditTemplateGroupModalView, NewTemplateGroupModalView, NewTemplateModalView, SettingsView, TemplateCollection, TemplateEditorView, TemplateGroupModel, TemplateGroupView, TemplateListItemView, TemplateModel, templateGroupRoot, templateRoot;
+  var ActionBarView, AppModel, ConfirmDeleteTemplateGroupModalView, ConfirmDeleteTemplateModalView, EditTemplateGroupModalView, NewTemplateGroupModalView, NewTemplateModalView, SettingsView, TemplateBrowserView, TemplateCollection, TemplateEditorView, TemplateGroupCollection, TemplateGroupModel, TemplateGroupView, TemplateListItemView, TemplateModel, templateGroupRoot, templateRoot;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   templateRoot = '/backend/api/templates/template';
   templateGroupRoot = '/backend/api/templates/group';
@@ -55,11 +55,48 @@
         this._templateGroupModel = model;
       }
       return this._templateGroupModel;
+    },
+    errors: function(obj) {
+      if (obj) {
+        this._errors = obj;
+        this.trigger("errors", this._errors);
+      }
+      return this._errors;
+    },
+    requiresSave: function(bool) {
+      if (bool || bool === false) {
+        this._requiresSave = bool;
+        this.trigger("change");
+      }
+      return this._requiresSave;
+    },
+    getMode: function() {
+      switch (this.get("template_content_type")) {
+        case "text/html":
+        case "text/xhtml+xml":
+          return "ace/mode/html";
+        case "text/css":
+          return "ace/mode/css";
+        case "application/javascript":
+          return "ace/mode/javascript";
+        case "application/json":
+          return "ace/mode/json";
+        case "application/rss+xml":
+        case "application/atom+xml":
+        case "text/xml":
+        case "application/soap+xml":
+          return "ace/mode/xml";
+        default:
+          return "ace/mode/text";
+      }
     }
   });
   TemplateCollection = Backbone.Collection.extend({
     model: TemplateModel,
     url: templateRoot
+  });
+  TemplateGroupCollection = Backbone.Collection.extend({
+    model: TemplateGroupModel
   });
   ActionBarView = Backbone.View.extend({
     initialize: function() {
@@ -90,7 +127,69 @@
       return e.preventDefault();
     },
     saveTemplateClickHandler: function(e) {
+      var templateModel;
+      if ($("#save-template-button").hasClass("disabled")) {
+        return;
+      }
+      $("#save-template-button").addClass("disabled");
+      templateModel = this.model.selectedTemplate();
+      templateModel.errors({});
+      templateModel.save({}, {
+        wait: true,
+        success: function(model, response) {
+          model.requiresSave(false);
+          return $("#save-template-button").removeClass("disabled");
+        },
+        error: function(model, response) {
+          var resp;
+          resp = $.parseJSON(response.responseText);
+          templateModel.errors(resp.errors);
+          return $("#save-template-button").removeClass("disabled");
+        }
+      });
       return e.preventDefault();
+    }
+  });
+  TemplateBrowserView = Backbone.View.extend({
+    initialize: function() {
+      this.$el.find("> ul > li").each(__bind(function(i, el) {
+        var indexModel, model, templategroup;
+        model = new TemplateGroupModel({
+          id: parseInt($(el).attr("data-id")),
+          templategroup_short_name: $(el).find(".group-header h3").text()
+        });
+        templategroup = new TemplateGroupView({
+          el: el,
+          model: model,
+          collection: this.options.templateCollection,
+          appModel: this.model
+        });
+        if (model.get("templategroup_short_name") === 'root') {
+          indexModel = templategroup.getIndexModel();
+          this.model.selectedTemplate(indexModel);
+          this.model.rootTemplateGroup(model);
+        }
+        return this.options.templateGroupCollection.add(model, {
+          silent: true
+        });
+      }, this));
+      return this.options.templateGroupCollection.on("add", this.templateGroupAddHandler, this);
+    },
+    sort: function() {
+      this.$el.find("> ul > li").tsort(".group-header h3");
+      return this.$el.find("> ul").prepend(this.$el.find("ul > li .group-header h3:contains(root)").closest("li"));
+    },
+    templateGroupAddHandler: function(model) {
+      var templategroup, templategroup_element;
+      templategroup_element = $(_.template($("#templategroup-list-item-template").text(), model.toJSON()));
+      this.$el.find("> ul").prepend(templategroup_element);
+      templategroup = new TemplateGroupView({
+        el: templategroup_element,
+        model: model,
+        collection: this.options.templateCollection,
+        appModel: this.model
+      });
+      return this.sort();
     }
   });
   TemplateGroupView = Backbone.View.extend({
@@ -134,8 +233,8 @@
       return e.stopPropagation();
     },
     sort: function() {
-      this.$el.find("ul>li").tsort();
-      return this.$el.find("ul").prepend(this.$el.find("[data-is-index=1]"));
+      this.$el.find("> ul > li").tsort();
+      return this.$el.find("> ul").prepend(this.$el.find("[data-is-index=1]"));
     },
     templateAddedHandler: function(templateModel) {
       var el, templateView;
@@ -171,7 +270,8 @@
   TemplateListItemView = Backbone.View.extend({
     initialize: function() {
       this.options.appModel.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
-      return this.model.on("destroy", this.modelDestroyHandler, this);
+      this.model.on("destroy", this.modelDestroyHandler, this);
+      return this.model.on("change", this.render, this);
     },
     events: {
       'click a': 'clickHandler'
@@ -194,6 +294,18 @@
     },
     modelDestroyHandler: function() {
       return this.$el.remove();
+    },
+    render: function() {
+      if (this.model.templateGroupModel().indexTemplateModel() === this.model) {
+        this.$el.find("a em").text(this.model.get("template_short_name"));
+      } else {
+        this.$el.find("a").text(this.model.get("template_short_name"));
+      }
+      if (this.model.requiresSave()) {
+        return this.$el.addClass("unsaved");
+      } else {
+        return this.$el.removeClass("unsaved");
+      }
     }
   });
   TemplateEditorView = Backbone.View.extend({
@@ -203,37 +315,62 @@
       this.editor.setShowPrintMargin(false);
       this.editor.getSession().on("change", _.bind(this.editorChangeHandler, this));
       this.setMode("ace/mode/html");
-      return this.model.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
+      this.model.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
+      this.selectedTemplateChangeHandler();
+      $("#tabs").on("shown", _.bind(this.tabShownHandler, this));
+      return this.ignoreEditorChange = false;
     },
-    editorChangeHandler: function() {
+    tabShownHandler: function(e) {
+      if (this.$el.hasClass("active") && this.templateModel) {
+        this.setValue(this.templateModel.get("template_content"));
+        if (this.getMode() !== this.templateModel.getMode()) {
+          return this.setMode(this.templateModel.getMode());
+        }
+      }
+    },
+    editorChangeHandler: function(e) {
+      if (this.ignoreEditorChange) {
+        return;
+      }
       this.templateModel = this.model.get("selectedTemplate");
-      return this.templateModel.set("template_content", this.editor.getSession().getValue(), {
-        silent: true
-      });
+      this.templateModel.requiresSave(true);
+      return this.templateModel.set("template_content", this.editor.getSession().getValue());
     },
     selectedTemplateChangeHandler: function() {
       if (this.templateModel) {
-        this.templateModel.off("change", this.templateModelChangeHandler, this);
+        this.templateModel.off("initialFetchComplete", this.initialFetchCompleteHandler, this);
+        this.templateModel.off("change:template_content_type", this.contentTypeChangeHandler, this);
       }
       this.templateModel = this.model.get("selectedTemplate");
-      this.templateModelChangeHandler();
-      return this.templateModel.on("change", this.templateModelChangeHandler, this);
+      this.templateModel.on("initialFetchComplete", this.initialFetchCompleteHandler, this);
+      this.templateModel.on("change:template_content_type", this.contentTypeChangeHandler, this);
+      this.setValue(this.templateModel.get("template_content"));
+      return this.setMode(this.templateModel.getMode());
     },
-    templateModelChangeHandler: function() {
-      var text;
-      this.templateModel = this.model.get("selectedTemplate");
-      text = this.templateModel.get("template_content");
-      if (text) {
-        return this.editor.getSession().setValue(text);
-      }
+    contentTypeChangeHandler: function() {
+      return this.setMode(this.templateModel.getMode());
+    },
+    setValue: function(value) {
+      this.ignoreEditorChange = true;
+      this.editor.getSession().clearAnnotations();
+      this.editor.getSession().setValue(value);
+      return this.ignoreEditorChange = false;
+    },
+    initialFetchCompleteHandler: function() {
+      this.setValue(this.templateModel.get("template_content"));
+      return this.setMode(this.templateModel.getMode());
     },
     setMode: function(mode) {
       return this.editor.getSession().setMode(mode);
+    },
+    getMode: function() {
+      return this.editor.getSession().getMode().$id;
     }
   });
   SettingsView = Backbone.View.extend({
     initialize: function() {
-      return this.model.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
+      this.model.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
+      return this.selectedTemplateChangeHandler();
     },
     events: {
       "change :input": "inputChangeHander"
@@ -242,16 +379,49 @@
       var formData;
       formData = this.$el.find("form").serializeObject();
       if (this.templateModel) {
-        return this.templateModel.set(formData);
+        this.templateModel.set(formData, {
+          silent: true
+        });
+        return this.templateModel.requiresSave(true);
       }
     },
     selectedTemplateChangeHandler: function() {
+      var errors;
       if (this.templateModel) {
         this.templateModel.off("change", this.populateFromModel, this);
+        this.templateModel.off("errors", this.renderErrors, this);
       }
       this.templateModel = this.model.get("selectedTemplate");
-      this.templateModel.on("change", this.populateFromModel, this);
-      return this.populateFromModel();
+      if (this.templateModel) {
+        this.templateModel.on("change", this.populateFromModel, this);
+        this.templateModel.on("errors", this.renderErrors, this);
+        this.populateFromModel();
+      }
+      this.removeErrors();
+      errors = this.templateModel.errors();
+      if (errors) {
+        return this.renderErrors(errors);
+      }
+    },
+    removeErrors: function() {
+      this.$el.find(".alert").remove();
+      return this.$el.find(".error").removeClass("error");
+    },
+    renderErrors: function(errors) {
+      var errors_html;
+      this.removeErrors();
+      errors_html = '';
+      return _.each(errors, function(value, key) {
+        _.each(value, function(el, i) {
+          return errors_html += _.template("<li><%= error %></li>", {
+            error: el
+          });
+        });
+        $("#id_" + key).before(_.template($("#form-error-template").text(), {
+          errors: errors_html
+        }));
+        return $("#id_" + key).parent().addClass("error");
+      });
     },
     populateFromModel: function() {
       if (this.templateModel.get("template_short_name")) {
@@ -260,6 +430,7 @@
         $("#id_template_cache_timeout").val(this.templateModel.get("template_cache_timeout"));
         $("#id_template_redirect_type").val(this.templateModel.get("template_redirect_type"));
         $("#id_template_redirect_url").val(this.templateModel.get("template_redirect_url"));
+        $("#id_templategroup").val(this.templateModel.get("templategroup"));
         $("input:radio[name=template_is_private][value='True']").attr("checked", this.templateModel.get("template_is_private"));
         $("input:radio[name=template_is_private][value='False']").attr("checked", !this.templateModel.get("template_is_private"));
         if (this.templateModel.get("template_short_name") === 'index') {
@@ -300,6 +471,7 @@
       "click #create-template-button": "createTemplateButtonClickHandler"
     },
     open: function(templateGroupModel) {
+      this.templateGroupModel = templateGroupModel;
       $("#id2_templategroup").val(templateGroupModel.id);
       this.removeErrors();
       this.$el.find("form").each(function() {
@@ -322,6 +494,7 @@
       this.temp_model = new TemplateModel(formData);
       this.temp_model.save({}, {
         success: __bind(function(model, response) {
+          model.templateGroupModel(this.templateGroupModel);
           this.collection.add(model);
           return this.close();
         }, this),
@@ -374,20 +547,13 @@
       var formData;
       formData = this.$el.find("form").serializeObject();
       $.post(templateGroupRoot, JSON.stringify(formData), __bind(function(data, textStatus, jqXHR) {
-        var model, template_element, templategroup, templategroup_element;
+        var template_model, templategroup_model;
         if (jqXHR.status === 200) {
-          templategroup_element = $(_.template($("#templategroup-list-item-template").text(), data.templategroup));
-          template_element = $(_.template($("#template-list-item-template").text(), data.template));
-          templategroup_element.find("ul.collapse").append(template_element);
-          $("#template-browser > ul").prepend(templategroup_element);
-          model = new TemplateGroupModel(data.templategroup);
-          templategroup = new TemplateGroupView({
-            el: templategroup_element,
-            model: model,
-            collection: this.collection,
-            appModel: this.model
-          });
-          this.model.selectedTemplate(model.indexTemplateModel());
+          templategroup_model = new TemplateGroupModel(data.templategroup);
+          template_model = new TemplateModel(data.template);
+          this.options.templateGroupCollection.add(templategroup_model);
+          this.options.templateCollection.add(template_model);
+          this.model.selectedTemplate(template_model);
           return this.close();
         }
       }, this), "json").error(function(jqXHR) {
@@ -477,17 +643,24 @@
     confirmDeleteHandler: function(e) {
       this.templateGroupModel.destroy();
       this.close();
-      this.model.selectTemplate(this.model.rootTemplateGroup().getIndexModel());
+      this.model.selectedTemplate(this.model.rootTemplateGroup().indexTemplateModel());
       return e.preventDefault();
     }
   });
   $(function() {
-    var actionBarView, appModel, confirmDeleteTemplateGroupModal, confirmDeleteTemplateModal, editTemplateGroupModal, newTemplateGroupModal, newTemplateModal, settingsView, templateCollection, templateEditorView;
+    var actionBarView, appModel, confirmDeleteTemplateGroupModal, confirmDeleteTemplateModal, editTemplateGroupModal, newTemplateGroupModal, newTemplateModal, settingsView, templateBrowserView, templateCollection, templateEditorView, templateGroupCollection;
     appModel = new AppModel();
     templateCollection = new TemplateCollection();
+    templateGroupCollection = new TemplateGroupCollection();
     actionBarView = new ActionBarView({
       el: $(".action-bar"),
       model: appModel
+    });
+    templateBrowserView = new TemplateBrowserView({
+      el: $("#template-browser"),
+      model: appModel,
+      templateCollection: templateCollection,
+      templateGroupCollection: templateGroupCollection
     });
     templateEditorView = new TemplateEditorView({
       el: $("#editor-pane"),
@@ -509,7 +682,8 @@
     newTemplateGroupModal = new NewTemplateGroupModalView({
       el: $("#create-templategroup-modal"),
       model: appModel,
-      collection: templateCollection
+      templateGroupCollection: templateGroupCollection,
+      templateCollection: templateCollection
     });
     editTemplateGroupModal = new EditTemplateGroupModalView({
       el: $("#edit-templategroup-modal"),
@@ -518,24 +692,6 @@
     confirmDeleteTemplateGroupModal = new ConfirmDeleteTemplateGroupModalView({
       el: $("#delete-templategroup-modal"),
       model: appModel
-    });
-    $("#template-browser > ul > li").each(function(i, el) {
-      var indexModel, model, templategroup;
-      model = new TemplateGroupModel({
-        id: parseInt($(el).attr("data-id")),
-        templategroup_short_name: $(el).find(".group-header h3").text()
-      });
-      templategroup = new TemplateGroupView({
-        el: el,
-        model: model,
-        collection: templateCollection,
-        appModel: appModel
-      });
-      if (model.get("templategroup_short_name") === 'root') {
-        indexModel = templategroup.getIndexModel();
-        appModel.selectedTemplate(indexModel);
-        return appModel.rootTemplateGroup(model);
-      }
     });
     $("#tabs a").click(function(e) {
       $(this).tab("show");
