@@ -16,6 +16,9 @@
 	<property name="CSS_OUTPUT" value="${basedir}/css" />
 	
 	<target name="compile-coffeescript">
+		<description>
+			Compiles all .coffee files in the JS_SOURCE directory to .js files.
+		</description>
 		<apply executable="${COFFEE_COMMAND}">
 			<fileset dir="${JS_SOURCE}" includes="*.coffee" />
 			<arg value="--compile" />
@@ -24,6 +27,9 @@
 	</target>
 	
 	<target name="minify-javascript">
+		<description>
+			Minifies any .js files in the JS_SOURCE directory and outputs them to the JS_OUTPUT directory.
+		</description>
 		<apply executable="${JAVA_COMMAND}" dest="${JS_OUTPUT}">
 			<fileset dir="${JS_SOURCE}" includes="*.js" excludes="*min.js" />
 			
@@ -37,12 +43,18 @@
 	</target>
 	
 	<target name="compile-less">
+		<description>
+			Compiles the main application .less file, thunderchild.less, to thunderchild.css outputting to the CSS_OUTPUT directory.
+		</description>
 		<exec executable="${LESSC_COMMAND}" output="${CSS_OUTPUT}/thunderchild.css">
 			<arg value="${CSS_SOURCE}/thunderchild.less" />
 		</exec>
 	</target>
 	
 	<target name="copy-css-assets">
+		<description>
+			Copies specified directories from CSS_SOURCE to CSS_OUTPUT.
+		</description>
 		<copy todir="${CSS_OUTPUT}/images">
 			<fileset dir="${CSS_SOURCE}/images" />
 		</copy>

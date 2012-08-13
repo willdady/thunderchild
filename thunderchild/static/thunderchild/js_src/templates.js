@@ -86,6 +86,10 @@
         case "text/xml":
         case "application/soap+xml":
           return "ace/mode/xml";
+        case "text/less":
+          return "ace/mode/less";
+        case "text/scss":
+          return "ace/mode/scss";
         default:
           return "ace/mode/text";
       }
@@ -468,7 +472,14 @@
       return this.model.on("openNewTemplateModal", this.open, this);
     },
     events: {
-      "click #create-template-button": "createTemplateButtonClickHandler"
+      "click #create-template-button": "createTemplateButtonClickHandler",
+      "keypress input": "inputKeyPressHandler"
+    },
+    inputKeyPressHandler: function(e) {
+      if (e.which === 13) {
+        this.createTemplateButtonClickHandler();
+        return e.preventDefault();
+      }
     },
     open: function(templateGroupModel) {
       this.templateGroupModel = templateGroupModel;
@@ -477,6 +488,7 @@
       this.$el.find("form").each(function() {
         return this.reset();
       });
+      $("#id2_template_is_private_0").prop("checked", true);
       this.$el.modal("show");
       return $("#id2_template_short_name").focus();
     },
@@ -518,7 +530,9 @@
           }
         }, this)
       });
-      return e.preventDefault();
+      if (e) {
+        return e.preventDefault();
+      }
     }
   });
   NewTemplateGroupModalView = Backbone.View.extend({
@@ -526,7 +540,14 @@
       return this.model.on("openNewTemplateGroupModal", this.open, this);
     },
     events: {
-      "click #create-templategroup-button": "createTemplateGroupButtonClickHandler"
+      "click #create-templategroup-button": "createTemplateGroupButtonClickHandler",
+      "keypress input": "inputKeyPressHandler"
+    },
+    inputKeyPressHandler: function(e) {
+      if (e.which === 13) {
+        this.createTemplateGroupButtonClickHandler();
+        return e.preventDefault();
+      }
     },
     open: function() {
       this.removeErrors();
@@ -551,15 +572,35 @@
         if (jqXHR.status === 200) {
           templategroup_model = new TemplateGroupModel(data.templategroup);
           template_model = new TemplateModel(data.template);
+          template_model.templateGroupModel(templategroup_model);
+          templategroup_model.indexTemplateModel(template_model);
           this.options.templateGroupCollection.add(templategroup_model);
           this.options.templateCollection.add(template_model);
           this.model.selectedTemplate(template_model);
           return this.close();
         }
-      }, this), "json").error(function(jqXHR) {
-        return log("ERROR", jqXHR);
-      });
-      return e.preventDefault();
+      }, this), "json").error(__bind(function(jqXHR) {
+        var errors_html, resp;
+        this.removeErrors();
+        if (jqXHR.status === 400) {
+          resp = $.parseJSON(jqXHR.responseText);
+          errors_html = '';
+          return _.each(resp.errors, function(value, key) {
+            _.each(value, function(el, i) {
+              return errors_html += _.template("<li><%= error %></li>", {
+                error: el
+              });
+            });
+            $("#id_" + key).before(_.template($("#form-error-template").text(), {
+              errors: errors_html
+            }));
+            return $("#id_" + key).parent().addClass("error");
+          });
+        }
+      }, this));
+      if (e) {
+        return e.preventDefault();
+      }
     }
   });
   EditTemplateGroupModalView = Backbone.View.extend({
@@ -568,7 +609,14 @@
     },
     events: {
       "click #save-templategroup-button": "saveTemplateGroupButtonClickHandler",
-      "click #delete-templategroup-button": "deleteTemplateGroupButtonClickHandler"
+      "click #delete-templategroup-button": "deleteTemplateGroupButtonClickHandler",
+      "keypress input": "inputKeyPressHandler"
+    },
+    inputKeyPressHandler: function(e) {
+      if (e.which === 13) {
+        this.saveTemplateGroupButtonClickHandler();
+        return e.preventDefault();
+      }
     },
     open: function(templateGroupModel) {
       this.templateGroupModel = templateGroupModel;
@@ -618,7 +666,9 @@
           }
         }, this)
       });
-      return e.preventDefault();
+      if (e) {
+        return e.preventDefault();
+      }
     },
     deleteTemplateGroupButtonClickHandler: function(e) {
       this.close();

@@ -139,6 +139,8 @@ class TemplateGroupForm(ModelForm):
 TEMPLATE_CONTENT_TYPES = (('text/html', 'HTML - text/html'),
                           ('text/xhtml+xml', 'XHTML - text/xhtml+xml'), 
                           ('text/css', 'CSS - text/css'),
+                          ('text/less', 'LESS - text/less'),
+                          ('text/scss', 'SASS - text/scss'),
                           ('application/javascript', 'Javascript - application/javascript'), 
                           ('application/json', 'JSON - application/json'),
                           ('application/rss+xml', 'RSS - application/rss+xml'), 

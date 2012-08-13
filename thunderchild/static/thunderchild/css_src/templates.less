@@ -5,6 +5,7 @@
   bottom:20px;
   right:81%;
   overflow:auto;
+  background:@white;
   .btn-primary {
     margin-top:5px;
     margin-bottom:22px;
@@ -16,9 +17,12 @@
     li {
       &.active {
         background:lighten(@baseColor, 50%);
+        &.unsaved {
+          background:lighten(@red, 28%);
+        }
       }
       &.unsaved {
-        background:red;
+        background:lighten(@red, 35%);
       }
       a {
         display:block;

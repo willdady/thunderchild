@@ -75,6 +75,8 @@ TemplateModel = Backbone.Model.extend
       when "application/javascript" then return "ace/mode/javascript"
       when "application/json" then return "ace/mode/json"
       when "application/rss+xml", "application/atom+xml", "text/xml", "application/soap+xml" then return "ace/mode/xml"
+      when "text/less" then return "ace/mode/less"
+      when "text/scss" then return "ace/mode/scss"
       else return"ace/mode/text"
     
 
@@ -407,6 +409,12 @@ NewTemplateModalView = Backbone.View.extend
     
   events:
     "click #create-template-button":"createTemplateButtonClickHandler"
+    "keypress input":"inputKeyPressHandler"
+    
+  inputKeyPressHandler:(e) ->
+    if e.which == 13
+      @createTemplateButtonClickHandler()
+      e.preventDefault()
     
   open: (templateGroupModel) ->
     @templateGroupModel = templateGroupModel
@@ -414,6 +422,7 @@ NewTemplateModalView = Backbone.View.extend
     # We clean up the modal by removing any previously entered values and error alerts
     @removeErrors()
     @$el.find("form").each -> this.reset()
+    $("#id2_template_is_private_0").prop("checked", true) # Explicitly set 'Is Private?' radio back to 'No'.
     # Show the modal
     @$el.modal("show")
     # Give the first input focus
@@ -447,7 +456,8 @@ NewTemplateModalView = Backbone.View.extend
               errors_html += _.template("<li><%= error %></li>", {error:el})
             $("#id2_"+key).before( _.template($("#form-error-template").text(), {errors:errors_html}) )
             $("#id2_"+key).parent().addClass("error")
-    e.preventDefault()
+    if e
+      e.preventDefault()
     
     
 NewTemplateGroupModalView = Backbone.View.extend
@@ -457,6 +467,12 @@ NewTemplateGroupModalView = Backbone.View.extend
     
   events:
     "click #create-templategroup-button":"createTemplateGroupButtonClickHandler"
+    "keypress input":"inputKeyPressHandler"
+    
+  inputKeyPressHandler:(e) ->
+    if e.which == 13
+      @createTemplateGroupButtonClickHandler()
+      e.preventDefault()
     
   open: ->
     # We clean up the modal by removing any previously entered values and error alerts
@@ -480,14 +496,27 @@ NewTemplateGroupModalView = Backbone.View.extend
       if jqXHR.status == 200
         templategroup_model = new TemplateGroupModel(data.templategroup)
         template_model = new TemplateModel(data.template)
+        template_model.templateGroupModel(templategroup_model)
+        templategroup_model.indexTemplateModel(template_model)
         @options.templateGroupCollection.add(templategroup_model)
         @options.templateCollection.add(template_model)
         @model.selectedTemplate(template_model)
         @close()
     ,"json"
-    ).error (jqXHR) ->
-      log("ERROR", jqXHR)
-    e.preventDefault()
+    ).error (jqXHR) =>
+      @removeErrors()
+      if jqXHR.status == 400
+        resp = $.parseJSON(jqXHR.responseText)
+        errors_html = ''
+        # Loop over each field in the errors object. The errors object contains fields in the format {<field name>:["error", "error", ...], ...}
+        _.each resp.errors, (value, key) ->
+          # As there can be multiple errors for a field we loop over the errors too.
+          _.each value, (el, i) ->
+            errors_html += _.template("<li><%= error %></li>", {error:el})
+          $("#id_"+key).before( _.template($("#form-error-template").text(), {errors:errors_html}) )
+          $("#id_"+key).parent().addClass("error")
+    if e
+      e.preventDefault()
     
     
 EditTemplateGroupModalView = Backbone.View.extend
@@ -498,7 +527,13 @@ EditTemplateGroupModalView = Backbone.View.extend
   events:
     "click #save-templategroup-button":"saveTemplateGroupButtonClickHandler"
     "click #delete-templategroup-button":"deleteTemplateGroupButtonClickHandler"
+    "keypress input":"inputKeyPressHandler"
     
+  inputKeyPressHandler:(e) ->
+    if e.which == 13
+      @saveTemplateGroupButtonClickHandler()
+      e.preventDefault()
+  
   open: (templateGroupModel) ->
     @templateGroupModel = templateGroupModel
     # We clean up the modal by removing any previously entered values and error alerts
@@ -537,7 +572,8 @@ EditTemplateGroupModalView = Backbone.View.extend
               errors_html += _.template("<li><%= error %></li>", {error:el})
             $("#id2_"+key).before( _.template($("#form-error-template").text(), {errors:errors_html}) )
             $("#id2_"+key).parent().addClass("error")
-    e.preventDefault()
+    if e
+      e.preventDefault()
 
   deleteTemplateGroupButtonClickHandler: (e) ->
     @close()

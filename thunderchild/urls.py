@@ -47,13 +47,6 @@ urlpatterns = patterns('',
     (r'^backend/api/templates/template$', 'thunderchild.template_views.template_create'),
     (r'^backend/api/templates/template/(\d+)$', 'thunderchild.template_views.template'),
     
-    (r'^backend/templates/group/create$', 'thunderchild.template_views.create_templategroup'),
-    (r'^backend/templates/group/edit/(\d+)$', 'thunderchild.template_views.edit_templategroup'),
-    (r'^backend/templates/group/delete$', 'thunderchild.template_views.delete_templategroup'),
-    (r'^backend/templates/group/(\d+)/create$', 'thunderchild.template_views.create_template'),
-    (r'^backend/templates/group/(\d+)/edit/(\d+)', 'thunderchild.template_views.edit_template'),
-    (r'^backend/templates/group/(\d+)/delete', 'thunderchild.template_views.delete_template'),
-    
     (r'^backend/forms/contact$', 'thunderchild.form_views.contactforms'),
     (r'^backend/forms/contact/create$', 'thunderchild.form_views.create_contactform'),
     (r'^backend/forms/contact/edit/(\d+)$', 'thunderchild.form_views.edit_contactform'),
