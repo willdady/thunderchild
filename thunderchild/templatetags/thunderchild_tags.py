@@ -1,4 +1,3 @@
-from datetime import datetime
 from django import template
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -29,7 +28,7 @@ def get_entries(context, entrytype_short_name, *args, **kwargs):
         return None
     
     # We get all entries of this EntryType EXCEPT those which have been marked as published = False AND/OR have expired.
-    entries = models.Entry.objects.filter(entrytype__exact=entrytype, is_published__exact=True).exclude(expiration_date__lt=datetime.now())
+    entries = models.Entry.objects.filter(entrytype__exact=entrytype, is_published__exact=True, expiration_date__gt=now())
 
     if order_by:
         order_by = [field_name.strip() for field_name in order_by.split(',')]
@@ -68,19 +67,16 @@ def get_entry(*args, **kwargs):
     slug = kwargs.get('slug')
     try:
         if slug:
-            model = models.Entry.objects.get(slug__exact=slug)
+            model = models.Entry.objects.get(slug__exact=slug, is_published__exact=True)
         elif id:
-            model = models.Entry.objects.get(pk=id)
+            model = models.Entry.objects.get(pk=id, is_published__exact=True)
         elif len(args) == 1:
-            model = models.Entry.objects.get(slug__exact=args[0])
+            model = models.Entry.objects.get(slug__exact=args[0], is_published__exact=True)
         else:
             return None
     except models.Entry.DoesNotExist:
         return None
-     
-    if not model.is_published:
-        return None
-    
+       
     if model.expiration_date:
         if model.expiration_date < now(): # Note we use Django's 'now' function as it will return either a naive or aware datetime according to settings.USE_TZ.
             return None

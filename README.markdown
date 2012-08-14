@@ -102,7 +102,22 @@ In order to use the following Thunderchild tags the above load tag *must* be pre
 
 Usage:
 
-	{% entry 'my_entry' as my_entry %}
+	{% entry 'my-entry-slug' as my_entry %}
+	
+By default all entries have the following attributes
+
+*author* - The entry's author. A [User](https://docs.djangoproject.com/en/1.4/topics/auth/#users) object.
+*title* - The entry's title.
+*slug* - The entry's slug.
+*creation_date* - A datetime of when the entry was created.
+*last_modified_date* - A datetime of when the entry was last modified.
+*expiration_date* - A datetime of when the entry will expire.
+*is_published* - A Boolean of whether the entry is published. Will always return true as non-published entries will not render to templates.
+*categories* - A list of Categories the Entry is assigned to. See {% categories %} tag below.
+*comments_enabled* - A Boolean stating whether comments have been enabled for this entry.
+*comments_expiration_date* - A datetime of when comments will be considered closed.
+
+In addition to the above default fields, all custom fields are accessible by their 'Short name'. Field short names can be seen at Admin/Field Groups.
 
 #### {% entries %}
 
@@ -144,6 +159,6 @@ to create templates at these locations. Alternatively, you may set the success a
 
 Example:
 
-	{% include "thunderchild/snippets/comment_form.html" with entry=my_entry success_url="/my/custom/success/url" error_url="/my/custom/error/url" only %}
+	{% include "thunderchild/snippets/comment_form.html" with entry=my_entry success_url="/my/custom/success/url" error_url="/my/custom/error/url" %}
 	
 	

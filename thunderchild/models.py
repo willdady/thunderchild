@@ -75,9 +75,9 @@ class Entry(models.Model):
             d['comments'] = Comment.objects.filter(entry__exact=self.id, is_spam__exact=False, is_approved__exact=True)
             d['comment_form'] = self.comment_form_dict
         
-        fielddatas = FieldData.objects.filter(entry__exact=self).filter(field__fieldgroup__exact=self.entrytype.fieldgroup).select_related('field')
+        fielddatas = FieldData.objects.filter(entry__exact=self, field__fieldgroup__exact=self.entrytype.fieldgroup).select_related('field')
         for fielddata in fielddatas:
-            d['{}'.format(fielddata.field.field_short_name)] = fielddata.value
+            d[fielddata.field.field_short_name] = fielddata.value
         return d
     
     dict = property(_get_dict)
