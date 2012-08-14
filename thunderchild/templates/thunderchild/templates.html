@@ -93,7 +93,7 @@
 									{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
 									{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
 								</div>
-								<div id="form_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
+								<div id="form_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} in">
 									{{ field }}
 									{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
 								</div>
@@ -227,4 +227,10 @@
 	{% else %}
 		<script src="{{ STATIC_URL }}thunderchild/js/templates-min.js"></script>
 	{% endif %}
+	<script>
+	// This stops label elements from triggering their associated fields when clicked.
+	$(".field_label_holder label").click(function(e){
+		e.preventDefault();
+	});
+	</script>
 {% endblock %}

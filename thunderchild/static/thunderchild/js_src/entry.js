@@ -51,7 +51,7 @@
       if (this.existingThumbnail.length > 0) {
         this.existingThumbnail.replaceWith(content);
       } else {
-        this.$el.parent().prepend(content);
+        this.$el.parent().append(content);
       }
       return this.model.hideMediaChooser();
     }

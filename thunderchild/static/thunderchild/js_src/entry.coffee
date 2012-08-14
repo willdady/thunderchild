@@ -46,7 +46,7 @@ window.MediaChooserWidgetView = Backbone.View.extend
     if @existingThumbnail.length > 0
       @existingThumbnail.replaceWith( content )
     else
-      @$el.parent().prepend( content )
+      @$el.parent().append( content )
     # Hide the chooser
     @model.hideMediaChooser()
 

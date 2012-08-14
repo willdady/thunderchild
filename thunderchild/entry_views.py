@@ -173,21 +173,30 @@ def edit_entry(request, entry_id):
                 if fielddata.value != form2.cleaned_data[field.field_short_name]:
                     fielddata.value = form2.cleaned_data[field.field_short_name]
                     fielddata.save()
+            
             if request.POST['submit-button'] == 'Save and finish':
                 return redirect('thunderchild.entry_views.entries')
-        return render(request, 'thunderchild/edit_entry.html', {'form1':form1, 
-                                                                'form2':form2, 
-                                                                'entry_id':entry_id, 
-                                                                'entrytype_name':entrytype_model.entrytype_name,
-                                                                'has_categorygroup':entrytype_model.categorygroup,
-                                                                'delete_url':reverse('thunderchild.entry_views.delete_entry')})
+            
+            data = entry_model.dict
+            media_assets = {}
+            for key, value in data.items():
+                if type(value) == models.MediaAsset:
+                    media_assets[key] = value
+                    data[key] = value.id # As MediaAsset.__unicode__() returns the asset's url we need to overwrite to point to the MediaAsset's id, not the actual MediaAsset instance.
+            return render(request, 'thunderchild/edit_entry.html', {'form1':form1, 
+                                                                    'form2':form2, 
+                                                                    'entry_id':entry_id, 
+                                                                    'entrytype_name':entrytype_model.entrytype_name,
+                                                                    'media_assets':media_assets,
+                                                                    'has_categorygroup':entrytype_model.categorygroup,
+                                                                    'delete_url':reverse('thunderchild.entry_views.delete_entry')})
     else:
         data = entry_model.dict
-        
         media_assets = {}
         for key, value in data.items():
             if type(value) == models.MediaAsset:
                 media_assets[key] = value
+                data[key] = value.id # As MediaAsset.__unicode__() returns the asset's url we need to overwrite to point to the MediaAsset's id, not the actual MediaAsset instance.
                 
         form1 = model_forms.EntryForm(entrytype_model=entrytype_model, initial=data)
         form2 = entrytype_model.get_form(initial=data)

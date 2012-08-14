@@ -77,7 +77,7 @@ class Entry(models.Model):
         
         fielddatas = FieldData.objects.filter(entry__exact=self, field__fieldgroup__exact=self.entrytype.fieldgroup).select_related('field')
         for fielddata in fielddatas:
-            d[fielddata.field.field_short_name] = fielddata.value
+            d[fielddata.field.field_short_name] = fielddata.value # <- Possible gotcha: Keep in mind value is a getter method!
         return d
     
     dict = property(_get_dict)
@@ -154,7 +154,10 @@ class FieldData(models.Model):
         elif self.field.field_type == 'checkboxes':
             value = json.dumps(value)
         elif self.field.field_type == 'file':
-            self.media_asset = MediaAsset.objects.get(id=value)
+            if value:
+                self.media_asset = MediaAsset.objects.get(id=value)
+            else:
+                self.media_asset = None
             value = 'MEDIA_ASSET'
         self.fielddata_value = value
     
@@ -307,8 +310,7 @@ class MediaAsset(models.Model):
                 os.remove(self.thumbnail_path)
 
     def __unicode__(self):
-        return u'{}'.format(self.id)
-    
+        return u'{}'.format(self.url)
     
 class ContactForm(models.Model):
     contactform_name = models.CharField(max_length=255, unique=True, verbose_name='Name')
