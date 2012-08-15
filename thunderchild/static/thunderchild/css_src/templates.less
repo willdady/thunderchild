@@ -1,11 +1,17 @@
+#content_container {
+  &.templates {
+    overflow:visible;
+  }
+}
 #template-browser {
   position:absolute;
   left:20px;
-  top:20px;
-  bottom:20px;
+  top:15px;
+  bottom:10px;
   right:81%;
   overflow:auto;
   background:@white;
+  border:solid 1px @baseBorderColor;
   .btn-primary {
     margin-top:5px;
     margin-bottom:22px;
@@ -38,6 +44,7 @@
         color:@white;
         padding:3px 6px;
         border-bottom:1px solid darken(@baseColor, 5%);
+        border-top:1px solid lighten(spin(@baseColor, 5),3%);
         h3 {
           float:left;
           margin:0;
@@ -67,8 +74,8 @@
   position:absolute;
   left:20%;
   right:20px;
-  top:20px;
-  bottom:20px;
+  top:15px;
+  bottom:10px;
   .tab-content {
     position:absolute;
     left:0;

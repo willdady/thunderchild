@@ -77,7 +77,7 @@
 			</div>
 		</div>
 		
-		<section id="content_container" class="container-fluid">
+		<section id="content_container" class="container-fluid {% block content_classes %}{% endblock %}">
 			{% block content %}{% endblock %}
 		</section>
 		{% block post_content %}{% endblock %}
