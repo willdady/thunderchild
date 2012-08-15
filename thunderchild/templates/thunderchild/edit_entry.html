@@ -79,6 +79,7 @@
 								<ul>
 									<li>{{ value.filename }}</li>
 								</ul>
+								<a href="#" class="remove-asset-button">&times;</a>
 							</div>
 							{% endifequal %}				
 						{% endfor %}
@@ -187,6 +188,7 @@
 		<ul>
 			<li><%= filename %></li>
 		</ul>
+		<a href="#" class="remove-asset-button">&times;</a>
 	</div>
 </script>
 
@@ -204,56 +206,4 @@
 {% else %}
 	<script src="{{ STATIC_URL }}thunderchild/js/entry-min.js"></script>
 {% endif %}
-<script>
-	$("#confirm_delete_modal").modal().modal("hide");
-	// This stops label elements from triggering their associated fields when clicked.
-	$(".field_label_holder label").click(function(e){
-		e.preventDefault();
-	});
-	
-	Utilities.autoSlug( $("#id_title"), $("#id_slug") );
-	
-	// Initialize date and datetime pickers
-	$('[data-field-type="datetime"]').datetimepicker({
-		dateFormat:'yy-mm-dd',
-		timeFormat:'hh:mm:ss',
-		showSecond:true,
-	});
-	$('[data-field-type="date"]').datepicker({
-		dateFormat:'yy-mm-dd',
-	});
-	
-	var appModel = new window.AppModel();
-	var mediaChooserModal = new window.MediaChooserModalView({el:$("#media_chooser_modal"), model:appModel});
-	$('[data-field-type="file"]').each(function() {
-		new window.MediaChooserWidgetView({el:$(this), model:appModel});
-	});
-	
-	// Convert all textareas to rich textareas. Note the textearea in the textarea modal will not create a fullscreen button
-	$('textarea').each(function() {
-		el = $(this)
-		if (el.attr("id") !== "textarea-modal-textarea") {
-			new window.RichTextAreaView({el:el, model:appModel});
-		} else {
-			new window.RichTextAreaView({el:el, model:appModel, noFullscreen:true, hideMediaChooserBackdrop:true});
-		}
-	});
-	
-	var textAreaModal = new window.TextAreaModalView({el:$("#textarea-modal"), model:appModel})
-	// Activate tabs
-	$("#tabs a").click(function(e){
-		$(this).tab("show");
-		e.preventDefault();
-	});
-	$("#tabs a:first").tab("show");
-	
-	// Activate color pickers
-	$('[data-field-type="color"]').each(function(i, el) {
-		console.log("OK");
-		var pickerID = "picker"+i;
-		var picker = $('<div id="'+pickerID+'" class="picker"></div>');
-		$(this).parent().append(picker)
-		$(picker).farbtastic($(this));
-	});
-</script>
 {% endblock %}

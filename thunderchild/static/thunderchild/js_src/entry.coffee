@@ -1,6 +1,6 @@
 counter = 0
 
-window.AppModel = Backbone.Model.extend
+AppModel = Backbone.Model.extend
 
   hideMediaChooser: ->
     @trigger "hideMediaChooser"
@@ -19,16 +19,28 @@ window.AppModel = Backbone.Model.extend
   textAreaModalClosed:(text) ->
     @trigger "textAreaModalChange", text
 
-window.MediaChooserWidgetView = Backbone.View.extend
+MediaChooserWidgetView = Backbone.View.extend
 
   initialize: ->
     @chooseFileButton = $('<a href="#" class="btn choose-file-button">Choose file</a>').click _.bind(@chooseFileButtonClickHandler, @)
     @$el.parent().prepend @chooseFileButton
     @$el.hide() # We hide the actual input element
     
+    @thumbnailTemplate = _.template( $("#mediaAssetThumbnailTemplate").text() )
+    
+    @thumbnail = @$el.parent().find ".media-asset-thumbnail"
+    @removeAssetButton = @thumbnail.find(".remove-asset-button").click _.bind(@removeAssetClickHandler, @)
+    
     @uid = counter # We give each widget a UID
     counter++
     @model.on "assetSelected", @assetSelectedHandler, @
+    
+  removeAssetClickHandler: (e) ->
+    if @thumbnail
+      @thumbnail.remove()
+      @$el.removeAttr("value")
+    log("REMOVE", @thumbnail, @$el)
+    e.preventDefault()
 
   chooseFileButtonClickHandler: (e) ->
     @model.showMediaChooser(@uid)
@@ -40,17 +52,24 @@ window.MediaChooserWidgetView = Backbone.View.extend
     # Assign the MediaAsset's id to the value of the field
     @$el.val(obj.id)
     # Replace the content of the thumbnail holder with the newly selected asset
-    thumbnailTemplate = _.template( $("#mediaAssetThumbnailTemplate").text() )
-    content = thumbnailTemplate({thumbnail_url:obj.thumbnail_url, filename:obj.filename})
+    content = @thumbnailTemplate({thumbnail_url:obj.thumbnail_url, filename:obj.filename})
     @existingThumbnail = @$el.parent().find ".media-asset-thumbnail"
     if @existingThumbnail.length > 0
       @existingThumbnail.replaceWith( content )
     else
       @$el.parent().append( content )
+    # Bind the remove button
+    @thumbnail = @$el.parent().find ".media-asset-thumbnail"
+    @removeAssetButton = @thumbnail.find(".remove-asset-button").click _.bind(@removeAssetClickHandler, @)
     # Hide the chooser
     @model.hideMediaChooser()
 
-window.MediaChooserModalView = Backbone.View.extend
+
+    
+    
+
+
+MediaChooserModalView = Backbone.View.extend
 
   initialize: ->
     @$el.modal().modal("hide")
@@ -66,7 +85,7 @@ window.MediaChooserModalView = Backbone.View.extend
     @$el.modal("hide")
     
 
-window.TextAreaModalView = Backbone.View.extend
+TextAreaModalView = Backbone.View.extend
 
   initialize: ->
     @$el.modal().modal('hide')
@@ -84,7 +103,7 @@ window.TextAreaModalView = Backbone.View.extend
   doneClickHandler: ->
     @model.textAreaModalClosed( @textarea.val() )
 
-window.RichTextAreaView = Backbone.View.extend
+RichTextAreaView = Backbone.View.extend
 
   initialize: ->
     @uid = counter # We give each widget a UID
@@ -127,3 +146,42 @@ window.RichTextAreaView = Backbone.View.extend
     if @model.get("fullscreen_source_uid") != @uid
       return # Make sure the event belongs to us by checking the active uid matches.
     @$el.val(text)
+
+$ ->
+  # This stops label elements from triggering their associated fields when clicked.
+  $(".field_label_holder label").click (e) ->
+    e.preventDefault();
+  # Select first tab by default
+  $("#tabs a:first").tab("show")
+  # Auto slug the title field
+  Utilities.autoSlug $("#id_title"), $("#id_slug")
+  # Initialize date and datetime pickers
+  $('[data-field-type="datetime"]').datetimepicker
+    dateFormat:'yy-mm-dd',
+    timeFormat:'hh:mm:ss',
+    showSecond:true
+  $('[data-field-type="date"]').datepicker
+    dateFormat:'yy-mm-dd'
+  
+  window.appModel = new AppModel() # Note the appModel avariable is defined on the window object so it can be called from the iframed Media Chooser.
+  
+  mediaChooserModal = new MediaChooserModalView {el:$("#media_chooser_modal"), model:appModel}
+  $('[data-field-type="file"]').each ->
+    new MediaChooserWidgetView {el:$(this), model:appModel}
+  
+  # Convert all textareas to rich textareas. Note the textearea in the textarea modal will not create a fullscreen button
+  $('textarea').each ->
+    el = $(this)
+    if el.attr("id") != "textarea-modal-textarea"
+      new RichTextAreaView {el:el, model:appModel}
+    else
+      new RichTextAreaView {el:el, model:appModel, noFullscreen:true, hideMediaChooserBackdrop:true}
+  
+  textAreaModal = new TextAreaModalView {el:$("#textarea-modal"), model:appModel}
+  
+  # Initialize color pickers
+  $('[data-field-type="color"]').each (i, el) ->
+    pickerID = "picker"+i;
+    picker = $('<div id="'+pickerID+'" class="picker"></div>');
+    $(this).parent().append(picker)
+    $(picker).farbtastic($(this));

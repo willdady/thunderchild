@@ -1,7 +1,7 @@
 (function() {
-  var counter;
+  var AppModel, MediaChooserModalView, MediaChooserWidgetView, RichTextAreaView, TextAreaModalView, counter;
   counter = 0;
-  window.AppModel = Backbone.Model.extend({
+  AppModel = Backbone.Model.extend({
     hideMediaChooser: function() {
       return this.trigger("hideMediaChooser");
     },
@@ -23,27 +23,37 @@
       return this.trigger("textAreaModalChange", text);
     }
   });
-  window.MediaChooserWidgetView = Backbone.View.extend({
+  MediaChooserWidgetView = Backbone.View.extend({
     initialize: function() {
       this.chooseFileButton = $('<a href="#" class="btn choose-file-button">Choose file</a>').click(_.bind(this.chooseFileButtonClickHandler, this));
       this.$el.parent().prepend(this.chooseFileButton);
       this.$el.hide();
+      this.thumbnailTemplate = _.template($("#mediaAssetThumbnailTemplate").text());
+      this.thumbnail = this.$el.parent().find(".media-asset-thumbnail");
+      this.removeAssetButton = this.thumbnail.find(".remove-asset-button").click(_.bind(this.removeAssetClickHandler, this));
       this.uid = counter;
       counter++;
       return this.model.on("assetSelected", this.assetSelectedHandler, this);
+    },
+    removeAssetClickHandler: function(e) {
+      if (this.thumbnail) {
+        this.thumbnail.remove();
+        this.$el.removeAttr("value");
+      }
+      log("REMOVE", this.thumbnail, this.$el);
+      return e.preventDefault();
     },
     chooseFileButtonClickHandler: function(e) {
       this.model.showMediaChooser(this.uid);
       return e.preventDefault();
     },
     assetSelectedHandler: function(obj) {
-      var content, thumbnailTemplate;
+      var content;
       if (this.model.get("uid") !== this.uid) {
         return;
       }
       this.$el.val(obj.id);
-      thumbnailTemplate = _.template($("#mediaAssetThumbnailTemplate").text());
-      content = thumbnailTemplate({
+      content = this.thumbnailTemplate({
         thumbnail_url: obj.thumbnail_url,
         filename: obj.filename
       });
@@ -53,10 +63,12 @@
       } else {
         this.$el.parent().append(content);
       }
+      this.thumbnail = this.$el.parent().find(".media-asset-thumbnail");
+      this.removeAssetButton = this.thumbnail.find(".remove-asset-button").click(_.bind(this.removeAssetClickHandler, this));
       return this.model.hideMediaChooser();
     }
   });
-  window.MediaChooserModalView = Backbone.View.extend({
+  MediaChooserModalView = Backbone.View.extend({
     initialize: function() {
       this.$el.modal().modal("hide");
       this.model.on("showMediaChooser", this.show, this);
@@ -72,7 +84,7 @@
       return this.$el.modal("hide");
     }
   });
-  window.TextAreaModalView = Backbone.View.extend({
+  TextAreaModalView = Backbone.View.extend({
     initialize: function() {
       this.$el.modal().modal('hide');
       this.textarea = $("#textarea-modal-textarea");
@@ -89,7 +101,7 @@
       return this.model.textAreaModalClosed(this.textarea.val());
     }
   });
-  window.RichTextAreaView = Backbone.View.extend({
+  RichTextAreaView = Backbone.View.extend({
     initialize: function() {
       this.uid = counter;
       counter++;
@@ -132,5 +144,60 @@
       }
       return this.$el.val(text);
     }
+  });
+  $(function() {
+    var mediaChooserModal, textAreaModal;
+    $(".field_label_holder label").click(function(e) {
+      return e.preventDefault();
+    });
+    $("#tabs a:first").tab("show");
+    Utilities.autoSlug($("#id_title"), $("#id_slug"));
+    $('[data-field-type="datetime"]').datetimepicker({
+      dateFormat: 'yy-mm-dd',
+      timeFormat: 'hh:mm:ss',
+      showSecond: true
+    });
+    $('[data-field-type="date"]').datepicker({
+      dateFormat: 'yy-mm-dd'
+    });
+    window.appModel = new AppModel();
+    mediaChooserModal = new MediaChooserModalView({
+      el: $("#media_chooser_modal"),
+      model: appModel
+    });
+    $('[data-field-type="file"]').each(function() {
+      return new MediaChooserWidgetView({
+        el: $(this),
+        model: appModel
+      });
+    });
+    $('textarea').each(function() {
+      var el;
+      el = $(this);
+      if (el.attr("id") !== "textarea-modal-textarea") {
+        return new RichTextAreaView({
+          el: el,
+          model: appModel
+        });
+      } else {
+        return new RichTextAreaView({
+          el: el,
+          model: appModel,
+          noFullscreen: true,
+          hideMediaChooserBackdrop: true
+        });
+      }
+    });
+    textAreaModal = new TextAreaModalView({
+      el: $("#textarea-modal"),
+      model: appModel
+    });
+    return $('[data-field-type="color"]').each(function(i, el) {
+      var picker, pickerID;
+      pickerID = "picker" + i;
+      picker = $('<div id="' + pickerID + '" class="picker"></div>');
+      $(this).parent().append(picker);
+      return $(picker).farbtastic($(this));
+    });
   });
 }).call(this);
