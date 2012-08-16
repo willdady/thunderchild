@@ -57,7 +57,7 @@
     },
     uploadCompleteHandler: function() {
       this.$el.modal("hide");
-      return window.location.replace(window.location.href);
+      return window.location.replace(mediaChooserURL);
     },
     uploadNameConflictHandler: function(response) {
       this.model.set("uploadResponse", response);

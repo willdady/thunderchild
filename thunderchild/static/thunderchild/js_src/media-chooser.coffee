@@ -62,7 +62,7 @@ UploadModalView = Backbone.View.extend
   
   uploadCompleteHandler: ->
     @$el.modal("hide")
-    window.location.replace(window.location.href) # We reload the page (without url parameters, taking us to the first page)
+    window.location.replace(mediaChooserURL) # We navigate to the default media chooser url taking us back to page 1.
 
   uploadNameConflictHandler: (response) ->
     @model.set("uploadResponse", response) # Store the response in the app model so we can retrieve it later.
