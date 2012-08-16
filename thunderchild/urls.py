@@ -51,6 +51,7 @@ urlpatterns = patterns('',
     (r'^backend/forms/contact/create$', 'thunderchild.form_views.create_contactform'),
     (r'^backend/forms/contact/edit/(\d+)$', 'thunderchild.form_views.edit_contactform'),
     (r'^backend/forms/contact/process/(\d+)$', 'thunderchild.form_views.process_contactform'),
+    (r'^backend/forms/contact/delete', 'thunderchild.form_views.delete_contactform'),
     
     (r'^backend/comments$', 'thunderchild.comment_views.comments'),
     (r'^backend/comments/submit$', 'thunderchild.comment_views.submit'),

@@ -16,7 +16,10 @@
 {% endblock %}
 
 {% block action_bar %}
-<input class="btn btn-primary pull-right" type="submit" value="Save" />
+<ul class="pull-right">
+	<li><a class="btn btn-danger" data-toggle="modal" href="#confirm_delete_modal"><i class="icon-trash icon-white"></i> Delete</a></li>
+	<li><input class="btn btn-primary" type="submit" value="Save" /></li>
+</ul>
 {% endblock %}
 
 {% block content %}
@@ -40,6 +43,7 @@
 
 {% block post_content %}
 </form>
+{% include "thunderchild/includes/confirm_delete_modal.html" with modal_message="Are you sure you want to <b>permanently</b> delete this contact form?" action=delete_url id=contactform_id %}
 {% endblock %}
 
 {% block javascript %}

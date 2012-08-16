@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import render, redirect, get_object_or_404
 from smtplib import SMTPException
@@ -47,10 +47,23 @@ def edit_contactform(request, contactform_id):
             form.save()
             return redirect('thunderchild.form_views.contactforms')
         else:
-            return render(request, 'thunderchild/edit_contactform.html', {'form':form, 'contactform_id':contactform_id})
+            return render(request, 'thunderchild/edit_contactform.html', {'form':form, 
+                                                                          'contactform_id':contactform_id,
+                                                                          'delete_url':reverse('thunderchild.form_views.delete_contactform')})
     else:
         form = model_forms.ContactFormForm(instance=model)
-        return render(request, 'thunderchild/edit_contactform.html', {'form':form, 'contactform_id':contactform_id})
+        return render(request, 'thunderchild/edit_contactform.html', {'form':form, 
+                                                                      'contactform_id':contactform_id,
+                                                                      'delete_url':reverse('thunderchild.form_views.delete_contactform')})
+    
+    
+@login_required(login_url=reverse_lazy('thunderchild.views.login'))
+def delete_contactform(request):    
+    if request.method == 'POST':
+        models.ContactForm.objects.filter(pk=request.POST['id']).delete()
+        return redirect('thunderchild.form_views.contactforms')
+    else:
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
     
     
 def process_contactform(request, contactform_id):
