@@ -41,12 +41,3 @@
 {% block post_content %}
 </form>
 {% endblock %}
-
-{% block javascript %}
-<script>
-	// This stops label elements from triggering their associated fields when clicked.
-	$(".field_label_holder label").click(function(e){
-		e.preventDefault();
-	});
-</script>
-{% endblock %}

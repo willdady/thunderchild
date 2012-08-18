@@ -96,7 +96,12 @@
 		{% endif %}
 		
 		<script>
-			$(".dropdown-toggle").dropdown(); // Initialize the dropdowns in the main nav
+			// Initialize the dropdowns in the main nav
+			$(".dropdown-toggle").dropdown();
+			// This stops label elements from triggering their associated fields when clicked.
+			$(".field_label_holder label").click(function(e){
+				e.preventDefault();
+			});
 		</script>
 		
 		{% block javascript %}{% endblock %}

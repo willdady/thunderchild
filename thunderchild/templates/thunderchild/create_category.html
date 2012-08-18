@@ -45,9 +45,5 @@
 {% block javascript %}
 <script>
 	Utilities.autoAlphanumeric( $("#id_category_name"), $("#id_category_short_name") );
-	// This stops label elements from triggering their associated fields when clicked.
-	$(".field_label_holder label").click(function(e){
-		e.preventDefault();
-	});
 </script>
 {% endblock %}
