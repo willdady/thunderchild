@@ -220,6 +220,15 @@
 {% endblock %}
 
 {% block javascript %}
+	<script>
+	// This stops label elements from triggering their associated fields when clicked.
+	$(".field_label_holder label").click(function(e){
+		e.preventDefault();
+	});
+	// Set paths needed by templates.js
+	var templateRoot = "{% url thunderchild.template_views.template_create %}";
+	var templateGroupRoot = "{% url thunderchild.template_views.group_create %}";
+	</script>
 	<script src="{{ STATIC_URL }}thunderchild/js/ace/ace.js"></script>
 	<script src="{{ STATIC_URL }}thunderchild/js/ace/theme-twilight.js"></script>
 	<script src="{{ STATIC_URL }}thunderchild/js/ace/mode-html.js"></script>
@@ -228,10 +237,4 @@
 	{% else %}
 		<script src="{{ STATIC_URL }}thunderchild/js/templates-min.js"></script>
 	{% endif %}
-	<script>
-	// This stops label elements from triggering their associated fields when clicked.
-	$(".field_label_holder label").click(function(e){
-		e.preventDefault();
-	});
-	</script>
 {% endblock %}

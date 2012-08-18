@@ -1,5 +1,6 @@
-templateRoot = '/backend/api/templates/template'
-templateGroupRoot = '/backend/api/templates/group'
+# The below two variables are set dynamically in the global scope.
+#templateRoot = '/backend/api/templates/template'
+#templateGroupRoot = '/backend/api/templates/group'
 
 ######################################################################################################################################
 # Models

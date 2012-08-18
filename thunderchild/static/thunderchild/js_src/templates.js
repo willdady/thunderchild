@@ -1,8 +1,6 @@
 (function() {
-  var ActionBarView, AppModel, ConfirmDeleteTemplateGroupModalView, ConfirmDeleteTemplateModalView, EditTemplateGroupModalView, NewTemplateGroupModalView, NewTemplateModalView, SettingsView, TemplateBrowserView, TemplateCollection, TemplateEditorView, TemplateGroupCollection, TemplateGroupModel, TemplateGroupView, TemplateListItemView, TemplateModel, templateGroupRoot, templateRoot;
+  var ActionBarView, AppModel, ConfirmDeleteTemplateGroupModalView, ConfirmDeleteTemplateModalView, EditTemplateGroupModalView, NewTemplateGroupModalView, NewTemplateModalView, SettingsView, TemplateBrowserView, TemplateCollection, TemplateEditorView, TemplateGroupCollection, TemplateGroupModel, TemplateGroupView, TemplateListItemView, TemplateModel;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-  templateRoot = '/backend/api/templates/template';
-  templateGroupRoot = '/backend/api/templates/group';
   AppModel = Backbone.Model.extend({
     selectedTemplate: function(model) {
       if (model) {
