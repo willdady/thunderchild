@@ -40,7 +40,6 @@
         this.thumbnail.remove();
         this.$el.removeAttr("value");
       }
-      log("REMOVE", this.thumbnail, this.$el);
       return e.preventDefault();
     },
     chooseFileButtonClickHandler: function(e) {

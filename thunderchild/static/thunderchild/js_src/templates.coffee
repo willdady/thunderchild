@@ -8,6 +8,10 @@
 
 AppModel = Backbone.Model.extend
 
+  assetSelectionCallback: (obj) ->
+    @closeMediaChooserModal()
+    @trigger "assetSelected", obj
+
   selectedTemplate: (model) ->
     if model
       @set("selectedTemplate", model)
@@ -32,6 +36,12 @@ AppModel = Backbone.Model.extend
     
   openConfirmDeleteTemplateGroupModal: (templateGroupModel) ->
     @trigger "openConfirmDeleteTemplateGroupModal", templateGroupModel
+    
+  openMediaChooserModal: ->
+    @trigger "openMediaChooserModal"
+    
+  closeMediaChooserModal: ->
+    @trigger "closeMediaChooserModal"
 
 
 TemplateGroupModel = Backbone.Model.extend
@@ -260,11 +270,25 @@ TemplateEditorView = Backbone.View.extend
     @editor.getSession().on "change", _.bind @editorChangeHandler, @
     @setMode("ace/mode/html")
     @model.on "change:selectedTemplate", @selectedTemplateChangeHandler, @
+    
     @selectedTemplateChangeHandler()
     # We need to listen to changes in the tabs to refresh the editor. It won't update it's content if hidden when new text is entered.
     $("#tabs").on "shown", _.bind(@tabShownHandler, @)
     
     @ignoreEditorChange = false
+    # Listen to event triggered from the media chooser to add the URL of chosen asset to the editor at the cursor.
+    @model.on "assetSelected", @assetSelectedHandler, @
+    
+  events:
+    "click #media_chooser_button":"mediaChooserButtonClickHandler"
+    
+  assetSelectedHandler: (obj) ->
+    log("ASSET SELECTED", obj)
+    @editor.insert(obj.url)
+    
+  mediaChooserButtonClickHandler: (e) ->
+    @model.openMediaChooserModal()
+    e.preventDefault()
     
   tabShownHandler: (e) ->
     if @$el.hasClass("active") and @templateModel
@@ -379,6 +403,21 @@ SettingsView = Backbone.View.extend
 ######################################################################################################################################
 # Modals
 ######################################################################################################################################
+
+
+MediaChooserModalView = Backbone.View.extend
+
+  initialize: ->
+    @model.on "openMediaChooserModal", @open, @
+    @model.on "closeMediaChooserModal", @close, @
+
+  open: ->
+    @$el.modal("show")
+    
+  close: ->
+    @$el.modal("hide")
+    
+
 
 ConfirmDeleteTemplateModalView = Backbone.View.extend
 
@@ -605,25 +644,27 @@ ConfirmDeleteTemplateGroupModalView = Backbone.View.extend
     e.preventDefault()    
 
 $ ->
-  appModel = new AppModel()
+  window.appModel = new AppModel() # Note the appModel variable is defined on the window object so it can be called from the iframed Media Chooser.
   
   templateCollection = new TemplateCollection()
   templateGroupCollection = new TemplateGroupCollection()
   
-  actionBarView = new ActionBarView {el:$(".action-bar"), model:appModel}
+  actionBarView = new ActionBarView {el:$(".action-bar"), model:window.appModel}
   
-  templateBrowserView = new TemplateBrowserView {el:$("#template-browser"), model:appModel, templateCollection:templateCollection, templateGroupCollection:templateGroupCollection}
+  templateBrowserView = new TemplateBrowserView {el:$("#template-browser"), model:window.appModel, templateCollection:templateCollection, templateGroupCollection:templateGroupCollection}
   
-  templateEditorView = new TemplateEditorView {el:$("#editor-pane"), model:appModel}
+  templateEditorView = new TemplateEditorView {el:$("#editor-pane"), model:window.appModel}
   
-  settingsView = new SettingsView {el:$("#settings-pane"), model:appModel}
+  settingsView = new SettingsView {el:$("#settings-pane"), model:window.appModel}
   
-  newTemplateModal = new NewTemplateModalView {el:$("#create-template-modal"), model:appModel, collection:templateCollection}
-  confirmDeleteTemplateModal = new ConfirmDeleteTemplateModalView {el:$("#delete-template-modal"), model:appModel}
+  newTemplateModal = new NewTemplateModalView {el:$("#create-template-modal"), model:window.appModel, collection:templateCollection}
+  confirmDeleteTemplateModal = new ConfirmDeleteTemplateModalView {el:$("#delete-template-modal"), model:window.appModel}
   
-  newTemplateGroupModal = new NewTemplateGroupModalView {el:$("#create-templategroup-modal"), model:appModel, templateGroupCollection:templateGroupCollection, templateCollection:templateCollection}
-  editTemplateGroupModal = new EditTemplateGroupModalView {el:$("#edit-templategroup-modal"), model:appModel}
-  confirmDeleteTemplateGroupModal = new ConfirmDeleteTemplateGroupModalView {el:$("#delete-templategroup-modal"), model:appModel}
+  mediaChooserModal = new MediaChooserModalView {el:$("#media_chooser_modal"), model:window.appModel}
+  
+  newTemplateGroupModal = new NewTemplateGroupModalView {el:$("#create-templategroup-modal"), model:window.appModel, templateGroupCollection:templateGroupCollection, templateCollection:templateCollection}
+  editTemplateGroupModal = new EditTemplateGroupModalView {el:$("#edit-templategroup-modal"), model:window.appModel}
+  confirmDeleteTemplateGroupModal = new ConfirmDeleteTemplateGroupModalView {el:$("#delete-templategroup-modal"), model:window.appModel}
   
   # Activate tabs
   $("#tabs a").click (e) ->

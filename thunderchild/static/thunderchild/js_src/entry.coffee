@@ -39,7 +39,6 @@ MediaChooserWidgetView = Backbone.View.extend
     if @thumbnail
       @thumbnail.remove()
       @$el.removeAttr("value")
-    log("REMOVE", @thumbnail, @$el)
     e.preventDefault()
 
   chooseFileButtonClickHandler: (e) ->

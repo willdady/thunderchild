@@ -1,7 +1,11 @@
 (function() {
-  var ActionBarView, AppModel, ConfirmDeleteTemplateGroupModalView, ConfirmDeleteTemplateModalView, EditTemplateGroupModalView, NewTemplateGroupModalView, NewTemplateModalView, SettingsView, TemplateBrowserView, TemplateCollection, TemplateEditorView, TemplateGroupCollection, TemplateGroupModel, TemplateGroupView, TemplateListItemView, TemplateModel;
+  var ActionBarView, AppModel, ConfirmDeleteTemplateGroupModalView, ConfirmDeleteTemplateModalView, EditTemplateGroupModalView, MediaChooserModalView, NewTemplateGroupModalView, NewTemplateModalView, SettingsView, TemplateBrowserView, TemplateCollection, TemplateEditorView, TemplateGroupCollection, TemplateGroupModel, TemplateGroupView, TemplateListItemView, TemplateModel;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   AppModel = Backbone.Model.extend({
+    assetSelectionCallback: function(obj) {
+      this.closeMediaChooserModal();
+      return this.trigger("assetSelected", obj);
+    },
     selectedTemplate: function(model) {
       if (model) {
         this.set("selectedTemplate", model);
@@ -28,6 +32,12 @@
     },
     openConfirmDeleteTemplateGroupModal: function(templateGroupModel) {
       return this.trigger("openConfirmDeleteTemplateGroupModal", templateGroupModel);
+    },
+    openMediaChooserModal: function() {
+      return this.trigger("openMediaChooserModal");
+    },
+    closeMediaChooserModal: function() {
+      return this.trigger("closeMediaChooserModal");
     }
   });
   TemplateGroupModel = Backbone.Model.extend({
@@ -320,7 +330,19 @@
       this.model.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
       this.selectedTemplateChangeHandler();
       $("#tabs").on("shown", _.bind(this.tabShownHandler, this));
-      return this.ignoreEditorChange = false;
+      this.ignoreEditorChange = false;
+      return this.model.on("assetSelected", this.assetSelectedHandler, this);
+    },
+    events: {
+      "click #media_chooser_button": "mediaChooserButtonClickHandler"
+    },
+    assetSelectedHandler: function(obj) {
+      log("ASSET SELECTED", obj);
+      return this.editor.insert(obj.url);
+    },
+    mediaChooserButtonClickHandler: function(e) {
+      this.model.openMediaChooserModal();
+      return e.preventDefault();
     },
     tabShownHandler: function(e) {
       if (this.$el.hasClass("active") && this.templateModel) {
@@ -441,6 +463,18 @@
           return $("#id_template_short_name").parent().parent().show();
         }
       }
+    }
+  });
+  MediaChooserModalView = Backbone.View.extend({
+    initialize: function() {
+      this.model.on("openMediaChooserModal", this.open, this);
+      return this.model.on("closeMediaChooserModal", this.close, this);
+    },
+    open: function() {
+      return this.$el.modal("show");
+    },
+    close: function() {
+      return this.$el.modal("hide");
     }
   });
   ConfirmDeleteTemplateModalView = Backbone.View.extend({
@@ -696,50 +730,54 @@
     }
   });
   $(function() {
-    var actionBarView, appModel, confirmDeleteTemplateGroupModal, confirmDeleteTemplateModal, editTemplateGroupModal, newTemplateGroupModal, newTemplateModal, settingsView, templateBrowserView, templateCollection, templateEditorView, templateGroupCollection;
-    appModel = new AppModel();
+    var actionBarView, confirmDeleteTemplateGroupModal, confirmDeleteTemplateModal, editTemplateGroupModal, mediaChooserModal, newTemplateGroupModal, newTemplateModal, settingsView, templateBrowserView, templateCollection, templateEditorView, templateGroupCollection;
+    window.appModel = new AppModel();
     templateCollection = new TemplateCollection();
     templateGroupCollection = new TemplateGroupCollection();
     actionBarView = new ActionBarView({
       el: $(".action-bar"),
-      model: appModel
+      model: window.appModel
     });
     templateBrowserView = new TemplateBrowserView({
       el: $("#template-browser"),
-      model: appModel,
+      model: window.appModel,
       templateCollection: templateCollection,
       templateGroupCollection: templateGroupCollection
     });
     templateEditorView = new TemplateEditorView({
       el: $("#editor-pane"),
-      model: appModel
+      model: window.appModel
     });
     settingsView = new SettingsView({
       el: $("#settings-pane"),
-      model: appModel
+      model: window.appModel
     });
     newTemplateModal = new NewTemplateModalView({
       el: $("#create-template-modal"),
-      model: appModel,
+      model: window.appModel,
       collection: templateCollection
     });
     confirmDeleteTemplateModal = new ConfirmDeleteTemplateModalView({
       el: $("#delete-template-modal"),
-      model: appModel
+      model: window.appModel
+    });
+    mediaChooserModal = new MediaChooserModalView({
+      el: $("#media_chooser_modal"),
+      model: window.appModel
     });
     newTemplateGroupModal = new NewTemplateGroupModalView({
       el: $("#create-templategroup-modal"),
-      model: appModel,
+      model: window.appModel,
       templateGroupCollection: templateGroupCollection,
       templateCollection: templateCollection
     });
     editTemplateGroupModal = new EditTemplateGroupModalView({
       el: $("#edit-templategroup-modal"),
-      model: appModel
+      model: window.appModel
     });
     confirmDeleteTemplateGroupModal = new ConfirmDeleteTemplateGroupModalView({
       el: $("#delete-templategroup-modal"),
-      model: appModel
+      model: window.appModel
     });
     $("#tabs a").click(function(e) {
       $(this).tab("show");
