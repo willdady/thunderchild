@@ -103,7 +103,7 @@ class Field(models.Model):
     field_type = models.CharField(max_length=20, verbose_name='Type')
     field_name = models.CharField(max_length=80, verbose_name='Name')
     field_short_name = models.CharField(max_length=80, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric,])
-    field_instructions = models.CharField(max_length=500, blank=True, verbose_name='Instructions', help_text='Useful instructions on using this field.')
+    field_instructions = models.CharField(max_length=500, blank=True, verbose_name='Instructions', help_text='Useful instructions on using this field. HTML allowed.')
     field_is_required = models.BooleanField(default=True, choices=((False, 'No'),(True, 'Yes')))
     field_display_order = models.IntegerField(default=0, verbose_name='Display order', help_text='The display order of this field in relation to other fields in this group.')
     field_collapsed_by_default = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Collapsed by default', help_text='A collapsed field will show only the field name by default and requires a click to expand. Useful for non-required fields.')

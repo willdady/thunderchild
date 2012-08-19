@@ -48,7 +48,7 @@
 						</div>
 						<div id="form1_fieldholder_title" class="collapse control-group field_holder {% if form1.title.errors %}error{% endif %} {% if not form1.title.field.field_collapsed_by_default %}in{% endif %}">
 							{{ form1.title }}
-							{% if form1.title.help_text %}<p class="help_text">{{ form1.title.help_text }}</p>{% endif %}
+							{% if form1.title.help_text|safe %}<p class="help_text">{{ form1.title.help_text|safe }}</p>{% endif %}
 						</div>
 				</div>
 				
@@ -60,7 +60,7 @@
 						</div>
 						<div id="form1_fieldholder_slug" class="collapse control-group field_holder {% if form1.slug.errors %}error{% endif %} {% if not form1.slug.field.field_collapsed_by_default %}in{% endif %}">
 							{{ form1.slug }}
-							{% if form1.slug.help_text %}<p class="help_text">{{ form1.slug.help_text }}</p>{% endif %}
+							{% if form1.slug.help_text|safe %}<p class="help_text">{{ form1.slug.help_text|safe }}</p>{% endif %}
 						</div>
 				</div>
 				
@@ -86,7 +86,7 @@
 							{% endfor %}
 							
 							{{ field }}
-							{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
+							{% if field.help_text|safe %}<p class="help_text">{{ field.help_text|safe }}</p>{% endif %}
 						</div>
 					</div>
 					{% else %}
@@ -102,7 +102,7 @@
 						</div>
 						<div id="form1_fieldholder_is_published" class="collapse control-group field_holder {% if form1.is_published.errors %}error{% endif %} {% if not form1.is_published.field.field_collapsed_by_default %}in{% endif %}">
 							{{ form1.is_published }}
-							{% if form1.is_published.help_text %}<p class="help_text">{{ form1.is_published.help_text }}</p>{% endif %}
+							{% if form1.is_published.help_text|safe %}<p class="help_text">{{ form1.is_published.help_text|safe }}</p>{% endif %}
 						</div>
 				</div>
 			</div>
@@ -116,7 +116,7 @@
 						</div>
 						<div id="form1_fieldholder_creation_date" class="collapse control-group field_holder {% if form1.creation_date.errors %}error{% endif %} {% if not form1.creation_date.field.field_collapsed_by_default %}in{% endif %}">
 							{{ form1.creation_date }}
-							{% if form1.creation_date.help_text %}<p class="help_text">{{ form1.creation_date.help_text }}</p>{% endif %}
+							{% if form1.creation_date.help_text|safe %}<p class="help_text">{{ form1.creation_date.help_text|safe }}</p>{% endif %}
 						</div>
 				</div>
 				
@@ -128,7 +128,7 @@
 						</div>
 						<div id="form1_fieldholder_expiration_date" class="collapse control-group field_holder {% if form1.expiration_date.errors %}error{% endif %} {% if not form1.expiration_date.field.field_collapsed_by_default %}in{% endif %}">
 							{{ form1.expiration_date }}
-							{% if form1.expiration_date.help_text %}<p class="help_text">{{ form1.expiration_date.help_text }}</p>{% endif %}
+							{% if form1.expiration_date.help_text|safe %}<p class="help_text">{{ form1.expiration_date.help_text|safe }}</p>{% endif %}
 						</div>
 				</div>
 			</div>
@@ -142,7 +142,7 @@
 					</div>
 					<div id="form1_fieldholder_comments_enabled" class="collapse control-group field_holder {% if form1.comments_enabled.errors %}error{% endif %} {% if not form1.comments_enabled.field.field_collapsed_by_default %}in{% endif %}">
 						{{ form1.comments_enabled }}
-						{% if form1.comments_enabled.help_text %}<p class="help_text">{{ form1.comments_enabled.help_text }}</p>{% endif %}
+						{% if form1.comments_enabled.help_text|safe %}<p class="help_text">{{ form1.comments_enabled.help_text|safe }}</p>{% endif %}
 					</div>
 				</div>
 				
@@ -154,7 +154,7 @@
 					</div>
 					<div id="form1_fieldholder_comments_expiration_date" class="collapse control-group field_holder {% if form1.comments_expiration_date.errors %}error{% endif %} {% if not form1.comments_expiration_date.field.field_collapsed_by_default %}in{% endif %}">
 						{{ form1.comments_expiration_date }}
-						{% if form1.comments_expiration_date.help_text %}<p class="help_text">{{ form1.comments_expiration_date.help_text }}</p>{% endif %}
+						{% if form1.comments_expiration_date.help_text|safe %}<p class="help_text">{{ form1.comments_expiration_date.help_text|safe }}</p>{% endif %}
 					</div>
 				</div>
 			</div>
@@ -168,7 +168,7 @@
 					</div>
 					<div id="form1_fieldholder_categories" class="collapse control-group field_holder {% if form1.categories.errors %}error{% endif %} {% if not form1.categories.field.field_collapsed_by_default %}in{% endif %}">
 						{{ form1.categories }}
-						{% if form1.categories.help_text %}<p class="help_text">{{ form1.categories.help_text }}</p>{% endif %}
+						{% if form1.categories.help_text|safe %}<p class="help_text">{{ form1.categories.help_text|safe }}</p>{% endif %}
 					</div>
 				</div>
 			</div>
