@@ -25,6 +25,11 @@
 								<ul>
 									<li><label for="thumbnail_{{ media_asset.id }}_checkbox">{{ media_asset.filename|truncatechars:20 }}</label></li>
 									<li class="size">{{ media_asset.size|filesizeformat }}</li>
+									{% if media_asset.is_image %}
+									<li>{{ media_asset.width }} x {{ media_asset.height }}</li>
+									{% else %}
+									<li>N/A</li>
+									{% endif %}
 									<li><input id="thumbnail_{{ media_asset.id }}_checkbox" type="checkbox" name="media_asset" value="{{ media_asset.id }}" data-id="{{ media_asset.id }}" /></li>
 								</ul>
 						</div>
@@ -88,7 +93,7 @@
 		<ul>
 			<li><%= filename %></li>
 			<li><%= size %></li>
-			<li><%= width %>x<%= height %></li>
+			<li><%= width %> x <%= height %></li>
 		</ul>
 	</script>
 
