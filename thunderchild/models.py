@@ -301,8 +301,9 @@ class MediaAsset(models.Model):
     
     def delete_from_disk(self):
         '''
-        Convienience method for deleting this asset's associated file from disk. NOTE: This makes no changes to the model.
+        Convienience method for deleting this asset's associated file and thumbnail from disk. NOTE: This makes no changes to the model.
         '''
+        print "YO", self.file_path
         if os.path.exists(self.file_path):
             os.remove(self.file_path)
         if os.path.exists(self.thumbnail_path):

@@ -15,6 +15,7 @@
 {% block content %}
 	
 	<div class="container">
+		{% if media_assets %}
 		<form id="thumbnails_form" action="{{ delete_url }}" method="post">{% csrf_token %}
 			<ul id="thumbnails_list" class="thumbnails">
 				{% for media_asset in media_assets %}
@@ -38,6 +39,9 @@
 				{% endfor %}
 			</ul>
 		</form>
+		{% else %}
+		<p class="no-media-message">You have not yet uploaded any media. Begin by clicking Upload above.</p>
+		{% endif %}
 	</div>
 	
 	{% if media_assets.paginator.num_pages > 1 %}

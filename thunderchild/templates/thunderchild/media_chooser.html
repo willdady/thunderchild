@@ -25,6 +25,7 @@
 		<section class="container">
 			<a href="#" id="media_chooser_upload_button" class="btn btn-primary"><i class="icon-arrow-up icon-white"></i> Upload</a>
 			
+			{% if media_assets %}
 			<ul id="media_chooser_thumbnails_list" class="thumbnails">
 				{% for media_asset in media_assets%}
 				<li>
@@ -45,6 +46,9 @@
 				</li>
 				{% endfor %}
 			</ul>
+			{% else %}
+			<p class="no-media-message">You have not yet uploaded any media. Begin by clicking Upload above.</p>
+			{% endif %}
 			
 			{% if media_assets.paginator.num_pages > 1 %}
 			<div class="pagination pagination-centered">

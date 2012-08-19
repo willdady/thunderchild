@@ -10,7 +10,6 @@ urlpatterns = patterns('',
     (r'^backend/media/upload$', 'thunderchild.media_views.upload'),
     (r'^backend/media/replace$', 'thunderchild.media_views.replace'),
     (r'^backend/media/assets$', 'thunderchild.media_views.assets'),
-    (r'^backend/media/assets/(\d+)$', 'thunderchild.media_views.edit_asset'),
     (r'^backend/media/chooser$', 'thunderchild.media_views.media_chooser'),
     
     (r'^backend/users$', 'thunderchild.views.users'),

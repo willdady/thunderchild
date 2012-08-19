@@ -21,7 +21,10 @@ def media(request):
     if request.method == 'POST':
         media_assets = request.POST.getlist('media_asset')
         if media_assets:
-            models.MediaAsset.objects.filter(id__in=media_assets).delete()
+            assets = models.MediaAsset.objects.filter(id__in=media_assets)
+            for model in assets:
+                model.delete_from_disk()
+                model.delete()
         return redirect(request.get_full_path())
     else:
         media_assets_list = models.MediaAsset.objects.all().order_by('-created')
@@ -141,31 +144,6 @@ def assets(request):
     data = serializers.serialize("json", models.MediaAsset.objects.all())
     return HttpResponse(data, content_type="text/json")
 
-    
-@login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def edit_asset(request, asset_id):   
-    if request.method == 'DELETE':
-        try:
-            model = models.MediaAsset.objects.get(pk=asset_id)
-        except models.MediaAsset.DoesNotExist:
-            pass
-        if model:
-            #Delete the file from disk (if it exists)
-            try:
-                os.remove(model.file_path)
-            except:
-                pass
-            #Delete the thumbnail from disk (if it exists)
-            try:
-                os.remove(model.thumbnail_path)
-            except:
-                pass
-            #Delete the model
-            model.delete()
-        return HttpResponse("OK")
-    else:
-        return HttpResponseNotAllowed(permitted_methods=['DELETE'])
-        
         
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def media_chooser(request): 
