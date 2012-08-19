@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from thunderchild import forms, model_forms, models
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))    
-def categorygroups(request):
+def categories(request):
     categorygroups = models.CategoryGroup.objects.all()
     categories = models.Category.objects.all()
     category_list = []
@@ -14,7 +14,7 @@ def categorygroups(request):
         d['categorygroup'] = categorygroup
         d['categories'] = categories.filter(categorygroup__exact=categorygroup)
         category_list.append(d)
-    return render(request, 'thunderchild/categorygroups.html', {'category_list':category_list})
+    return render(request, 'thunderchild/categories.html', {'category_list':category_list})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))    
@@ -23,7 +23,7 @@ def create_categorygroup(request):
         form = model_forms.CategoryGroupForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('thunderchild.category_views.categorygroups')
+            return redirect('thunderchild.category_views.categories')
             #return redirect('thunderchild.category_views.create_category', form.instance.id)
         else:
             return render(request, 'thunderchild/create_categorygroup.html', {'form':form})
@@ -39,7 +39,7 @@ def edit_categorygroup(request, categorygroup_id):
         form = model_forms.CategoryGroupForm(request.POST, instance=model)
         if form.is_valid():
             form.save()
-            return redirect('thunderchild.category_views.categorygroups')
+            return redirect('thunderchild.category_views.categories')
         else:
             return render(request, 'thunderchild/edit_categorygroup.html', {'form':form, 
                                                                             'categorygroup_id':categorygroup_id,
@@ -55,7 +55,7 @@ def edit_categorygroup(request, categorygroup_id):
 def delete_categorygroup(request):
     if request.method == 'POST':
         models.CategoryGroup.objects.filter(id__exact=request.POST['id']).delete()
-        return redirect('thunderchild.category_views.categorygroups') 
+        return redirect('thunderchild.category_views.categories') 
     else:
         return HttpResponseNotAllowed(permitted_methods=['POST'])
 
@@ -66,7 +66,7 @@ def create_category(request, categorygroup_id):
         form = model_forms.CategoryForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('thunderchild.category_views.categorygroups')
+            return redirect('thunderchild.category_views.categories')
         else:
             return render(request, 'thunderchild/create_category.html', {'form':form, 'categorygroup_id':categorygroup_id})
     else:
@@ -81,7 +81,7 @@ def edit_category(request, categorygroup_id, category_id):
         form = model_forms.CategoryForm(request.POST, instance=model)
         if form.is_valid():
             form.save()
-            return redirect('thunderchild.category_views.categorygroups')
+            return redirect('thunderchild.category_views.categories')
         else:
             return render(request, 'thunderchild/edit_category.html', {'form':form, 
                                                                        'categorygroup_id':categorygroup_id, 
@@ -99,7 +99,7 @@ def edit_category(request, categorygroup_id, category_id):
 def delete_category(request, categorygroup_id):
     if request.method == 'POST':
         models.Category.objects.filter(id=request.POST['id']).delete()
-        return redirect('thunderchild.category_views.categorygroups')
+        return redirect('thunderchild.category_views.categories')
     else:
         return HttpResponseNotAllowed(permitted_methods=['POST'])
         

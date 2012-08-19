@@ -33,16 +33,16 @@ def dynamic_view(request, path):
     except TemplateModel.DoesNotExist:
         template_name = '{}/index'.format(segments[0])
         model = get_object_or_404(TemplateModel, template_uid__exact=template_name)
+    
+    # If the template is private return 404
+    if model.template_is_private:
+        raise Http404
         
     if model.is_redirected:
         if model.template_redirect_type == 301:
             return redirect(model.template_redirect_url, permanent=True)
         if model.template_redirect_type == 302:
             return redirect(model.template_redirect_url)
-        
-    # If the template is private return 404
-    if model.template_is_private:
-        raise Http404
         
     # If we have our template cached no need to process it further. Simply return it.
     cached_template = cache.get(path)
