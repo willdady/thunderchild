@@ -23,7 +23,7 @@
 						<div class="thumbnail" data-id="{{ media_asset.id }}" data-is-image="{{ media_asset.is_image }}" data-url="{{ media_asset.url }}" data-filename="{{ media_asset.filename }}">
 								<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" data-width="{{ media_asset.width }}" data-height="{{ media_asset.height }}" />
 								<ul>
-									<li><label for="thumbnail_{{ media_asset.id }}_checkbox">{{ media_asset.filename }}</label></li>
+									<li><label for="thumbnail_{{ media_asset.id }}_checkbox">{{ media_asset.filename|truncatechars:20 }}</label></li>
 									<li class="size">{{ media_asset.size|filesizeformat }}</li>
 									<li><input id="thumbnail_{{ media_asset.id }}_checkbox" type="checkbox" name="media_asset" value="{{ media_asset.id }}" data-id="{{ media_asset.id }}" /></li>
 								</ul>
@@ -36,7 +36,6 @@
 	</div>
 	
 	{% if media_assets.paginator.num_pages > 1 %}
-	<hr />
 	<div class="pagination pagination-centered">
 		<ul>
 			{% if media_assets.has_previous %}

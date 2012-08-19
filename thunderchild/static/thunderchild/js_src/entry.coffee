@@ -62,11 +62,7 @@ MediaChooserWidgetView = Backbone.View.extend
     @removeAssetButton = @thumbnail.find(".remove-asset-button").click _.bind(@removeAssetClickHandler, @)
     # Hide the chooser
     @model.hideMediaChooser()
-
-
     
-    
-
 
 MediaChooserModalView = Backbone.View.extend
 
@@ -101,6 +97,7 @@ TextAreaModalView = Backbone.View.extend
 
   doneClickHandler: ->
     @model.textAreaModalClosed( @textarea.val() )
+
 
 RichTextAreaView = Backbone.View.extend
 
@@ -147,9 +144,6 @@ RichTextAreaView = Backbone.View.extend
     @$el.val(text)
 
 $ ->
-  # This stops label elements from triggering their associated fields when clicked.
-  $(".field_label_holder label").click (e) ->
-    e.preventDefault();
   # Select first tab by default
   $("#tabs a:first").tab("show")
   # Auto slug the title field

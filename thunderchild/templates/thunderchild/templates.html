@@ -24,6 +24,7 @@
 			{% for t in templates %}
 			<li data-id="{{ t.templategroup.id }}">
 				<div class="group-header clearfix" data-toggle="collapse" data-target="#template-group-{{ t.templategroup.id }}">
+					<i class="chevron"></i>
 					{% if t.templategroup.templategroup_short_name == "root" %}
 					<h3><em>{{ t.templategroup.templategroup_short_name }}</em></h3>
 					<ul class="controls pull-right">
@@ -63,6 +64,7 @@
 	<script id="templategroup-list-item-template" type="text/html">
 		<li data-id="<%= id %>">
 			<div class="group-header clearfix" data-toggle="collapse" data-target="#template-group-<%= id %>">
+				<i class="chevron"></i>
 				<h3><%= templategroup_short_name %></h3>
 				<ul class="controls pull-right">
 					<li><a href="#" class="edit-templategroup-button"><i class="icon-cog icon-white"></i></a></li>
@@ -83,7 +85,7 @@
 		</ul>
 		<div class="tab-content">
 			<div id="editor-pane" class="tab-pane active">
-				<a id="media_chooser_button" href="#" class="btn btn-mini"><i class="icon-picture"></i></a>
+				<a id="media_chooser_button" href="#" class="btn btn-mini"><i class="icon-picture"></i> Media Chooser</a>
 				<pre id="editor"></pre>
 			</div>
 			<div id="settings-pane" class="tab-pane">
@@ -92,6 +94,7 @@
 						{% if not field.is_hidden %}
 						<div class="accordion-group">
 								<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
+									<i class="chevron"></i>
 									{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
 									{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
 								</div>

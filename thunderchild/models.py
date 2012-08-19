@@ -17,10 +17,10 @@ from django.contrib.sites.models import Site
 
 
 class EntryType(models.Model):
-    fieldgroup = models.ForeignKey('FieldGroup', blank=True, null=True, on_delete=models.SET_NULL)
-    categorygroup = models.ForeignKey('CategoryGroup', blank=True, null=True, on_delete=models.SET_NULL)
     entrytype_name = models.CharField(max_length=80, unique=True, verbose_name='Name')
     entrytype_short_name = models.CharField(max_length=80, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric])
+    fieldgroup = models.ForeignKey('FieldGroup', blank=True, null=True, on_delete=models.SET_NULL)
+    categorygroup = models.ForeignKey('CategoryGroup', blank=True, null=True, on_delete=models.SET_NULL)
     
     def get_form(self, *args, **kwargs):
         if not self.fieldgroup:

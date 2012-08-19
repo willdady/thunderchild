@@ -102,6 +102,19 @@
 			$(".field_label_holder label").click(function(e){
 				e.preventDefault();
 			});
+			// We listen to the collapse 'show' and 'hide' events and add the "in" class to the collapsable item's parent on show and remove it on hide.
+			// This is so the parent can be styled to denote being collapsed or expanded.
+			$(".collapse").on("show", function() {
+				$(this).parent().addClass("in")
+			}).on("hide", function() {
+				$(this).parent().removeClass("in")
+			});
+			$(".collapse").each(function(i, el){
+				var el = $(this);
+				if (el.hasClass("in")) {
+					el.parent().addClass("in")
+				}
+			})
 		</script>
 		
 		{% block javascript %}{% endblock %}

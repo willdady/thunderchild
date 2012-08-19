@@ -9,7 +9,7 @@
   }
 }
 .field_label_holder {
-  padding:5px 10px 0px 10px;
+  padding:5px 10px 0px 8px;
   label, p {
       margin:0;
       padding:0;
@@ -48,6 +48,17 @@
                 }
             }
         }
+    }
+    .chevron {
+      display:inline-block;
+      width:15px;
+      height:15px;
+      background:url("images/chevron-sprite-sheet.png") no-repeat;
+    }
+    &.in {
+      .chevron {
+        background-position:-15px 0;
+      }
     }
 }
 #categories {

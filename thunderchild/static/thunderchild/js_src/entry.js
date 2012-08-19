@@ -146,9 +146,6 @@
   });
   $(function() {
     var mediaChooserModal, textAreaModal;
-    $(".field_label_holder label").click(function(e) {
-      return e.preventDefault();
-    });
     $("#tabs a:first").tab("show");
     Utilities.autoSlug($("#id_title"), $("#id_slug"));
     $('[data-field-type="datetime"]').datetimepicker({
