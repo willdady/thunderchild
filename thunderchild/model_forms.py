@@ -9,7 +9,7 @@ import thunderchild.forms
 
 
 class EntryTypeForm(ModelForm):
-    fieldgroup = forms.ModelChoiceField(queryset=models.FieldGroup.objects.all(), required=False, label='Field group', help_text='A group of custom fields which entries of this entry type will possess. Field groups are created under Admin / Field Groups.')
+    fieldgroup = forms.ModelChoiceField(queryset=models.FieldGroup.objects.all(), required=False, label='Field group', help_text='A group of custom fields which entries of this entry type will possess. Field groups are created under Admin / Fields.')
     categorygroup = forms.ModelChoiceField(queryset=models.CategoryGroup.objects.all(), required=False, label='Category group', help_text='A group of categories which entries of this entry type may be assigned to. Categories groups are created under Admin / Categories.')
     class Meta:
         model = models.EntryType

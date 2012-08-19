@@ -5,7 +5,7 @@ from thunderchild import forms, model_forms, models
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def fieldgroups(request):
+def fields(request):
     fieldgroups = models.FieldGroup.objects.all()
     fields = models.Field.objects.all()
     field_list = []
@@ -14,7 +14,7 @@ def fieldgroups(request):
         d['fieldgroup'] = fieldgroup
         d['fields'] = fields.filter(fieldgroup__exact=fieldgroup).order_by('field_display_order')
         field_list.append(d)
-    return render(request, 'thunderchild/field_groups.html', {'field_list':field_list})
+    return render(request, 'thunderchild/fields.html', {'field_list':field_list})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -24,7 +24,7 @@ def create_fieldgroup(request):
         if form.is_valid():
             model = models.FieldGroup(**form.cleaned_data)
             model.save()
-            return redirect('thunderchild.field_views.fieldgroups')
+            return redirect('thunderchild.field_views.fields')
         else:
             return render(request, 'thunderchild/create_fieldgroup.html', {'form':form})
     else:
@@ -39,7 +39,7 @@ def edit_fieldgroup(request, fieldgroup_id):
         form = model_forms.FieldGroupForm(request.POST, instance=model)
         if form.is_valid():
             form.save()
-            return redirect('thunderchild.field_views.fieldgroups')
+            return redirect('thunderchild.field_views.fields')
         else:
             return render(request, 'thunderchild/edit_fieldgroup.html', {'form':form, 
                                                                          'fieldgroup_id':fieldgroup_id,
@@ -55,7 +55,7 @@ def edit_fieldgroup(request, fieldgroup_id):
 def delete_fieldgroup(request):
     if request.method == 'POST':
         models.FieldGroup.objects.filter(id=request.POST['id']).delete()
-        return redirect('thunderchild.field_views.fieldgroups')
+        return redirect('thunderchild.field_views.fields')
     else:
         return HttpResponseNotAllowed(permitted_methods=['POST'])
 
@@ -67,7 +67,7 @@ def create_field(request, fieldgroup_id):
         if form.is_valid():
             model = models.Field(**form.cleaned_data)
             model.save()
-            return redirect('thunderchild.field_views.fieldgroups')
+            return redirect('thunderchild.field_views.fields')
         else:
             model = get_object_or_404(models.FieldGroup, pk=fieldgroup_id)
             return render(request, 'thunderchild/create_field.html', {'form':form, 'fieldgroup_id':fieldgroup_id, 'fieldgroup_name':model.fieldgroup_name})
@@ -84,7 +84,7 @@ def edit_field(request, fieldgroup_id, field_id):
         form = model_forms.FieldForm(request.POST, instance=model)
         if form.is_valid():
             form.save()
-            return redirect('thunderchild.field_views.fieldgroups')
+            return redirect('thunderchild.field_views.fields')
         else:
             return render(request, 'thunderchild/edit_field.html', {'form':form, 
                                                                     'fieldgroup_id':fieldgroup_id, 
@@ -105,7 +105,7 @@ def delete_field(request, fieldgroup_id):
     if request.method == 'POST':
         models.Field.objects.filter(id=request.POST['id']).delete()
         models.FieldData.objects.filter(field=request.POST['id']).delete()
-        return redirect('thunderchild.field_views.fieldgroups')
+        return redirect('thunderchild.field_views.fields')
     else:
         return HttpResponseNotAllowed(permitted_methods=['POST'])
 
