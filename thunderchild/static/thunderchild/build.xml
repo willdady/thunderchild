@@ -55,10 +55,10 @@
 		<description>
 			Copies specified directories from CSS_SOURCE to CSS_OUTPUT.
 		</description>
-		<copy todir="${CSS_OUTPUT}/images">
+		<copy todir="${CSS_OUTPUT}/images" overwrite="true">
 			<fileset dir="${CSS_SOURCE}/images" />
 		</copy>
-		<copy todir="${CSS_OUTPUT}/cupertino">
+		<copy todir="${CSS_OUTPUT}/cupertino" overwrite="true">
 			<fileset dir="${CSS_SOURCE}/cupertino" />
 		</copy>
 	</target>
