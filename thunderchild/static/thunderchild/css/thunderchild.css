@@ -185,8 +185,12 @@ a:hover {
 .nav-tabs > .active > a:hover {
   background: #ecf0f1;
 }
+.nav-tabs > li > a {
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
 .navbar .navbar-inner {
-  min-height: 35px;
+  min-height: 31px;
   background: #525858;
   /* Old browsers */
 
@@ -226,10 +230,10 @@ a:hover {
   padding-right: 10px;
 }
 .navbar .divider-vertical {
-  height: 35px;
+  height: 31px;
 }
 .navbar .nav > li > a {
-  padding: 7px 10px 9px;
+  padding: 5px 10px 7px;
   text-shadow: 0px -1px 0px #000000;
   border-left: 1px solid #303333;
   color: #b3b3b3;
@@ -262,7 +266,7 @@ a:hover {
 }
 #content-bar {
   position: fixed;
-  top: 35px;
+  top: 31px;
   width: 100%;
   z-index: 1;
   min-width: 940px;
@@ -272,7 +276,7 @@ a:hover {
   background: #e0e5e8;
 }
 #content-bar .breadcrumbs-bar {
-  min-height: 23px;
+  min-height: 21px;
   background: #1f6e63;
   border-top: 1px solid #288e7f;
 }
@@ -295,7 +299,6 @@ a:hover {
 #content-bar .breadcrumbs-bar ul.breadcrumb li a {
   display: inline-block;
   color: #57cfbe;
-  padding: 3px 0;
 }
 #content-bar .breadcrumbs-bar ul.breadcrumb li .divider {
   color: #57cfbe;
@@ -344,7 +347,7 @@ a:hover {
   position: absolute;
   left: 0;
   right: 0;
-  top: 160px;
+  top: 156px;
   bottom: 0;
   overflow-y: scroll;
   padding-top: 20px;
@@ -383,6 +386,9 @@ div.ui-datepicker {
   position: static;
   width: auto;
 }
+#content_container.login {
+  overflow: visible;
+}
 #login_form_holder {
   background: #e6eaed;
   border: 1px solid #d7dee2;
@@ -417,13 +423,18 @@ div.ui-datepicker {
   width: auto;
   float: left;
 }
+#content_container.templates {
+  overflow: visible;
+}
 #template-browser {
   position: absolute;
   left: 20px;
-  top: 20px;
-  bottom: 20px;
+  top: 15px;
+  bottom: 10px;
   right: 81%;
   overflow: auto;
+  background: #ffffff;
+  border: solid 1px #dddddd;
 }
 #template-browser .btn-primary {
   margin-top: 5px;
@@ -437,8 +448,11 @@ div.ui-datepicker {
 #template-browser ul li.active {
   background: #baece0;
 }
+#template-browser ul li.active.unsaved {
+  background: #ff8f8f;
+}
 #template-browser ul li.unsaved {
-  background: red;
+  background: #ffb3b3;
 }
 #template-browser ul li a {
   display: block;
@@ -448,12 +462,24 @@ div.ui-datepicker {
   text-decoration: none;
   color: #25826d;
 }
+#template-browser ul li .chevron {
+  display: block;
+  float: left;
+  width: 15px;
+  height: 15px;
+  margin-right: 2px;
+  background: url('images/chevron-sprite-sheet-white.png') no-repeat;
+}
+#template-browser ul li.in .chevron {
+  background-position: -15px;
+}
 #template-browser ul li .group-header {
   font-weight: bold;
   background: #25826d;
   color: #ffffff;
   padding: 3px 6px;
   border-bottom: 1px solid #1f6e5c;
+  border-top: 1px solid #288e7f;
 }
 #template-browser ul li .group-header h3 {
   float: left;
@@ -478,14 +504,14 @@ div.ui-datepicker {
   position: absolute;
   left: 20%;
   right: 20px;
-  top: 20px;
-  bottom: 20px;
+  top: 15px;
+  bottom: 10px;
 }
 #template-view .tab-content {
   position: absolute;
   left: 0;
   right: 0;
-  top: 54px;
+  top: 42px;
   bottom: 0;
   overflow: visible;
 }
@@ -499,8 +525,11 @@ div.ui-datepicker {
   position: absolute;
   left: 0;
   right: 0;
-  top: 0;
+  top: 30px;
   bottom: 0;
+}
+#template-view .tab-content #settings-pane .field-holder {
+  float: left;
 }
 #create-template-modal label,
 #create-templategroup-modal label,
@@ -537,7 +566,7 @@ div.ui-datepicker {
   width: 100%;
 }
 .field_label_holder {
-  padding: 5px 10px 0px 10px;
+  padding: 5px 10px 0px 8px;
 }
 .field_label_holder label,
 .field_label_holder p {
@@ -583,6 +612,15 @@ div.ui-datepicker {
 .accordion-group ul li label input {
   margin-right: 5px;
 }
+.accordion-group .chevron {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background: url("images/chevron-sprite-sheet.png") no-repeat;
+}
+.accordion-group.in .chevron {
+  background-position: -15px 0;
+}
 #categories ul li {
   clear: both;
 }
@@ -605,9 +643,9 @@ div.ui-datepicker {
   margin-bottom: 9px;
 }
 #textarea-modal {
-  width: 970px;
-  height: 620px;
-  margin: -350px 0 0 -485px;
+  width: 952px;
+  height: 640px;
+  margin: -320px 0 0 -476px;
   z-index: 1049;
 }
 #textarea-modal .modal-body {
@@ -623,8 +661,8 @@ div.ui-datepicker {
   margin-right: 5px;
 }
 #textarea-modal .modal-body textarea {
-  width: 930px;
-  height: 482px;
+  width: 912px;
+  height: 502px;
   max-width: none;
 }
 .field_holder .textarea-controls {
@@ -638,6 +676,7 @@ div.ui-datepicker {
   clear: both;
 }
 .field_holder .media-asset-thumbnail {
+  position: relative;
   float: left;
   clear: both;
   background: #ffffff;
@@ -662,6 +701,45 @@ div.ui-datepicker {
   word-wrap: break-word;
   width: 130px;
   line-height: 1.3em;
+}
+.field_holder .media-asset-thumbnail a.remove-asset-button {
+  transition: 0.25s;
+  -moz-transition: 0.25s;
+  -webkit-transition: 0.25s;
+  -o-transition: 0.25s;
+  opacity: 0;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+  -webkit-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.35);
+  -moz-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.35);
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.35);
+  position: absolute;
+  background: #ff0000;
+  background-color: #d60000;
+  background-image: -moz-linear-gradient(top, #ff0000, #990000);
+  background-image: -ms-linear-gradient(top, #ff0000, #990000);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff0000), to(#990000));
+  background-image: -webkit-linear-gradient(top, #ff0000, #990000);
+  background-image: -o-linear-gradient(top, #ff0000, #990000);
+  background-image: linear-gradient(top, #ff0000, #990000);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0000', endColorstr='#990000', GradientType=0);
+  font-weight: bold;
+  font-size: 17px;
+  color: #ffffff;
+  width: 16px;
+  height: 16px;
+  top: 7px;
+  right: 7px;
+  border: 1px solid #b30000;
+}
+.field_holder .media-asset-thumbnail a.remove-asset-button:hover {
+  text-decoration: none;
+}
+.field_holder .media-asset-thumbnail:hover a.remove-asset-button {
+  display: block;
+  opacity: 1;
 }
 .field_holder input[type="checkbox"] {
   margin: 2px 5px 8px 0;
@@ -693,13 +771,17 @@ div.ui-datepicker {
   max-width: 220px;
   min-width: 180px;
 }
+.no-media-message {
+  text-align: center;
+}
 #thumbnails_form {
   margin: 0;
 }
 ul.thumbnails {
   margin: 0;
-  margin-left: -1%;
+  margin-left: -2%;
   width: 100%;
+  margin-bottom: -15px;
 }
 ul.thumbnails li {
   width: 14.666%;
@@ -712,33 +794,36 @@ ul.thumbnails li a {
 ul.thumbnails li .thumbnail {
   text-align: center;
   background: #ffffff;
-  height: 150px;
+  height: 155px;
+  position: relative;
 }
 ul.thumbnails li .thumbnail img {
-  max-height: 86px;
+  max-height: 83px;
 }
 ul.thumbnails li .thumbnail ul {
+  position: absolute;
+  bottom: 6px;
   text-align: center;
   list-style: none;
-  width: 120px;
+  width: 130px;
   margin: 4px 0px 0px 0px;
 }
 ul.thumbnails li .thumbnail li,
 ul.thumbnails li .thumbnail label,
 ul.thumbnails li .thumbnail p {
   font-size: 10px;
-  line-height: 1.3em;
+  line-height: 1.5em;
   width: 100%;
   word-wrap: break-word;
   margin: 0;
   cursor: pointer;
 }
 ul.thumbnails li .thumbnail:hover {
-  border-color: #25826d;
+  border-color: #6bd5bd;
 }
 #preview_modal {
-  width: 630px;
-  margin: -380px 0px 0px -315px;
+  width: 952px;
+  margin: -380px 0px 0px -476px;
 }
 #preview_modal .modal-body {
   overflow: visible;
@@ -746,8 +831,8 @@ ul.thumbnails li .thumbnail:hover {
   text-align: center;
 }
 #preview_modal .modal-body img {
-  max-width: 600px;
-  max-height: 530px;
+  max-width: 935px;
+  max-height: 600px;
 }
 #preview_modal .modal-body ul {
   margin: 10px 0px 0px 0px;
@@ -759,26 +844,16 @@ ul.thumbnails li .thumbnail:hover {
 }
 #media_chooser_modal {
   width: 952px;
-  height: 640px;
-  margin: -320px 0 0 -476px;
+  height: 676px;
+  margin: -338px 0 0 -476px;
 }
 #media_chooser_modal .modal-body {
   max-height: none;
 }
 #media_chooser_modal .modal-body iframe {
   width: 922px;
-  height: 555px;
+  height: 590px;
   border: none;
-}
-#media_chooser_thumbnails_list {
-  height: 439px;
-  margin-left: -2%;
-}
-#media_chooser_thumbnails_list li .thumbnail {
-  height: 130px;
-}
-#media_chooser_thumbnails_list li .thumbnail img {
-  margin-bottom: 5px;
 }
 #media_chooser_upload_button {
   margin-bottom: 14px;
@@ -788,6 +863,18 @@ ul.thumbnails li .thumbnail:hover {
 }
 .media-chooser #upload_modal {
   top: 370px;
+}
+.media-chooser .thumbnails {
+  margin-bottom: auto;
+}
+.media-chooser .thumbnails .thumbnail {
+  height: 140px;
+}
+.media-chooser .pagination {
+  float: left;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 0;
 }
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header {
