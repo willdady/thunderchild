@@ -23,7 +23,7 @@
 		{% endfor %}
 	</select>
 	{% with entry_types|first as first_entry_type %}
-	<a id="go_button" href="/backend/entries/create/{{ first_entry_type.id }}" class="btn btn-primary">Go</a>
+	<a id="go_button" href="/dashboard/entries/create/{{ first_entry_type.id }}" class="btn btn-primary">Go</a>
 	{% endwith %}
 </div>
 {% endblock %}
@@ -84,7 +84,7 @@
 <script>
 	var goButton = $("#go_button");
 	$("#entry_type_select").change(function(){
-		goButton.attr( "href", "/backend/entries/create/"+$(this).val() );
+		goButton.attr( "href", "/dashboard/entries/create/"+$(this).val() );
 	});
 </script>
 {% endblock %}
