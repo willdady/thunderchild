@@ -57,7 +57,7 @@ In addition to the default settings provided when creating a project with Django
 1. If you are installing in a development environment you should set DEBUG = True and must also add INTERNAL_IPS = ('127.0.0.1',). Remember to set Debug = False if deploying to a production environment.
 2. USE_TZ = True
 3. Edit TEMPLATE_LOADERS to add 'thunderchild.loaders.TemplateLoader'as the last item in the tuple.
-4. Add a (cached backend)[https://docs.djangoproject.com/en/dev/topics/cache/]. It is not a requirement to use a cache backend but it will significantly reduced the number of database hits if you do. Eg.
+4. Add a [cached backend](https://docs.djangoproject.com/en/dev/topics/cache/). It is not a requirement to use a cache backend but will significantly reduced the number of database hits if you do. Eg.
 
 	```
 	CACHES = {
