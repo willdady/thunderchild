@@ -1,6 +1,6 @@
 # Thunderchild
 
-Thunderchild is a turn-key CMS solution built atop Django. It is inspired by ExpressionEngine by EllisLab.
+Thunderchild is a CMS solution built atop Django. It is inspired by ExpressionEngine by EllisLab.
 
 ## Requirements
 
