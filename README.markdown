@@ -54,10 +54,21 @@ included as the last item.
 
 In addition to the default settings provided when creating a project with Django 1.4, Thunderchild requires the following:
 
-1. Edit INSTALLED_APPS to add 'thunderchild' as the last item in the tuple.
+1. If you are installing in a development environment you should set DEBUG = True and must also add INTERNAL_IPS = ('127.0.0.1',). Remember to set Debug = False if deploying to a production environment.
 2. USE_TZ = True
 3. Edit TEMPLATE_LOADERS to add 'thunderchild.loaders.TemplateLoader'as the last item in the tuple.
-4. Add 'django.core.context_processors.request' to the [TEMPLATE_CONTEXT_PROCESSORS](https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors) tuple. This allows access to the request object within templates.
+4. Add a (cached backend)[https://docs.djangoproject.com/en/dev/topics/cache/]. It is not a requirement to use a cache backend but it will significantly reduced the number of database hits if you do. Eg.
+
+	```
+	CACHES = {
+	    'default': {
+	        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+	        'LOCATION': '/path/to/cache/directory',
+	    }
+	}
+	```
+
+5. Add 'django.core.context_processors.request' to the [TEMPLATE_CONTEXT_PROCESSORS](https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors) tuple. This allows access to the request object within templates.
 
 	```
 	TEMPLATE_CONTEXT_PROCESSORS = (
@@ -71,9 +82,8 @@ In addition to the default settings provided when creating a project with Django
 	    "django.contrib.messages.context_processors.messages"
 	)
 	```
-
-5. If you are installing in a development environment you should set DEBUG = True and must also add INTERNAL_IPS = ('127.0.0.1',). Remember to set Debug = False if deploying to a production environment.
-
+	
+6. Edit INSTALLED_APPS to add 'thunderchild' as the last item in the tuple.
 
 ## Templates
 
@@ -106,16 +116,16 @@ Usage:
 	
 By default all entries have the following attributes
 
-*author* - The entry's author. A [User](https://docs.djangoproject.com/en/1.4/topics/auth/#users) object.
-*title* - The entry's title.
-*slug* - The entry's slug.
-*creation_date* - A datetime of when the entry was created.
-*last_modified_date* - A datetime of when the entry was last modified.
-*expiration_date* - A datetime of when the entry will expire.
-*is_published* - A Boolean of whether the entry is published. Will always return true as non-published entries will not render to templates.
-*categories* - A list of Categories the Entry is assigned to. See {% categories %} tag below.
-*comments_enabled* - A Boolean stating whether comments have been enabled for this entry.
-*comments_expiration_date* - A datetime of when comments will be considered closed.
+*author* - The entry's author. A [User](https://docs.djangoproject.com/en/1.4/topics/auth/#users) object.  
+*title* - The entry's title.  
+*slug* - The entry's slug.  
+*creation_date* - A datetime of when the entry was created.  
+*last_modified_date* - A datetime of when the entry was last modified.  
+*expiration_date* - A datetime of when the entry will expire.  
+*is_published* - A Boolean of whether the entry is published. Will always return true as non-published entries will not render to templates.  
+*categories* - A list of Categories the Entry is assigned to. See {% categories %} tag below.  
+*comments_enabled* - A Boolean stating whether comments have been enabled for this entry.  
+*comments_expiration_date* - A datetime of when comments will be considered closed.  
 
 In addition to the above default fields, all custom fields are accessible by their 'Short name'. Field short names can be seen at Admin/Field Groups.
 
