@@ -165,7 +165,7 @@ TemplatePreviewControlsView = Backbone.View.extend
     else if templateGroupName == 'root' and templateName != 'index'
       templateUID = templateName
     else if templateName == 'index'
-      templateUID = templateGroupName
+      templateUID = "#{ templateGroupName }/"
     else
       templateUID = "#{ templateGroupName }/#{ templateName }"
     @$el.find(".template-uid").text(templateUID)

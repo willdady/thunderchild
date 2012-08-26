@@ -546,6 +546,26 @@ div.ui-datepicker {
 #edit-templategroup-modal .alert {
   margin-bottom: 10px;
 }
+#preview-link-holder {
+  position: absolute;
+  right: 0;
+  top: 4px;
+}
+#preview-link-holder .preview-url,
+#preview-link-holder input,
+#preview-link-holder a {
+  float: left;
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 11px;
+}
+#preview-link-holder input {
+  padding: 0;
+  width: 130px;
+}
+#preview-link-holder p {
+  line-height: 22px;
+}
 #id_template_content {
   height: 550px;
 }

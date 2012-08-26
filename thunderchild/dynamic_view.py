@@ -22,17 +22,21 @@ def dynamic_view(request, path):
     if num_segments == 0:
         template_name = 'root/index'
     elif num_segments == 1:
-        # If there is only one segment assume we want a template from the root group. If no such template exists in the root group, see if a group exists with this name (see try block below).
-        template_name = 'root/{}'.format(segments[0]) 
+        #If we have only one segment and our path has a trailing slash treat the segment as a template group name. Otherwise we treat it as the name of a template in the root template group.
+        if path[-1] == '/':
+            template_name = '{}/index'.format(segments[0])
+        else:
+            template_name = 'root/{}'.format(segments[0]) 
     elif num_segments > 1:
         template_name = '{}/{}'.format(segments[0], segments[1])
         
     # Load the TemplateModel
-    try:
-        model = TemplateModel.objects.get(template_uid__exact=template_name)
-    except TemplateModel.DoesNotExist:
-        template_name = '{}/index'.format(segments[0])
-        model = get_object_or_404(TemplateModel, template_uid__exact=template_name)
+    model = get_object_or_404(TemplateModel, template_uid__exact=template_name)
+#    try:
+#        model = TemplateModel.objects.get(template_uid__exact=template_name)
+#    except TemplateModel.DoesNotExist:
+#        template_name = '{}/index'.format(segments[0])
+#        model = get_object_or_404(TemplateModel, template_uid__exact=template_name)
     
     # If the template is private return 404
     if model.template_is_private:

@@ -183,7 +183,7 @@
       } else if (templateGroupName === 'root' && templateName !== 'index') {
         templateUID = templateName;
       } else if (templateName === 'index') {
-        templateUID = templateGroupName;
+        templateUID = "" + templateGroupName + "/";
       } else {
         templateUID = "" + templateGroupName + "/" + templateName;
       }
