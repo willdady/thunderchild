@@ -1,5 +1,5 @@
 (function() {
-  var ActionBarView, AppModel, ConfirmDeleteTemplateGroupModalView, ConfirmDeleteTemplateModalView, EditTemplateGroupModalView, MediaChooserModalView, NewTemplateGroupModalView, NewTemplateModalView, SettingsView, TemplateBrowserView, TemplateCollection, TemplateEditorView, TemplateGroupCollection, TemplateGroupModel, TemplateGroupView, TemplateListItemView, TemplateModel;
+  var ActionBarView, AppModel, ConfirmDeleteTemplateGroupModalView, ConfirmDeleteTemplateModalView, EditTemplateGroupModalView, MediaChooserModalView, NewTemplateGroupModalView, NewTemplateModalView, SettingsView, TemplateBrowserView, TemplateCollection, TemplateEditorView, TemplateGroupCollection, TemplateGroupModel, TemplateGroupView, TemplateListItemView, TemplateModel, TemplatePreviewControlsView;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   AppModel = Backbone.Model.extend({
     assetSelectionCallback: function(obj) {
@@ -74,7 +74,7 @@
     requiresSave: function(bool) {
       if (bool || bool === false) {
         this._requiresSave = bool;
-        this.trigger("change");
+        this.trigger("requiresSave");
       }
       return this._requiresSave;
     },
@@ -160,6 +160,35 @@
         }
       });
       return e.preventDefault();
+    }
+  });
+  TemplatePreviewControlsView = Backbone.View.extend({
+    initialize: function() {
+      return this.model.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
+    },
+    events: {
+      "change .preview-url-parameters": "resetPreviewButtonHref"
+    },
+    resetPreviewButtonHref: function() {
+      var url;
+      url = $(".preview-url").text() + $(".preview-url-parameters").val();
+      return $("#preview-template-button").attr("href", url);
+    },
+    selectedTemplateChangeHandler: function(model, templateModel) {
+      var templateGroupName, templateName, templateUID;
+      templateName = templateModel.get("template_short_name");
+      templateGroupName = templateModel.templateGroupModel().get("templategroup_short_name");
+      if (templateGroupName === 'root' && templateName === 'index') {
+        templateUID = '';
+      } else if (templateGroupName === 'root' && templateName !== 'index') {
+        templateUID = templateName;
+      } else if (templateName === 'index') {
+        templateUID = templateGroupName;
+      } else {
+        templateUID = "" + templateGroupName + "/" + templateName;
+      }
+      this.$el.find(".template-uid").text(templateUID);
+      return this.resetPreviewButtonHref();
     }
   });
   TemplateBrowserView = Backbone.View.extend({
@@ -283,7 +312,7 @@
     initialize: function() {
       this.options.appModel.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
       this.model.on("destroy", this.modelDestroyHandler, this);
-      return this.model.on("change", this.render, this);
+      return this.model.on("change requiresSave", this.render, this);
     },
     events: {
       'click a': 'clickHandler'
@@ -455,8 +484,11 @@
         $("#id_template_redirect_type").val(this.templateModel.get("template_redirect_type"));
         $("#id_template_redirect_url").val(this.templateModel.get("template_redirect_url"));
         $("#id_templategroup").val(this.templateModel.get("templategroup"));
-        $("input:radio[name=template_is_private][value='True']").attr("checked", this.templateModel.get("template_is_private"));
-        $("input:radio[name=template_is_private][value='False']").attr("checked", !this.templateModel.get("template_is_private"));
+        if (this.templateModel.get("template_is_private")) {
+          $("input:radio[name=template_is_private][value='True']").attr("checked", "checked");
+        } else {
+          $("input:radio[name=template_is_private][value='False']").attr("checked", "checked");
+        }
         if (this.templateModel.get("template_short_name") === 'index') {
           return $("#id_template_short_name").parent().parent().hide();
         } else {
@@ -730,12 +762,16 @@
     }
   });
   $(function() {
-    var actionBarView, confirmDeleteTemplateGroupModal, confirmDeleteTemplateModal, editTemplateGroupModal, mediaChooserModal, newTemplateGroupModal, newTemplateModal, settingsView, templateBrowserView, templateCollection, templateEditorView, templateGroupCollection;
+    var actionBarView, confirmDeleteTemplateGroupModal, confirmDeleteTemplateModal, editTemplateGroupModal, mediaChooserModal, newTemplateGroupModal, newTemplateModal, settingsView, templateBrowserView, templateCollection, templateEditorView, templateGroupCollection, templatePreviewControlsView;
     window.appModel = new AppModel();
     templateCollection = new TemplateCollection();
     templateGroupCollection = new TemplateGroupCollection();
     actionBarView = new ActionBarView({
       el: $(".action-bar"),
+      model: window.appModel
+    });
+    templatePreviewControlsView = new TemplatePreviewControlsView({
+      el: $("#preview-link-holder"),
       model: window.appModel
     });
     templateBrowserView = new TemplateBrowserView({

@@ -8,6 +8,8 @@ from django.http import HttpResponseNotAllowed, HttpResponse,\
     HttpResponseBadRequest
 from django.core import serializers
 import json
+import urlparse
+from django.contrib.sites.models import Site
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -31,11 +33,19 @@ def templates(request):
         else:
             templates_list.append({'templategroup':templategroup, 'templates':_templates})
     
+    print Site.objects.get_current().domain
+    
+    # Build the absolute URL for thunderchild.dynamic_view.dynamic_view. This is rendered as part of the the preview template controls.
+    domain = "{}{}".format("http://", Site.objects.get_current().domain)
+    path = reverse('thunderchild.dynamic_view.dynamic_view', args=[''])
+    absolute_dynamic_url = urlparse.urljoin(domain, path)
+    
     return render(request, 'thunderchild/templates.html', {'templates':templates_list,
                                                            'template_form':model_forms.TemplateForm,
                                                            'new_template_form':model_forms.TemplateForm(auto_id="id2_%s"),
                                                            'new_templategroup_form':model_forms.TemplateGroupForm,
-                                                           'edit_templategroup_form':model_forms.TemplateGroupForm(auto_id="id2_%s")})
+                                                           'edit_templategroup_form':model_forms.TemplateGroupForm(auto_id="id2_%s"),
+                                                           'absolute_dynamic_url':absolute_dynamic_url})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))

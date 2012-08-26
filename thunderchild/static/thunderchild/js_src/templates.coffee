@@ -76,7 +76,7 @@ TemplateModel = Backbone.Model.extend
   requiresSave:(bool) ->
     if bool or bool == false
       @_requiresSave = bool
-      @trigger("change")
+      @trigger("requiresSave")
     return @_requiresSave
     
   getMode: ->
@@ -143,6 +143,33 @@ ActionBarView = Backbone.View.extend
         $("#save-template-button").removeClass("disabled")
        
     e.preventDefault()
+
+
+TemplatePreviewControlsView = Backbone.View.extend
+
+  initialize: ->
+    @model.on "change:selectedTemplate", @selectedTemplateChangeHandler, @
+    
+  events:
+    "change .preview-url-parameters":"resetPreviewButtonHref"
+    
+  resetPreviewButtonHref: ->
+    url = $(".preview-url").text()+$(".preview-url-parameters").val()
+    $("#preview-template-button").attr("href", url)
+
+  selectedTemplateChangeHandler: (model, templateModel) ->
+    templateName = templateModel.get("template_short_name")
+    templateGroupName = templateModel.templateGroupModel().get("templategroup_short_name")
+    if templateGroupName == 'root' and templateName == 'index'
+      templateUID = ''
+    else if templateGroupName == 'root' and templateName != 'index'
+      templateUID = templateName
+    else if templateName == 'index'
+      templateUID = templateGroupName
+    else
+      templateUID = "#{ templateGroupName }/#{ templateName }"
+    @$el.find(".template-uid").text(templateUID)
+    @resetPreviewButtonHref()
 
 
 TemplateBrowserView = Backbone.View.extend
@@ -229,7 +256,7 @@ TemplateListItemView = Backbone.View.extend
   initialize: ->
     @options.appModel.on "change:selectedTemplate", @selectedTemplateChangeHandler, @
     @model.on "destroy", @modelDestroyHandler, @
-    @model.on "change", @render, @
+    @model.on "change requiresSave", @render, @
 
   events:
     'click a':'clickHandler'
@@ -391,8 +418,11 @@ SettingsView = Backbone.View.extend
       $("#id_template_redirect_url").val( @templateModel.get("template_redirect_url") )
       $("#id_templategroup").val( @templateModel.get("templategroup") )
       
-      $("input:radio[name=template_is_private][value='True']").attr("checked", @templateModel.get("template_is_private"))
-      $("input:radio[name=template_is_private][value='False']").attr("checked", !@templateModel.get("template_is_private"))
+      if @templateModel.get("template_is_private")
+        $("input:radio[name=template_is_private][value='True']").attr("checked", "checked")
+      else
+        $("input:radio[name=template_is_private][value='False']").attr("checked", "checked")
+
       # As index templates are forbidden from being renamed we hide the input
       if @templateModel.get("template_short_name") == 'index'
         $("#id_template_short_name").parent().parent().hide()
@@ -650,6 +680,8 @@ $ ->
   templateGroupCollection = new TemplateGroupCollection()
   
   actionBarView = new ActionBarView {el:$(".action-bar"), model:window.appModel}
+  
+  templatePreviewControlsView = new TemplatePreviewControlsView {el:$("#preview-link-holder"), model:window.appModel}
   
   templateBrowserView = new TemplateBrowserView {el:$("#template-browser"), model:window.appModel, templateCollection:templateCollection, templateGroupCollection:templateGroupCollection}
   
