@@ -32,11 +32,6 @@ def dynamic_view(request, path):
         
     # Load the TemplateModel
     model = get_object_or_404(TemplateModel, template_uid__exact=template_name)
-#    try:
-#        model = TemplateModel.objects.get(template_uid__exact=template_name)
-#    except TemplateModel.DoesNotExist:
-#        template_name = '{}/index'.format(segments[0])
-#        model = get_object_or_404(TemplateModel, template_uid__exact=template_name)
     
     # If the template is private return 404
     if model.template_is_private:

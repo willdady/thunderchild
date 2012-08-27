@@ -99,7 +99,7 @@
 				<form id="settings-form">
 					{% for field in template_form %}
 						{% if not field.is_hidden %}
-						<div class="accordion-group">
+						<div id="{{ field.label|slugify }}-group" class="accordion-group">
 								<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
 									<i class="chevron"></i>
 									{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}

@@ -371,10 +371,15 @@ SettingsView = Backbone.View.extend
     "change :input":"inputChangeHander"
     
   inputChangeHander: ->
-    formData = @$el.find("form").serializeObject()
     if @templateModel
+      formData = @$el.find("form").serializeObject()
       @templateModel.set(formData, {silent:true})
       @templateModel.requiresSave(true)
+    # If the template is marked as private we hide the irrelevant fields.
+    if $("input:radio[name=template_is_private][value='True']").prop("checked")
+      $("#cache-timeout-group, #redirect-group, #redirect-url-group").hide()
+    else
+      $("#cache-timeout-group, #redirect-group, #redirect-url-group").show()
     
   selectedTemplateChangeHandler: ->
     # If we have a reference to an existing template remove event callback
@@ -419,9 +424,13 @@ SettingsView = Backbone.View.extend
       $("#id_templategroup").val( @templateModel.get("templategroup") )
       
       if @templateModel.get("template_is_private")
-        $("input:radio[name=template_is_private][value='True']").attr("checked", "checked")
+        $("input:radio[name=template_is_private][value='True']").prop("checked", true)
+        $("input:radio[name=template_is_private][value='False']").prop("checked", false)
+        $("#cache-timeout-group, #redirect-group, #redirect-url-group").hide()
       else
-        $("input:radio[name=template_is_private][value='False']").attr("checked", "checked")
+        $("input:radio[name=template_is_private][value='True']").prop("checked", false)
+        $("input:radio[name=template_is_private][value='False']").prop("checked", true)
+        $("#cache-timeout-group, #redirect-group, #redirect-url-group").show()
 
       # As index templates are forbidden from being renamed we hide the input
       if @templateModel.get("template_short_name") == 'index'

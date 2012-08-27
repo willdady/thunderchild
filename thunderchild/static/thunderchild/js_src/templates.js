@@ -430,12 +430,17 @@
     },
     inputChangeHander: function() {
       var formData;
-      formData = this.$el.find("form").serializeObject();
       if (this.templateModel) {
+        formData = this.$el.find("form").serializeObject();
         this.templateModel.set(formData, {
           silent: true
         });
-        return this.templateModel.requiresSave(true);
+        this.templateModel.requiresSave(true);
+      }
+      if ($("input:radio[name=template_is_private][value='True']").prop("checked")) {
+        return $("#cache-timeout-group, #redirect-group, #redirect-url-group").hide();
+      } else {
+        return $("#cache-timeout-group, #redirect-group, #redirect-url-group").show();
       }
     },
     selectedTemplateChangeHandler: function() {
@@ -485,9 +490,13 @@
         $("#id_template_redirect_url").val(this.templateModel.get("template_redirect_url"));
         $("#id_templategroup").val(this.templateModel.get("templategroup"));
         if (this.templateModel.get("template_is_private")) {
-          $("input:radio[name=template_is_private][value='True']").attr("checked", "checked");
+          $("input:radio[name=template_is_private][value='True']").prop("checked", true);
+          $("input:radio[name=template_is_private][value='False']").prop("checked", false);
+          $("#cache-timeout-group, #redirect-group, #redirect-url-group").hide();
         } else {
-          $("input:radio[name=template_is_private][value='False']").attr("checked", "checked");
+          $("input:radio[name=template_is_private][value='True']").prop("checked", false);
+          $("input:radio[name=template_is_private][value='False']").prop("checked", true);
+          $("#cache-timeout-group, #redirect-group, #redirect-url-group").show();
         }
         if (this.templateModel.get("template_short_name") === 'index') {
           return $("#id_template_short_name").parent().parent().hide();
