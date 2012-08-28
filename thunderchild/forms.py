@@ -17,10 +17,10 @@ class DynamicForm(forms.Form):
             
             if field.field_type == 'text':
                 options = json.loads(field.field_options)
-                self.fields[field.field_short_name] = forms.CharField(max_length=options['max_length'], help_text=field.field_instructions, widget=forms.TextInput(attrs={'class':'input-large'}))
+                self.fields[field.field_short_name] = forms.CharField(max_length=options['max_length'], help_text=field.field_instructions, widget=forms.TextInput(attrs={'class':'input-xxlarge'}))
             if field.field_type == 'textarea':
                 options = json.loads(field.field_options)
-                self.fields[field.field_short_name] = forms.CharField(max_length=options['max_length'], help_text=field.field_instructions, widget=forms.Textarea())
+                self.fields[field.field_short_name] = forms.CharField(max_length=options['max_length'], help_text=field.field_instructions, widget=forms.Textarea(attrs={'class':'input-xxlarge'}))
             if field.field_type == 'datetime':
                 self.fields[field.field_short_name] = forms.DateTimeField(help_text=field.field_instructions, widget=forms.TextInput(attrs={'class':'input-medium', 'data-field-type':'datetime'}))
             if field.field_type == 'date':
@@ -85,11 +85,11 @@ class UserCreationForm(forms.ModelForm):
         regex=r'^[\w.@+-]+$',
         help_text = "Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.",
         error_messages = {'invalid': "This value may contain only letters, numbers and @/./+/-/_ characters."},
-        widget=forms.TextInput(attrs={'class':'input-large'})
+        widget=forms.TextInput(attrs={'class':'input-xxlarge'})
     )
-    first_name = forms.CharField(max_length=30, label="First name", widget=forms.TextInput(attrs={'class':'input-large'}))
-    last_name = forms.CharField(max_length=30, label="Last name", widget=forms.TextInput(attrs={'class':'input-large'}))
-    email = forms.EmailField(widget=forms.TextInput(attrs={'class':'input-large'}))
+    first_name = forms.CharField(max_length=30, label="First name", widget=forms.TextInput(attrs={'class':'input-xxlarge'}))
+    last_name = forms.CharField(max_length=30, label="Last name", widget=forms.TextInput(attrs={'class':'input-xxlarge'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'class':'input-xxlarge'}))
     password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
     password2 = forms.CharField(label="Password confirmation", widget=forms.PasswordInput, help_text = "Enter the same password as above, for verification.")
 

@@ -266,8 +266,8 @@ class MediaAsset(models.Model):
         # If no match based on type, try match based on file extension.
         ext = filename.split('.')[-1]
         extensions = ['aac', 'ai', 'aiff', 'avi', 'bmp', 'c', 'cpp', 'css', 'dat', 'dmg', 'doc', 'dotx', 'dwg', 'dxf', 'eps', 'exe', 
-                      'flv', 'h', 'hpp', 'html', 'ics', 'iso', 'java', 'key', 'mid', 'mp3', 'mp4', 'mpg', 'odf', 'ods', 'odt', 'otp', 
-                      'ots', 'ott', 'pdf', 'php', 'ppt', 'psd', 'py', 'qt', 'rar', 'rb', 'rtf', 'sql', 'tga', 'tgz', 'tiff', 'txt', 
+                      'flv', 'h', 'hpp', 'html', 'ics', 'iso', 'java', 'js', 'key', 'less', 'mid', 'mp3', 'mp4', 'mpg', 'odf', 'ods', 'odt', 'otp', 
+                      'ots', 'ott', 'pdf', 'php', 'ppt', 'psd', 'py', 'qt', 'rar', 'rb', 'rtf', 'scss', 'sass', 'sql', 'tga', 'tgz', 'tiff', 'txt', 
                       'wav', 'xls', 'xlsx', 'xml', 'yml', 'zip']
         if ext in extensions:
             return '{}thunderchild/images/media_icons/{}.png'.format(settings.STATIC_URL, ext)

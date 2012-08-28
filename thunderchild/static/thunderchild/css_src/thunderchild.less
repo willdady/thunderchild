@@ -12,41 +12,8 @@ body {
     overflow-y:visible;
   }
 }
-input[type="text"], textarea, table {
-  &.input-small {
-    width:90px;
-  }
-  &.input-medium {
-    width:200px;
-  }
-  &.input-large {
-    width:770px;
-    max-width:770px;
-  }
-}
 textarea{
-  width:100%;
-  max-width:770px;
   resize: none;
-}
-form {
-  ul {
-        margin:0px 0px 5px 0px;
-        padding:0;
-        display:inline-block;
-        list-style:none;
-        li {
-            float:left;
-            margin-right:10px;
-            label {
-                margin:0;
-                input[type="text"], input[type="radio"], input[type="checkbox"] {
-                    float:left;
-                    margin-right:5px;
-                }
-            }
-        }
-    }
 }
 .alert-error {
     padding-bottom:4px;
@@ -142,13 +109,28 @@ a {
 }
 .navbar {
   .navbar-inner {
-    min-height:31px;
+    min-height:32px;
     .navbar-gradient();
     .box-shadow(none);
     .nav {
       border-right:1px solid darken(@navbarBackgroundColor, 1%);
+      margin:0 9px;
       li {
         border-left:1px solid @navbarHighlightColor;
+        &.dropdown {
+          &.open {
+            > .dropdown-toggle {
+              color:@navbarLinkColor;
+              background:none;
+            }
+          }
+          > .dropdown-toggle {
+            .caret {
+              border-top-color:@navbarLinkColor;
+              border-bottom-color:@navbarLinkColor;
+            }
+          }
+        }
       }
       li:last-child {
         border-right:1px solid @navbarHighlightColor;
@@ -169,9 +151,13 @@ a {
         text-shadow: 0px -1px 0px #000;
         border-left:1px solid darken(@navbarBackgroundColor, 1%);
         color:@navbarLinkColor;
+        font-size:12px;
         &:hover {
           color:@navbarLinkHoverColor;
         }
+      }
+      > .dropdown-menu::after, .dropdown-menu::before {
+        border:none;
       }
     }
   }
@@ -180,9 +166,6 @@ a {
        background:@dropdownMenuBackgroundColor;
        margin:0;
        .border-radius(0px 0px 5px 5px);
-       li, li:last-child {
-         border:none;
-       }
        a {
          color:@navbarLinkColor;
          &:hover {
@@ -190,16 +173,12 @@ a {
            background:@dropdownMenuHoverBackgroundColor;
          }
        }
-       &:before, &:after {
-         border:none;
-         display:none;
-       }
     }
   }
 }
 #content-bar {
   position:fixed;
-  top:31px;
+  top:32px;
   width:100%;
   z-index:1;
   min-width:940px;
@@ -296,7 +275,6 @@ div.ui-datepicker {
 @import "create_edit_template.less";
 @import "dashboard.less";
 @import "create_edit_entry.less";
-@import "user_groups.less";
 @import "entries.less";
 @import "media.less";
 @import "time-picker.less";

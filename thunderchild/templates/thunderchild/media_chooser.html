@@ -22,54 +22,52 @@
 	
 	<body class="media-chooser">		
 		
-		<section class="container">
-			<a href="#" id="media_chooser_upload_button" class="btn btn-primary"><i class="icon-arrow-up icon-white"></i> Upload</a>
-			
-			{% if media_assets %}
-			<ul id="media_chooser_thumbnails_list" class="thumbnails">
-				{% for media_asset in media_assets%}
-				<li>
-					<a href="#" target="_blank">
-						<div class="thumbnail" data-id="{{ media_asset.id }}" data-url="{{ media_asset.url }}">
-							<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" />
-							<ul>
-								<li><label for="thumbnail_{{ media_asset.id }}_checkbox">{{ media_asset.filename|truncatechars:20 }}</label></li>
-								<li class="size">{{ media_asset.size|filesizeformat }}</li>
-								{% if media_asset.is_image %}
-								<li>{{ media_asset.width }} x {{ media_asset.height }}</li>
-								{% else %}
-								<li>N/A</li>
-								{% endif %}
-							</ul>
-						</div>
-					</a>
-				</li>
+		<a href="#" id="media_chooser_upload_button" class="btn btn-primary"><i class="icon-arrow-up icon-white"></i> Upload</a>
+		
+		{% if media_assets %}
+		<ul id="media_chooser_thumbnails_list" class="thumbnails">
+			{% for media_asset in media_assets%}
+			<li>
+				<a href="#" target="_blank">
+					<div class="thumbnail" data-id="{{ media_asset.id }}" data-url="{{ media_asset.url }}">
+						<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" />
+						<ul>
+							<li><label for="thumbnail_{{ media_asset.id }}_checkbox">{{ media_asset.filename|truncatechars:20 }}</label></li>
+							<li class="size">{{ media_asset.size|filesizeformat }}</li>
+							{% if media_asset.is_image %}
+							<li>{{ media_asset.width }} x {{ media_asset.height }}</li>
+							{% else %}
+							<li>N/A</li>
+							{% endif %}
+						</ul>
+					</div>
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<p class="no-media-message">You have not yet uploaded any media. Begin by clicking Upload above.</p>
+		{% endif %}
+		
+		{% if media_assets.paginator.num_pages > 1 %}
+		<div class="pagination pagination-centered">
+			<ul>
+				{% if media_assets.has_previous %}
+					<li><a href="?page={{ media_assets.previous_page_number }}">«</a></li>
+				{% endif %}
+				{% for num in media_assets.paginator.page_range %}
+					{% ifequal media_assets.number num %}
+						<li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
+					{% else %}
+						<li><a href="?page={{ num }}">{{ num }}</a></li>
+					{% endifequal %}
 				{% endfor %}
+				{% if media_assets.has_next %}
+					<li><a href="?page={{ media_assets.next_page_number }}">»</a></li>
+				{% endif %}
 			</ul>
-			{% else %}
-			<p class="no-media-message">You have not yet uploaded any media. Begin by clicking Upload above.</p>
-			{% endif %}
-			
-			{% if media_assets.paginator.num_pages > 1 %}
-			<div class="pagination pagination-centered">
-				<ul>
-					{% if media_assets.has_previous %}
-						<li><a href="?page={{ media_assets.previous_page_number }}">«</a></li>
-					{% endif %}
-					{% for num in media_assets.paginator.page_range %}
-						{% ifequal media_assets.number num %}
-							<li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
-						{% else %}
-							<li><a href="?page={{ num }}">{{ num }}</a></li>
-						{% endifequal %}
-					{% endfor %}
-					{% if media_assets.has_next %}
-						<li><a href="?page={{ media_assets.next_page_number }}">»</a></li>
-					{% endif %}
-				</ul>
-			</div>
-			{% endif %}
-		</section>
+		</div>
+		{% endif %}
 		
 		{% include "thunderchild/includes/upload_modal.html" %}
 				

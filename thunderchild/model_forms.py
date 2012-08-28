@@ -14,8 +14,8 @@ class EntryTypeForm(ModelForm):
     class Meta:
         model = models.EntryType
         widgets = {
-                   'entrytype_name':TextInput(attrs={'class':'input-large'}),
-                   'entrytype_short_name':TextInput(attrs={'class':'input-large'}),
+                   'entrytype_name':TextInput(attrs={'class':'input-xxlarge'}),
+                   'entrytype_short_name':TextInput(attrs={'class':'input-xxlarge'}),
                    }
         
         
@@ -34,8 +34,8 @@ class EntryForm(ModelForm):
         exclude = ['author']
         widgets  = {
                     'entrytype':HiddenInput(),
-                    'title':TextInput(attrs={'class':'input-large'}),
-                    'slug':TextInput(attrs={'class':'input-large'}),
+                    'title':TextInput(attrs={'class':'input-xxlarge'}),
+                    'slug':TextInput(attrs={'class':'input-xxlarge'}),
                     'creation_date':TextInput(attrs={'class':'input-medium', 'data-field-type':'datetime'}),
                     'expiration_date':TextInput(attrs={'class':'input-medium', 'data-field-type':'datetime'}),
                     'is_published':RadioSelect(),
@@ -58,7 +58,7 @@ FIELD_TYPES = (('text', 'Text'),
 class FieldForm(ModelForm):
     
     max_length = forms.IntegerField(help_text='The maximum number of characters this field allows.', initial=128, required=False, widget=TextInput(attrs={'class':'input-small'}))
-    field_choices = thunderchild.forms.TextToChoicesField(help_text='One choice per line. Minimum 2 choices.', required=False, widget=Textarea(attrs={'class':'input-large'}))
+    field_choices = thunderchild.forms.TextToChoicesField(help_text='One choice per line. Minimum 2 choices.', required=False, widget=Textarea(attrs={'class':'input-xxlarge'}))
     
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance')
@@ -109,9 +109,9 @@ class FieldForm(ModelForm):
         model = models.Field
         exclude = ['field_options'] # We don't render the field_options field as it's populated with JSON in the above clean method.
         widgets  = {
-                    'field_name':TextInput(attrs={'class':'input-large'}),
-                    'field_short_name':TextInput(attrs={'class':'input-large'}),
-                    'field_instructions':TextInput(attrs={'class':'input-large'}),
+                    'field_name':TextInput(attrs={'class':'input-xxlarge'}),
+                    'field_short_name':TextInput(attrs={'class':'input-xxlarge'}),
+                    'field_instructions':TextInput(attrs={'class':'input-xxlarge'}),
                     'field_display_order':TextInput(attrs={'class':'input-small'}),
                     'field_is_required':RadioSelect(),
                     'field_collapsed_by_default':RadioSelect(),
@@ -124,7 +124,7 @@ class FieldGroupForm(ModelForm):
     class Meta:
         model = models.FieldGroup
         widgets = {
-                   'fieldgroup_name':TextInput(attrs={'class':'input-large'})
+                   'fieldgroup_name':TextInput(attrs={'class':'input-xxlarge'})
                    }
         
         
@@ -132,7 +132,7 @@ class TemplateGroupForm(ModelForm):
     class Meta:
         model = models.TemplateGroup
         widgets = {
-                   'templategroup_short_name':TextInput(attrs={'class':'input-large'})
+                   'templategroup_short_name':TextInput(attrs={'class':'input-xxlarge'})
                    }
         
       
@@ -162,10 +162,10 @@ class TemplateForm(ModelForm):
         widgets  = {
                     'template_content_type':Select(choices=TEMPLATE_CONTENT_TYPES),
                     'templategroup':HiddenInput(),
-                    'template_short_name':TextInput(attrs={'class':'input-large'}),
+                    'template_short_name':TextInput(attrs={'class':'input-xxlarge'}),
                     'template_is_private':RadioSelect(),
                     'template_redirect_type':Select(choices=TEMPLATE_REDIRECT_TYPES),
-                    'template_redirect_url':TextInput(attrs={'class':'input-large'}),
+                    'template_redirect_url':TextInput(attrs={'class':'input-xxlarge'}),
                     'template_content':HiddenInput()
         }
     
@@ -210,8 +210,8 @@ class TemplateForm(ModelForm):
 class CategoryGroupForm(ModelForm):
     class Meta:
         model = models.CategoryGroup
-        widgets = {'categorygroup_name':TextInput(attrs={'class':'input-large'}),
-                   'categorygroup_short_name':TextInput(attrs={'class':'input-large'})}    
+        widgets = {'categorygroup_name':TextInput(attrs={'class':'input-xxlarge'}),
+                   'categorygroup_short_name':TextInput(attrs={'class':'input-xxlarge'})}    
     
 
 class CategoryForm(ModelForm):
@@ -219,8 +219,8 @@ class CategoryForm(ModelForm):
         model = models.Category
         widgets = {
                    'categorygroup':HiddenInput(),
-                   'category_name':TextInput(attrs={'class':'input-large'}),
-                   'category_short_name':TextInput(attrs={'class':'input-large'})
+                   'category_name':TextInput(attrs={'class':'input-xxlarge'}),
+                   'category_short_name':TextInput(attrs={'class':'input-xxlarge'})
                    }
         
     def clean(self):
@@ -261,11 +261,11 @@ class ContactFormForm(ModelForm):
     class Meta:
         model = models.ContactForm
         widgets = {
-                   'contactform_name':TextInput(attrs={'class':'input-large'}),
-                   'contactform_short_name':TextInput(attrs={'class':'input-large'}),
-                   'recipient_emails':TextInput(attrs={'class':'input-large'}),
-                   'success_url':TextInput(attrs={'class':'input-large'}),
-                   'error_url':TextInput(attrs={'class':'input-large'})
+                   'contactform_name':TextInput(attrs={'class':'input-xxlarge'}),
+                   'contactform_short_name':TextInput(attrs={'class':'input-xxlarge'}),
+                   'recipient_emails':TextInput(attrs={'class':'input-xxlarge'}),
+                   'success_url':TextInput(attrs={'class':'input-xxlarge'}),
+                   'error_url':TextInput(attrs={'class':'input-xxlarge'})
                    }
 
 
@@ -274,10 +274,10 @@ class CommentModelForm(ModelForm):
         model = models.Comment
         exclude = ['entry']
         widgets = {
-                   'name':TextInput(attrs={'class':'input-large'}),
-                   'email':TextInput(attrs={'class':'input-large'}),
-                   'website':TextInput(attrs={'class':'input-large'}),
-                   'ip_address':TextInput(attrs={'class':'input-large'}),
+                   'name':TextInput(attrs={'class':'input-xxlarge'}),
+                   'email':TextInput(attrs={'class':'input-xxlarge'}),
+                   'website':TextInput(attrs={'class':'input-xxlarge'}),
+                   'ip_address':TextInput(attrs={'class':'input-xxlarge'}),
                    }
     
     
