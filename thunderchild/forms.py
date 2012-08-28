@@ -16,9 +16,11 @@ class DynamicForm(forms.Form):
         for field in fields:
             
             if field.field_type == 'text':
-                self.fields[field.field_short_name] = forms.CharField(help_text=field.field_instructions, widget=forms.TextInput(attrs={'class':'input-large'}))
+                options = json.loads(field.field_options)
+                self.fields[field.field_short_name] = forms.CharField(max_length=options['max_length'], help_text=field.field_instructions, widget=forms.TextInput(attrs={'class':'input-large'}))
             if field.field_type == 'textarea':
-                self.fields[field.field_short_name] = forms.CharField(help_text=field.field_instructions, widget=forms.Textarea())
+                options = json.loads(field.field_options)
+                self.fields[field.field_short_name] = forms.CharField(max_length=options['max_length'], help_text=field.field_instructions, widget=forms.Textarea())
             if field.field_type == 'datetime':
                 self.fields[field.field_short_name] = forms.DateTimeField(help_text=field.field_instructions, widget=forms.TextInput(attrs={'class':'input-medium', 'data-field-type':'datetime'}))
             if field.field_type == 'date':

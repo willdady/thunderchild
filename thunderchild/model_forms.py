@@ -57,7 +57,7 @@ FIELD_TYPES = (('text', 'Text'),
 
 class FieldForm(ModelForm):
     
-    maxlength = forms.IntegerField(help_text='The maximum number of characters this field allows.', initial=128, required=False, widget=TextInput(attrs={'class':'input-small'}))
+    max_length = forms.IntegerField(help_text='The maximum number of characters this field allows.', initial=128, required=False, widget=TextInput(attrs={'class':'input-small'}))
     field_choices = thunderchild.forms.TextToChoicesField(help_text='One choice per line. Minimum 2 choices.', required=False, widget=Textarea(attrs={'class':'input-large'}))
     
     def __init__(self, *args, **kwargs):
@@ -72,8 +72,8 @@ class FieldForm(ModelForm):
                     for choice in json_data['field_choices']:
                         field_choices = field_choices + choice[1] + '\r'
                     initial['field_choices'] = field_choices[0:-1]
-                if 'maxlength' in json_data:
-                    initial['maxlength'] = json_data['maxlength']
+                if 'max_length' in json_data:
+                    initial['max_length'] = json_data['max_length']
                 kwargs['initial'] = initial
             
         super(FieldForm, self).__init__(*args, **kwargs)
@@ -81,26 +81,26 @@ class FieldForm(ModelForm):
     def clean(self):
         cleaned_data = super(FieldForm, self).clean()
         field_type = cleaned_data.get('field_type')
-        maxlength = cleaned_data.get('maxlength')
+        max_length = cleaned_data.get('max_length')
         field_choices = cleaned_data.get('field_choices')
         # We validate our field options conditionally, based on the value of field_type. For example, max_length must be specified for 'text' and 'textarea' types
         # but is not required for 'select' and 'radiobuttons' types.
-        if (field_type == 'text' or field_type == 'textarea') and (maxlength <= 0 or maxlength == None):
-            if maxlength <= 0:
-                self._errors['maxlength'] = self.error_class(['Value must be greater than 0'])
-            if maxlength == None:
-                self._errors['maxlength'] = self.error_class(['This field is required'])
+        if (field_type == 'text' or field_type == 'textarea') and (max_length <= 0 or max_length == None):
+            if max_length <= 0:
+                self._errors['max_length'] = self.error_class(['Value must be greater than 0'])
+            if max_length == None:
+                self._errors['max_length'] = self.error_class(['This field is required'])
         if (field_type == 'select' or field_type == 'radiobuttons') and len(field_choices) < 2:
             self._errors['field_choices'] = self.error_class(['Field must have at least two choices'])
         # Convert the appropriate options for the specified field_type to JSON and store in cleaned_data['field_options'].
         if field_type == 'text' or field_type == 'textarea':
-            options = json.dumps({'maxlength':maxlength})
+            options = json.dumps({'max_length':max_length})
             cleaned_data['field_options'] = options
         elif field_type == 'select' or field_type == 'checkboxes' or field_type == 'radiobuttons':
             options = json.dumps({'field_choices':field_choices})
             cleaned_data['field_options'] = options
         
-        del cleaned_data['maxlength']
+        del cleaned_data['max_length']
         del cleaned_data['field_choices']        
     
         return cleaned_data
