@@ -22,45 +22,41 @@
 		<script src="{{ STATIC_URL }}thunderchild/js/modernizr-2.5.3.min.js"></script>
 	</head>
 	
-	<body>		
+	<body id="login">		
 		
-		<section id="content_container" class="container login">
-			<div class="row">
-				<div id="login_form_holder" class="span4 offset4">
-					{% if errors %}
-					<div class="alert alert-error">
-						<strong>Error:</strong>
-						<ul>
-						{% for error in errors %}
-							<li>- {{ error }}</li>
-						{% endfor %}
-						</ul>
-					</div>
-					{% endif %}
-					<form method="post" class="form-horizontal" action="{% url thunderchild.views.login %}">
-						{% csrf_token %}<input type="hidden" name="next" value="{{ next }}" />
-						<div class="control-group">
-							<label for="id_{{ form.username.html_name }}" class="control-label">{{ form.username.label }}</label>
-							<div class="controls">
-								{{ form.username }}
-							</div>
-						</div>
-						<div class="control-group">
-							<label for="id_{{ form.password.html_name }}" class="control-label">{{ form.password.label }}</label>
-							<div class="controls">
-								{{ form.password }}
-							</div>
-						</div>
-						<div id="login-control-group" class="control-group">
-							<div class="controls">
-								<label for="id_{{ form.remember_me.html_name }}" class="checkbox">{{ form.remember_me }} Remember me</label>
-								<input class="btn pull-right" type="submit" value="Login" />
-							</div>
-						</div>
-					</form>
-				</div>
+		<div id="login_form_holder">
+			{% if errors %}
+			<div class="alert alert-error">
+				<strong>Error:</strong>
+				<ul>
+				{% for error in errors %}
+					<li>- {{ error }}</li>
+				{% endfor %}
+				</ul>
 			</div>
-		</section>
+			{% endif %}
+			<form method="post" class="form-horizontal" action="{% url thunderchild.views.login %}">
+				{% csrf_token %}<input type="hidden" name="next" value="{{ next }}" />
+				<div class="control-group">
+					<label for="id_{{ form.username.html_name }}" class="control-label">{{ form.username.label }}</label>
+					<div class="controls">
+						{{ form.username }}
+					</div>
+				</div>
+				<div class="control-group">
+					<label for="id_{{ form.password.html_name }}" class="control-label">{{ form.password.label }}</label>
+					<div class="controls">
+						{{ form.password }}
+					</div>
+				</div>
+				<div id="login-control-group" class="control-group">
+					<div class="controls">
+						<label for="id_{{ form.remember_me.html_name }}" class="checkbox">{{ form.remember_me }} Remember me</label>
+						<input class="btn pull-right" type="submit" value="Login" />
+					</div>
+				</div>
+			</form>
+		</div>
 		
 		<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>

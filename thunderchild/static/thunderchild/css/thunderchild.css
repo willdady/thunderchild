@@ -26,7 +26,8 @@
   box-sizing: border-box;
 }
 body {
-  overflow: hidden;
+  overflow-y: scroll;
+  padding-top: 176px;
   background: #ecf0f1;
 }
 body.media-chooser {
@@ -34,45 +35,8 @@ body.media-chooser {
   background: none;
   overflow-y: visible;
 }
-input[type="text"].input-small,
-textarea.input-small,
-table.input-small {
-  width: 90px;
-}
-input[type="text"].input-medium,
-textarea.input-medium,
-table.input-medium {
-  width: 200px;
-}
-input[type="text"].input-large,
-textarea.input-large,
-table.input-large {
-  width: 770px;
-  max-width: 770px;
-}
 textarea {
-  width: 100%;
-  max-width: 770px;
   resize: none;
-}
-form ul {
-  margin: 0px 0px 5px 0px;
-  padding: 0;
-  display: inline-block;
-  list-style: none;
-}
-form ul li {
-  float: left;
-  margin-right: 10px;
-}
-form ul li label {
-  margin: 0;
-}
-form ul li label input[type="text"],
-form ul li label input[type="radio"],
-form ul li label input[type="checkbox"] {
-  float: left;
-  margin-right: 5px;
 }
 .alert-error {
   padding-bottom: 4px;
@@ -190,7 +154,7 @@ a:hover {
   padding-bottom: 7px;
 }
 .navbar .navbar-inner {
-  min-height: 31px;
+  min-height: 32px;
   background: #525858;
   /* Old browsers */
 
@@ -218,9 +182,18 @@ a:hover {
 }
 .navbar .navbar-inner .nav {
   border-right: 1px solid #303333;
+  margin: 0 9px;
 }
 .navbar .navbar-inner .nav li {
   border-left: 1px solid #393d3e;
+}
+.navbar .navbar-inner .nav li.dropdown.open > .dropdown-toggle {
+  color: #b3b3b3;
+  background: none;
+}
+.navbar .navbar-inner .nav li.dropdown > .dropdown-toggle .caret {
+  border-top-color: #b3b3b3;
+  border-bottom-color: #b3b3b3;
 }
 .navbar .navbar-inner .nav li:last-child {
   border-right: 1px solid #393d3e;
@@ -237,9 +210,14 @@ a:hover {
   text-shadow: 0px -1px 0px #000000;
   border-left: 1px solid #303333;
   color: #b3b3b3;
+  font-size: 12px;
 }
 .navbar .nav > li > a:hover {
   color: #ffffff;
+}
+.navbar .nav > li > .dropdown-menu::after,
+.navbar .nav > li .dropdown-menu::before {
+  border: none;
 }
 .navbar .pull-right .dropdown-menu {
   background: #323636;
@@ -248,10 +226,6 @@ a:hover {
   -moz-border-radius: 0px 0px 5px 5px;
   border-radius: 0px 0px 5px 5px;
 }
-.navbar .pull-right .dropdown-menu li,
-.navbar .pull-right .dropdown-menu li:last-child {
-  border: none;
-}
 .navbar .pull-right .dropdown-menu a {
   color: #b3b3b3;
 }
@@ -259,14 +233,9 @@ a:hover {
   color: #ffffff;
   background: #47525b;
 }
-.navbar .pull-right .dropdown-menu:before,
-.navbar .pull-right .dropdown-menu:after {
-  border: none;
-  display: none;
-}
 #content-bar {
   position: fixed;
-  top: 31px;
+  top: 32px;
   width: 100%;
   z-index: 1;
   min-width: 940px;
@@ -342,15 +311,6 @@ a:hover {
 #content-bar .action-bar .pull-right li {
   margin-left: 5px;
   margin-right: 0px;
-}
-#content_container {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 156px;
-  bottom: 0;
-  overflow-y: scroll;
-  padding-top: 20px;
 }
 #content_container header {
   margin-bottom: 15px;
@@ -429,7 +389,7 @@ div.ui-datepicker {
 #template-browser {
   position: absolute;
   left: 20px;
-  top: 15px;
+  top: 170px;
   bottom: 10px;
   right: 81%;
   overflow: auto;
@@ -484,14 +444,11 @@ div.ui-datepicker {
 #template-browser ul li .group-header h3 {
   float: left;
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 19px;
 }
 #template-browser ul li .group-header a {
   padding: 0;
-}
-#template-browser ul li .group-header a i {
-  margin-top: 2px;
 }
 #template-browser ul li .group-header ul.controls {
   background: none;
@@ -504,7 +461,7 @@ div.ui-datepicker {
   position: absolute;
   left: 20%;
   right: 20px;
-  top: 15px;
+  top: 170px;
   bottom: 10px;
 }
 #template-view .tab-content {
@@ -536,15 +493,33 @@ div.ui-datepicker {
 #edit-templategroup-modal label {
   font-weight: bold;
 }
-#create-template-modal input[type="text"].input-large,
-#create-templategroup-modal input[type="text"].input-large,
-#edit-templategroup-modal input[type="text"].input-large {
-  width: 520px;
+#create-template-modal input[type="text"],
+#create-templategroup-modal input[type="text"],
+#edit-templategroup-modal input[type="text"] {
+  width: 516px;
 }
 #create-template-modal .alert,
 #create-templategroup-modal .alert,
 #edit-templategroup-modal .alert {
   margin-bottom: 10px;
+}
+#create-template-modal ul,
+#create-templategroup-modal ul,
+#edit-templategroup-modal ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#create-template-modal ul li,
+#create-templategroup-modal ul li,
+#edit-templategroup-modal ul li {
+  float: left;
+  margin-right: 10px;
+}
+#create-template-modal ul li label input,
+#create-templategroup-modal ul li label input,
+#edit-templategroup-modal ul li label input {
+  margin: 0 2px 4px 0;
 }
 #preview-link-holder {
   position: absolute;
@@ -578,12 +553,6 @@ div.ui-datepicker {
   padding-left: 10px;
   padding-right: 20px;
   margin: 6px 0px 0px 0px;
-}
-.field_holder input[type="text"].input-large,
-.field_holder input[type="password"].input-large,
-.field_holder textarea.input-large,
-.field_holder table.input-large {
-  width: 100%;
 }
 .field_label_holder {
   padding: 5px 10px 0px 8px;
@@ -630,7 +599,7 @@ div.ui-datepicker {
   margin: 0;
 }
 .accordion-group ul li label input {
-  margin-right: 5px;
+  margin: 0 2px 4px 0;
 }
 .accordion-group .chevron {
   display: inline-block;
@@ -642,9 +611,6 @@ div.ui-datepicker {
   background-position: -15px 0;
 }
 #categories ul li {
-  clear: both;
-}
-#user_group_form ul li {
   clear: both;
 }
 #create_controls label {
@@ -681,8 +647,8 @@ div.ui-datepicker {
   margin-right: 5px;
 }
 #textarea-modal .modal-body textarea {
-  width: 912px;
-  height: 502px;
+  width: 906px;
+  height: 499px;
   max-width: none;
 }
 .field_holder .textarea-controls {
