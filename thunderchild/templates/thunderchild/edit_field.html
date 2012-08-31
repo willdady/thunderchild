@@ -25,7 +25,7 @@
 {% block content %}
 	{% for field in form %}
 		{% if not field.is_hidden %}
-		<div class="accordion-group">
+		<div id="{{ field.label|slugify }}-group" class="accordion-group">
 				<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
 					<i class="chevron"></i>
 					{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
@@ -48,6 +48,11 @@
 {% endblock %}
 
 {% block javascript %}
+{% if debug %}
+	<script src="{{ STATIC_URL }}thunderchild/js_src/fields.js"></script>
+{% else %}
+	<script src="{{ STATIC_URL }}thunderchild/js/fields-min.js"></script>
+{% endif %}
 <script>
 	Utilities.autoAlphanumeric( $("#id_field_name"), $("#id_field_short_name") );
 </script>
