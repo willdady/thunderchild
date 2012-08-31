@@ -133,7 +133,7 @@ In addition to the above default fields, all custom fields are accessible by the
 
 Usage:
 
-	{% entries 'blog-entry' offset=2 limit=3 year=2012 order_by='-title, author' as blog_entries %}
+	{% entries 'blog-entry' offset=2 limit=3 year=2012 order_by='-title, author' categories='news, fun' as blog_entries %}
 	
 #### {% categories %}
 

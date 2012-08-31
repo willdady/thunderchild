@@ -22,6 +22,7 @@ def get_entries(context, entrytype_short_name, *args, **kwargs):
     year = kwargs.get('year')
     month = kwargs.get('month')
     day = kwargs.get('day')
+    categories = kwargs.get('categories')
     
     try:
         entrytype = models.EntryType.objects.get(entrytype_short_name__exact=entrytype_short_name)
@@ -34,6 +35,12 @@ def get_entries(context, entrytype_short_name, *args, **kwargs):
     if order_by:
         order_by = [field_name.strip() for field_name in order_by.split(',')]
         entries = entries.order_by(*order_by)
+    else:
+        entries = entries.order_by('-creation_date')
+    
+    if categories:
+        categories = [x.strip() for x in categories.split(',')]
+        entries = entries.filter(categories__category_short_name__in=categories)
     
     if year:
         entries = entries.filter(entry_creation_date__year=year)
