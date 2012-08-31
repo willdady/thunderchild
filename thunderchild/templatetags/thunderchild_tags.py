@@ -2,6 +2,7 @@ from django import template
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now
+from django.db.models import Q
 from thunderchild import models
 
 register = template.Library()
@@ -27,8 +28,8 @@ def get_entries(context, entrytype_short_name, *args, **kwargs):
     except models.EntryType.DoesNotExist:
         return None
     
-    # We get all entries of this EntryType EXCEPT those which have been marked as published = False AND/OR have expired.
-    entries = models.Entry.objects.filter(entrytype__exact=entrytype, is_published__exact=True, expiration_date__gt=now())
+    # We get all entries of this EntryType EXCEPT those which have been marked as published = False AND/OR have expired. Note the Q objects in the below filter MUST come before keyword arguments.
+    entries = models.Entry.objects.filter(Q(expiration_date__exact=None) | Q(expiration_date__gt=now()), entrytype__exact=entrytype, is_published__exact=True )
 
     if order_by:
         order_by = [field_name.strip() for field_name in order_by.split(',')]
