@@ -346,17 +346,23 @@ div.ui-datepicker {
   position: static;
   width: auto;
 }
-#content_container.login {
-  overflow: visible;
+#login {
+  padding: 0;
 }
 #login_form_holder {
+  position: absolute;
   background: #e6eaed;
   border: 1px solid #d7dee2;
   padding: 30px;
+  width: 310px;
+  height: 132px;
+  top: 50%;
+  left: 50%;
+  margin-top: -96px;
+  margin-left: -185px;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
-  margin-top: 200px;
 }
 #login_form_holder form {
   margin: 0;
