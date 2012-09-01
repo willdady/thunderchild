@@ -9,7 +9,7 @@ Thunderchild is a CMS solution built atop Django. It is inspired by ExpressionEn
 
 ## Features
 
-* Create your own entry types with custom fields to fit your data. No being boxed into a fixed schema.
+* Create your own entry types with custom fields to fit your data.
 * Publish entires to templates using standard Django template tags. Create pretty URL's.
 * Full cache support. Take advantage of Django's cache framework on a per-template basis.
 * Built-in media manager for uploading files.
@@ -110,11 +110,13 @@ In order to use the following Thunderchild tags the above load tag *must* be pre
 
 #### {% entry %}
 
+Returns a single Entry by it's slug.
+
 Usage:
 
 	{% entry 'my-entry-slug' as my_entry %}
 	
-By default all entries have the following attributes
+All Entry objects have the following attributes:
 
 *author* - The entry's author. A [User](https://docs.djangoproject.com/en/1.4/topics/auth/#users) object.  
 *title* - The entry's title.  
@@ -127,21 +129,43 @@ By default all entries have the following attributes
 *comments_enabled* - A Boolean stating whether comments have been enabled for this entry.  
 *comments_expiration_date* - A datetime of when comments will be considered closed.  
 
-In addition to the above default fields, all custom fields are accessible by their 'Short name'. Field short names can be seen at Admin/Field Groups.
+In addition to the above default fields, all custom fields are accessible by their short name. Field short names can be found at Admin/Field Groups.
 
 #### {% entries %}
+
+Performs a complex query returning a list of Entry objects matching the passed query parameters. The entries tag expects a single EntryType short name 
+optionally followed by any of the following attributes:
+
+*limit* - An integer denoting how many entries to limit the query to.  
+*offset* - An integer to offset the results by. Combined with limit this is useful for paginated results.  
+*order_by* - A comma-separated string of field names. Prefix a field name with '-' to reverse the order.  
+*year* - An 4 digit integer specifying the year to filter the entries by.  
+*month* - An integer specifying the month to filter the entries by. (1 = January, 12 = December).  
+*day* - An integer specifying the day to filter the entries by.  
+*categories* - A comma-separated string of Category short names to filter the results by.  
 
 Usage:
 
 	{% entries 'blog-entry' offset=2 limit=3 year=2012 order_by='-title, author' categories='news, fun' as blog_entries %}
 	
+The above example would store the query result in blog_entries which can be iterated over with a standard [for tag](https://docs.djangoproject.com/en/1.4/ref/templates/builtins/#for).
+	
 #### {% categories %}
+
+Returns a list of Category objects belonging to the CategoryGroup. Expects a single parameter, a CategoryGroup short name.
 
 Usage:
 
-	{% categories 'my_category_group' as my_category_group %}
+	{% categories 'my_category_group' as my_category_group %}	
+
+Category objects have the following attributes:
+
+*category_name* - The Category's name.  
+*category_short_name* - The Category's short name.  
 	
 #### {% template_url %}
+
+Returns a URL for a template. A single string parameter is expected in the format "<template group>/<template name>".
 
 Usage:
 
