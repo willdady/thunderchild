@@ -240,6 +240,7 @@ class CategoryForm(ModelForm):
 class EntriesFilterForm(forms.Form):
     entrytype = forms.ChoiceField(choices=[], required=False, label="Entry type")
     author = forms.ChoiceField(choices=[], required=False)
+    is_published = forms.ChoiceField(choices=[('', '---------'), ('True', 'True'), ('False', 'False')], required=False, label="Published")
     
     def __init__(self, *args, **kwargs):
         super(EntriesFilterForm, self).__init__(*args, **kwargs)

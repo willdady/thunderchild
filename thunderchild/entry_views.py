@@ -61,16 +61,20 @@ def delete_entrytype(request):
 def entries(request):
     entry_objects = models.Entry.objects.all().order_by('-creation_date')
     
-    # Filter entires by entrytype is entrytype parameter is set
+    # Filter entires by entrytype if entrytype parameter is set
     entrytype_id = request.GET.get('entrytype')
     if entrytype_id:
         entry_objects = entry_objects.filter(entrytype__exact=entrytype_id)
-    # Filter entires by author is author parameter is set    
+    # Filter entires by author if author parameter is set    
     author_id = request.GET.get('author')
     if author_id:
         entry_objects = entry_objects.filter(author__exact=author_id)
+    # Filter entires by is_published if author parameter is set    
+    is_published = request.GET.get('is_published')
+    if is_published:
+        entry_objects = entry_objects.filter(is_published__exact=is_published=='True')
     # If both entrytype and author URL parameters are present but equal to empty strings we redirect to the same URL without the parameters.    
-    if entrytype_id == '' and author_id == '':
+    if entrytype_id == '' and author_id == '' and is_published == '':
         return redirect('thunderchild.entry_views.entries')
     
     paginator = Paginator(entry_objects, 30)
@@ -88,9 +92,19 @@ def entries(request):
         entries.append(entry.dict)
     entry_types = models.EntryType.objects.all()
     
+    # Rebuild the query string WITHOUT the page parameter (if it exists). We use this to append to our pagination links so filters retain across pages.
+    filter_query = '&'.join( ['{}={}'.format(key, val) for key, val in request.GET.items() if key != 'page'] )
+    if filter_query != '':
+        filter_query = '&'+filter_query
+    print filter_query
+    
     form = model_forms.EntriesFilterForm(request.GET)
     
-    return render(request, 'thunderchild/entries.html', {'page':p, 'entries':entries, 'entry_types':entry_types, 'form':form})
+    return render(request, 'thunderchild/entries.html', {'page':p, 
+                                                         'entries':entries, 
+                                                         'entry_types':entry_types, 
+                                                         'form':form,
+                                                         'filter_query':filter_query})
     
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -106,7 +120,8 @@ def create_entry(request, entrytype_id):
                                                                           'form2':form2, 
                                                                           'entrytype_id':entrytype_id, 
                                                                           'entrytype_name':entrytype_model.entrytype_name,
-                                                                          'has_categorygroup':entrytype_model.categorygroup})
+                                                                          'has_categorygroup':entrytype_model.categorygroup,
+                                                                          'filter_query':filter_query})
         
         if form1.is_valid():
             form1.instance.author = request.user

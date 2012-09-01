@@ -4,17 +4,6 @@
 {% block title_bar_title %}Entries{% endblock %}
 
 {% block action_bar %}
-<div class="pull-left">
-	<form id="entries_filter_form" action="{% url thunderchild.entry_views.entries %}" method="get">
-		<ul>
-			{% for field in form %}
-			<li>{{ field.label_tag }}</li>
-			<li>{{ field }}</li>
-			{% endfor %}
-			<li><input type="submit" value="Filter" class="btn" /></li>
-		</ul>
-	</form>
-</div>
 <div id="create_controls" class="pull-right">
 	<label for="entry_type_select">Create a new</label>
 	<select id="entry_type_select">
@@ -29,6 +18,15 @@
 {% endblock %}
 
 {% block content %}
+
+		<form id="entries_filter_form" action="{% url thunderchild.entry_views.entries %}" method="get">
+			<ul>
+				{% for field in form %}
+				<li>{{ field.label_tag }}{{ field }}</li>
+				{% endfor %}
+				<li><input type="submit" value="Filter" class="btn btn-small" /></li>
+			</ul>
+		</form>
 	
 		<table>
 			<thead>
@@ -62,17 +60,17 @@
 	<div class="pagination pagination-centered">
 		<ul>
 			{% if page.has_previous %}
-				<li><a href="?page={{ page.previous_page_number }}">«</a></li>
+				<li><a href="?page={{ page.previous_page_number }}{{ filter_query }}">«</a></li>
 			{% endif %}
 			{% for num in page.paginator.page_range %}
 				{% ifequal page.number num %}
-					<li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
+					<li class="active"><a href="?page={{ num }}{{ filter_query }}">{{ num }}</a></li>
 				{% else %}
-					<li><a href="?page={{ num }}">{{ num }}</a></li>
+					<li><a href="?page={{ num }}{{ filter_query }}">{{ num }}</a></li>
 				{% endifequal %}
 			{% endfor %}
 			{% if page.has_next %}
-				<li><a href="?page={{ page.next_page_number }}">»</a></li>
+				<li><a href="?page={{ page.next_page_number }}{{ filter_query }}">»</a></li>
 			{% endif %}
 		</ul>
 	</div>
