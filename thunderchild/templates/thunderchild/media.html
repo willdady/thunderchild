@@ -22,7 +22,9 @@
 				<li>
 					<a href="{{ media_asset.url }}" target="_blank">
 						<div class="thumbnail" data-id="{{ media_asset.id }}" data-is-image="{{ media_asset.is_image }}" data-url="{{ media_asset.url }}" data-filename="{{ media_asset.filename }}">
-								<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" data-width="{{ media_asset.width }}" data-height="{{ media_asset.height }}" />
+								<div class="img-wrapper{% if media_asset.type == 'image/png' %} transparency{% endif %}">
+									<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" data-width="{{ media_asset.width }}" data-height="{{ media_asset.height }}" />
+								</div>
 								<ul>
 									<li><label for="thumbnail_{{ media_asset.id }}_checkbox">{{ media_asset.filename|truncatechars:20 }}</label></li>
 									<li class="size">{{ media_asset.size|filesizeformat }}</li>

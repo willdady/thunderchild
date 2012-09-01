@@ -66,7 +66,11 @@ def upload(request):
         #Save a thumbnail to disk
         width, height = None, None
         try:
-            thumbnail_filename = filename.split('.')[0] + '-thumb.jpg' #Save all thumbnails as jpeg regardless of upload image type.
+            # Thumbnails are saved as JPG unless the source is PNG. Then it's saved as a PNG to preserve transparency.
+            suffix = '-thumb.jpg'
+            if f.content_type == 'image/png':
+                suffix = '-thumb.png'
+            thumbnail_filename = filename.split('.')[0] + suffix
             im = Image.open(os.path.join(settings.MEDIA_ROOT, directory, filename))
             width, height = im.size
             im.thumbnail((140, 140), Image.ANTIALIAS)

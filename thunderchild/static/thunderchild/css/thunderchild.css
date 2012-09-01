@@ -802,6 +802,9 @@ ul.thumbnails li .thumbnail {
   height: 155px;
   position: relative;
 }
+ul.thumbnails li .thumbnail .img-wrapper.transparency {
+  background: url("images/transparency_grid.gif");
+}
 ul.thumbnails li .thumbnail img {
   max-height: 83px;
 }
