@@ -99,7 +99,7 @@ UploadModalView = Backbone.View.extend
 AssetItemView = Backbone.View.extend
 
   initialize: ->
-    @filename = @$el.find("p").text()
+    @filename = @$el.find("label").text()
     @id = @$el.attr("data-id")
     @url = @$el.attr("data-url")
     

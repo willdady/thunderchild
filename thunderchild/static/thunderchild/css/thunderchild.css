@@ -695,10 +695,11 @@ div.ui-datepicker {
   line-height: 1.3em;
 }
 .field_holder .media-asset-thumbnail a.remove-asset-button {
-  transition: 0.25s;
-  -moz-transition: 0.25s;
-  -webkit-transition: 0.25s;
-  -o-transition: 0.25s;
+  -webkit-transition: opacity 0.25s;
+  -moz-transition: opacity 0.25s;
+  -ms-transition: opacity 0.25s;
+  -o-transition: opacity 0.25s;
+  transition: opacity 0.25s;
   opacity: 0;
   -webkit-border-radius: 9px;
   -moz-border-radius: 9px;
@@ -719,6 +720,7 @@ div.ui-datepicker {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0000', endColorstr='#990000', GradientType=0);
   font-weight: bold;
   font-size: 17px;
+  line-height: 17px;
   color: #ffffff;
   width: 16px;
   height: 16px;
@@ -802,9 +804,6 @@ ul.thumbnails li .thumbnail {
   height: 155px;
   position: relative;
 }
-ul.thumbnails li .thumbnail .img-wrapper.transparency {
-  background: url("images/transparency_grid.gif");
-}
 ul.thumbnails li .thumbnail img {
   max-height: 83px;
 }
@@ -883,6 +882,12 @@ ul.thumbnails li .thumbnail:hover {
   width: 100%;
   margin-top: 5px;
   margin-bottom: 0;
+}
+.img-wrapper {
+  display: inline-block;
+}
+.img-wrapper.transparency {
+  background: url("images/transparency_grid.gif");
 }
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header {

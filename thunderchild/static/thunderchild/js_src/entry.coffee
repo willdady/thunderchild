@@ -22,8 +22,9 @@ AppModel = Backbone.Model.extend
 MediaChooserWidgetView = Backbone.View.extend
 
   initialize: ->
-    @chooseFileButton = $('<a href="#" class="btn choose-file-button">Choose file</a>').click _.bind(@chooseFileButtonClickHandler, @)
+    @chooseFileButton = $('<a href="#" class="btn choose-file-button">Choose file</a>')
     @$el.parent().prepend @chooseFileButton
+    @chooseFileButton.click _.bind(@chooseFileButtonClickHandler, @)
     @$el.hide() # We hide the actual input element
     
     @thumbnailTemplate = _.template( $("#mediaAssetThumbnailTemplate").text() )

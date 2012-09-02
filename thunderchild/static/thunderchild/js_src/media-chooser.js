@@ -95,7 +95,7 @@
   });
   AssetItemView = Backbone.View.extend({
     initialize: function() {
-      this.filename = this.$el.find("p").text();
+      this.filename = this.$el.find("label").text();
       this.id = this.$el.attr("data-id");
       return this.url = this.$el.attr("data-url");
     },

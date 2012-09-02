@@ -80,10 +80,7 @@
     a {
       &.remove-asset-button {
         
-        transition: 0.25s;
-        -moz-transition: 0.25s;
-        -webkit-transition: 0.25s;
-        -o-transition: 0.25s;
+        .transition(opacity 0.25s) ;
         opacity:0;
         
         .border-radius(9px);
@@ -93,6 +90,7 @@
         #gradient.vertical(@red, darken(@red, 20%));
         font-weight:bold;
         font-size:17px;
+        line-height:17px;
         color:@white;
         width:16px;
         height:16px;

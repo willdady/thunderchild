@@ -25,8 +25,9 @@
   });
   MediaChooserWidgetView = Backbone.View.extend({
     initialize: function() {
-      this.chooseFileButton = $('<a href="#" class="btn choose-file-button">Choose file</a>').click(_.bind(this.chooseFileButtonClickHandler, this));
+      this.chooseFileButton = $('<a href="#" class="btn choose-file-button">Choose file</a>');
       this.$el.parent().prepend(this.chooseFileButton);
+      this.chooseFileButton.click(_.bind(this.chooseFileButtonClickHandler, this));
       this.$el.hide();
       this.thumbnailTemplate = _.template($("#mediaAssetThumbnailTemplate").text());
       this.thumbnail = this.$el.parent().find(".media-asset-thumbnail");
