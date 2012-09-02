@@ -32,6 +32,8 @@ PreviewModalView = Backbone.View.extend
   show:(assetModel) ->
     modal_body = @$el.find ".modal-body"
     modal_body.html( @imageTemplate(assetModel.toJSON()) )
+    if assetModel.get("type") == "image/png"
+      modal_body.find(".img-wrapper").addClass("transparency")
     @$el.modal("show")
     
 
@@ -178,6 +180,7 @@ AssetItemsView = Backbone.View.extend
         is_image:el.find('.thumbnail').attr('data-is-image') == 'True',
         filename:el.find('.thumbnail').attr('data-filename'),
         url:el.find('.thumbnail').attr('data-url'),
+        type:el.find('.thumbnail').attr('data-type'),
         size:el.find('.size').text(),
         width:el.find('img').attr('data-width'),
         height:el.find('img').attr('data-height'),

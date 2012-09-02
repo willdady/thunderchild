@@ -26,6 +26,9 @@
       var modal_body;
       modal_body = this.$el.find(".modal-body");
       modal_body.html(this.imageTemplate(assetModel.toJSON()));
+      if (assetModel.get("type") === "image/png") {
+        modal_body.find(".img-wrapper").addClass("transparency");
+      }
       return this.$el.modal("show");
     }
   });
@@ -171,6 +174,7 @@
           is_image: el.find('.thumbnail').attr('data-is-image') === 'True',
           filename: el.find('.thumbnail').attr('data-filename'),
           url: el.find('.thumbnail').attr('data-url'),
+          type: el.find('.thumbnail').attr('data-type'),
           size: el.find('.size').text(),
           width: el.find('img').attr('data-width'),
           height: el.find('img').attr('data-height')

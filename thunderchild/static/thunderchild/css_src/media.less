@@ -22,11 +22,6 @@ ul {
         background:@white;
         height:155px;
         position:relative;
-        .img-wrapper {
-          &.transparency {
-            background:url("images/transparency_grid.gif")
-          }
-        }
         img {
           max-height:83px;
         }
@@ -108,5 +103,11 @@ ul {
     width:100%;
     margin-top:5px;
     margin-bottom:0;
+  }
+}
+.img-wrapper {
+  display:inline-block;
+  &.transparency {
+    background:url("images/transparency_grid.gif")
   }
 }

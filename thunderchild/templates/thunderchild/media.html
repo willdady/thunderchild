@@ -21,7 +21,7 @@
 				{% for media_asset in media_assets %}
 				<li>
 					<a href="{{ media_asset.url }}" target="_blank">
-						<div class="thumbnail" data-id="{{ media_asset.id }}" data-is-image="{{ media_asset.is_image }}" data-url="{{ media_asset.url }}" data-filename="{{ media_asset.filename }}">
+						<div class="thumbnail" data-id="{{ media_asset.id }}" data-is-image="{{ media_asset.is_image }}" data-url="{{ media_asset.url }}" data-filename="{{ media_asset.filename }}" data-type="{{ media_asset.type }}">
 								<div class="img-wrapper{% if media_asset.type == 'image/png' %} transparency{% endif %}">
 									<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" data-width="{{ media_asset.width }}" data-height="{{ media_asset.height }}" />
 								</div>
@@ -95,9 +95,11 @@
 		</div>
 	</div>
 	<script type="text/html" id="preview_modal_template">
-		<img src="<%= url %>" alt="<%= filename %>" />
+		<div class="img-wrapper">
+			<img src="<%= url %>" alt="<%= filename %>" />
+		</div>
 		<ul>
-			<li><%= filename %></li>
+			<li><a href="<%= url %>" target="_blank"><%= filename %></a></li>
 			<li><%= size %></li>
 			<li><%= width %> x <%= height %></li>
 		</ul>

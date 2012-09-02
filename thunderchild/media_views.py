@@ -48,14 +48,11 @@ def upload(request):
         
         resp = {}
         
-        today = date.today()
-        directory = "{}/{}/".format(today.year, today.month)
-        
-        fs = FileSystemStorage(location=settings.MEDIA_ROOT+directory, base_url=settings.MEDIA_URL+directory)
+        fs = FileSystemStorage(location=settings.MEDIA_ROOT, base_url=settings.MEDIA_URL)
         
         filename = fs.get_valid_name(f.name)
         if fs.exists(filename):
-            qs = models.MediaAsset.objects.filter(filename__exact=filename).filter(directory__exact=directory)
+            qs = models.MediaAsset.objects.filter(filename__exact=filename)
             if len(qs) > 0:
                 existing_asset = qs[0]
                 name_conflict = {'original':filename, 'id':existing_asset.id}
@@ -71,10 +68,10 @@ def upload(request):
             if f.content_type == 'image/png':
                 suffix = '-thumb.png'
             thumbnail_filename = filename.split('.')[0] + suffix
-            im = Image.open(os.path.join(settings.MEDIA_ROOT, directory, filename))
+            im = Image.open(os.path.join(settings.MEDIA_ROOT, filename))
             width, height = im.size
             im.thumbnail((140, 140), Image.ANTIALIAS)
-            im.save(os.path.join(settings.MEDIA_ROOT, directory, thumbnail_filename))
+            im.save(os.path.join(settings.MEDIA_ROOT, thumbnail_filename))
         except IOError:
             thumbnail_filename = None
             pass
@@ -84,7 +81,6 @@ def upload(request):
         mediaAsset.base_url = '{ MEDIA_URL }'
         mediaAsset.size = fs.size(filename)
         mediaAsset.type = f.content_type
-        mediaAsset.directory = directory
         if thumbnail_filename:
             mediaAsset.thumbnail = thumbnail_filename
             resp['thumbnail_url'] = fs.url(thumbnail_filename)

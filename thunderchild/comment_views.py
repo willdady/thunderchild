@@ -66,7 +66,6 @@ def bulk_action(request):
         
         if action == 'delete':
             for comment_id in comments:
-                print 'YO', comment_id
                 models.Comment.objects.filter(id__exact=comment_id).delete()
         elif action == 'approve' or action == 'unapprove':
             for comment_id in comments:

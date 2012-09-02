@@ -245,7 +245,6 @@ class Category(models.Model):
 
 class MediaAsset(models.Model):
     filename = models.CharField(max_length=255, verbose_name='File Name')
-    directory = models.CharField(max_length=255, verbose_name='Directory')
     base_url = models.CharField(max_length=255, verbose_name='URL')
     type = models.CharField(max_length=255, verbose_name='Type')
     width = models.IntegerField(blank=True, null=True)
@@ -276,24 +275,24 @@ class MediaAsset(models.Model):
     
     @property
     def url(self):
-        url = self.base_url + self.directory + self.filename
+        url = self.base_url + self.filename
         return url.replace('{ MEDIA_URL }', settings.MEDIA_URL)
     
     @property
     def thumbnail_url(self):
         if self.is_image:
-            url = self.base_url + self.directory + self.thumbnail
+            url = self.base_url + self.thumbnail
             return url.replace('{ MEDIA_URL }', settings.MEDIA_URL)
         else:
             return self._get_non_image_thumbnail_url(self.filename, self.type)
     
     @property
     def file_path(self):
-        return os.path.join(settings.MEDIA_ROOT, self.directory, self.filename)
+        return os.path.join(settings.MEDIA_ROOT, self.filename)
     
     @property
     def thumbnail_path(self):
-        return os.path.join(settings.MEDIA_ROOT, self.directory, self.thumbnail)
+        return os.path.join(settings.MEDIA_ROOT, self.thumbnail)
     
     @property
     def is_image(self):
@@ -303,7 +302,6 @@ class MediaAsset(models.Model):
         '''
         Convienience method for deleting this asset's associated file and thumbnail from disk. NOTE: This makes no changes to the model.
         '''
-        print "YO", self.file_path
         if os.path.exists(self.file_path):
             os.remove(self.file_path)
         if os.path.exists(self.thumbnail_path):
