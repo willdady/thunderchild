@@ -180,4 +180,9 @@ def get_contactform(*args, **kwargs):
     
     return {'action':action, 'method':method, 'form':form}
     
-       
+
+@register.filter(name='range')
+def get_range(value):
+    # Inspired by http://djangosnippets.org/snippets/1357/
+    return range(value)
+
