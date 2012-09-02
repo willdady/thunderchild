@@ -186,3 +186,15 @@ def get_range(value):
     # Inspired by http://djangosnippets.org/snippets/1357/
     return range(value)
 
+
+@register.filter(name='segmentlist')
+def get_segment_list(value, arg):
+    result = []
+    try:
+        for x in range(0, len(value), arg):
+            result.append( value[x:x+arg] )
+    except TypeError:
+        return None
+    return result
+
+
