@@ -181,7 +181,7 @@ def get_contactform(*args, **kwargs):
     return {'action':action, 'method':method, 'form':form}
     
 
-@register.filter(name='range')
+@register.filter(name='get_range')
 def get_range(value):
     # Inspired by http://djangosnippets.org/snippets/1357/
     return range(value)
@@ -196,5 +196,14 @@ def get_segment_list(value, arg):
     except TypeError:
         return None
     return result
+
+
+@register.filter(name='subtract')
+def subtract(value, arg):
+    try:
+        result = int(value) - int(arg)
+        return result
+    except ValueError:
+        return None
 
 
