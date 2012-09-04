@@ -118,6 +118,7 @@ Usage:
 	
 All Entry objects have the following attributes:
 
+*id* - An integer. The entry's primary key, unique to each Entry.
 *author* - The entry's author. A [User](https://docs.djangoproject.com/en/1.4/topics/auth/#users) object.  
 *title* - The entry's title.  
 *slug* - The entry's slug.  

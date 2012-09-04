@@ -67,6 +67,8 @@ def upload(request):
             suffix = '-thumb.jpg'
             if f.content_type == 'image/png':
                 suffix = '-thumb.png'
+            if f.content_type == 'image/gif':
+                suffix = '-thumb.gif'
             thumbnail_filename = filename.split('.')[0] + suffix
             im = Image.open(os.path.join(settings.MEDIA_ROOT, filename))
             width, height = im.size
