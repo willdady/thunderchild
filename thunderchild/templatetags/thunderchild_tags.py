@@ -166,7 +166,7 @@ def get_contactform(*args, **kwargs):
     
     """
     try:
-        short_name = arg[0]
+        short_name = args[0]
         model = models.ContactForm.objects.get(contactform_short_name__exact=short_name)
     except models.ContactForm.DoesNotExist:
         return ''
