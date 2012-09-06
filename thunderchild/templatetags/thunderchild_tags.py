@@ -152,7 +152,7 @@ def get_contactform(*args, **kwargs):
     form: The actual form instance.
     
     Example:
-    {% contact_form id=1 as my_form %}
+    {% contact_form "my_contact_form" as my_form %}
     
     <form action="{{ my_form.action }}" method="{{ my_form.method }}">
         {% csrf_token %}
@@ -165,12 +165,9 @@ def get_contactform(*args, **kwargs):
     </form>
     
     """
-    id = kwargs.get('id')
-    
-    if not id:
-        return ''
     try:
-        model = models.ContactForm.objects.get(pk=id)
+        short_name = arg[0]
+        model = models.ContactForm.objects.get(contactform_short_name__exact=short_name)
     except models.ContactForm.DoesNotExist:
         return ''
     
