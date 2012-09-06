@@ -124,7 +124,6 @@ class UserCreationForm(forms.ModelForm):
     
     
 class ContactForm(forms.Form):
-    entry_id = forms.IntegerField(widget=forms.HiddenInput)
     email = forms.EmailField()
     subject = forms.CharField(max_length=150)
     message = forms.CharField(max_length=300, widget=forms.Textarea)
