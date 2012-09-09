@@ -122,7 +122,6 @@ def replace(request):
         else:
             existing_asset.thumbnail = ''
         
-        existing_asset.directory = new_asset.directory
         existing_asset.base_url = new_asset.base_url
         existing_asset.type = new_asset.type
         existing_asset.width = new_asset.width
