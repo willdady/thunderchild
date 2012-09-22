@@ -3,47 +3,118 @@
 {% block title %}Categories{% endblock %}
 {% block title_bar_title %}Categories{% endblock %}
 
+{% block body_classes %}categories{% endblock %}
+
 {% block action_bar %}
-<a class="btn btn-primary pull-right" href="{% url thunderchild.category_views.create_categorygroup %}">Create category group</a>
+<a id="create-categorygroup-button" class="btn btn-primary pull-right" href="#">Create category group</a>
 {% endblock %}
 
-{% block content %}
-		{% if category_list %}
-			{% for obj in category_list %}
-			<div class="row-fluid">
-				<h3>{{ obj.categorygroup.categorygroup_name }}</h3>
-				{% if obj.categories %}
-				<table border="1" style="table-layout:fixed;">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Short name</th>
-						</tr>
-					</thead>
-					{% if obj.categories %}
-					<tbody>
-						{% for category in obj.categories %}
-						<tr>
-							<td><a href="{% url thunderchild.category_views.edit_category obj.categorygroup.id category.id %}">{{ category.category_name }}</a></td>
-							<td>{{ category.category_short_name }}</td>
-						</tr>
-						{% endfor %}
-					</tbody>
-					{% endif %}
-				</table>
-				{% else %}
-				<p>Group is empty. Click 'Create category' below to add a category to this group.</p>
+{% block post_content %}
+<script type="text/html" id="categorygroup-template">
+	<div class="group-header clearfix collapsed" data-toggle="collapse" data-target="#group-content-<%= id %>">
+		<i class="chevron"></i>
+		<h3><%= categorygroup_name %></h3>
+	</div>
+	<div id="group-content-<%= id %>" class="group-content collapse">
+		<div class="pull-right controls">
+			<a class="btn btn-mini btn-link delete-group-button" href="#">Delete</a>
+			<a class="btn btn-small edit-group-button" href="#">Edit</a>
+			<a class="btn btn-small btn-primary create-category-button" href="#">Create category</a>
+		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Short name</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</script>
+<script type="text/html" id="category-template">
+	<tr data-category-id="<%= id %>">
+		<td><a href="#"><%= category_name %></a></td>
+		<td><%= category_short_name %></td>
+	</tr>
+</script>
+<script id="form-error-template" type="text/html">
+	<div class="alert alert-error"><ul class="errorlist"><%= errors %></ul></div>
+</script>
+
+
+<div id="categorygroup-modal" class="modal hide">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>Create category group</h3>
+	</div>
+	<div class="modal-body">
+		<form id="categorygroup-modal-form">
+			<div class="field-holder">
+				{{ categorygroup_form.categorygroup_name.label_tag }}
+				<!--
+				<div class="alert alert-error">
+					<ul class="errorlist"><li>Foo</li></ul>
+				</div>
+				-->
+				{{ categorygroup_form.categorygroup_name }}
+				{% if categorygroup_form.categorygroup_name.help_text %}
+				<p class="help_text">{{ categorygroup_form.categorygroup_name.help_text }}</p>
 				{% endif %}
 			</div>
-			<div class="row-fluid">
-				<div class="pull-right">
-					<a class="btn btn-small" href="{% url thunderchild.category_views.edit_categorygroup obj.categorygroup.id %}">Edit group</a>
-					<a class="btn btn-small" href="{% url thunderchild.category_views.create_category obj.categorygroup.id %}">Create category</a>
-				</div>
+			<div class="field-holder">
+				{{ categorygroup_form.categorygroup_short_name.label_tag }}
+				{{ categorygroup_form.categorygroup_short_name }}
+				{% if categorygroup_form.categorygroup_short_name.help_text %}
+				<p class="help_text">{{ categorygroup_form.categorygroup_short_name.help_text }}</p>
+				{% endif %}
 			</div>
-			<hr />
-			{% endfor %}
-		{% else %}
-			<p>There are currently no category groups defined. Click 'Create category group' above to create one.</p>
-		{% endif %}
+		</form>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="#" class="btn btn-primary" id="categorygroup-form-modal-ok-button">Create</a>
+	</div>
+</div>
+
+<div id="category-modal" class="modal hide">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>Create category</h3>
+	</div>
+	<div class="modal-body">
+		{{ category_form }}
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="#" class="btn btn-primary" id="category-form-modal-ok-button">Create</a>
+	</div>
+</div>
+
+<div id="confirm-delete-modal" class="modal hide">
+	<div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Confirm Delete</h3>
+	</div>
+	<div class="modal-body">
+		<p id="confirm-delete-message"></p>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="#" class="btn btn-danger" id="confirm-delete-button">Confirm Delete</a>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+	<script>
+		var categoryGroupData = {{ categorygroups_json|safe }};
+		var categoryData = {{ categories_json|safe }};
+	</script>
+	{% if debug %}
+		<script src="{{ STATIC_URL }}thunderchild/js_src/categories.js"></script>
+	{% else %}
+		<script src="{{ STATIC_URL }}thunderchild/js/categories-min.js"></script>
+	{% endif %}
 {% endblock %}

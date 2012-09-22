@@ -230,6 +230,14 @@ class CategoryGroup(models.Model):
     categorygroup_name = models.CharField(max_length=255, verbose_name='Name')
     categorygroup_short_name = models.CharField(max_length=255, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric])
     
+    def as_dict(self):
+        data = {
+                'id':self.id,
+                'categorygroup_name':self.categorygroup_name,
+                'categorygroup_short_name':self.categorygroup_short_name
+               }
+        return data
+    
     def __unicode__(self):
         return u'{}'.format(self.categorygroup_name)
                
@@ -238,6 +246,15 @@ class Category(models.Model):
     categorygroup = models.ForeignKey(CategoryGroup)
     category_name = models.CharField(max_length=255, verbose_name='Name')
     category_short_name = models.CharField(max_length=255, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric])
+    
+    def as_dict(self):
+        data = {
+                'id':self.id,
+                'categorygroup':self.categorygroup.id,
+                'category_name':self.category_name,
+                'category_short_name':self.category_short_name
+               }
+        return data
 
     def __unicode__(self):
         return u'{}'.format(self.category_name)

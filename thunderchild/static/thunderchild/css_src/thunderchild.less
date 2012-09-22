@@ -15,11 +15,36 @@ body {
 textarea{
   resize: none;
 }
-.alert-error {
-    padding-bottom:4px;
-    .errorlist {
-        margin:0px;
+.modal {
+  form {
+    margin:0;
+  }
+  label {
+    font-weight:bold;
+  }
+  input[type="text"] {
+    width:516px;
+  }
+  .alert {
+    margin-bottom:10px;
+    li {
+      float:none;
     }
+  }
+  ul {
+    list-style:none;
+    padding:0;
+    margin:0;
+    li {
+      float:left;
+      margin-right:10px;
+      label {
+        input {
+          margin:0 2px 4px 0;
+        }
+      }
+    }
+  }
 }
 .error {
     input[type="text"], input[type="password"], textarea {
@@ -88,6 +113,12 @@ a {
 }
 .btn-primary {
   .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
+}
+.btn-link {
+  color:@linkColor;
+  &:hover {
+    color:@linkColorHover;
+  }
 }
 .group {
   background: @groupBackgroundColor;
@@ -260,6 +291,19 @@ a {
   }
 }
 
+.chevron {
+  display:inline-block;
+  width:15px;
+  height:15px;
+  background:url("images/chevron-sprite-sheet.png") no-repeat;
+  background-position:-15px 0;
+}
+.collapsed {
+  .chevron {
+    background-position:0 0;
+  }
+}
+
 div.ui-datepicker {
  font-size:11px;
  .box-shadow(1px 2px 3px 0px rgba(0, 0, 0, 0.35);
@@ -277,4 +321,5 @@ div.ui-datepicker {
 @import "create_edit_entry.less";
 @import "entries.less";
 @import "media.less";
+@import "categories.less";
 @import "time-picker.less";
