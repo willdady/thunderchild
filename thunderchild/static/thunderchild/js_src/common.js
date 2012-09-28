@@ -14,10 +14,11 @@ require.config({
     	"lib/log":[],
     	"lib/django-ajax":["jquery"],
     	"lib/jquery.serialize-object":["jquery"],
-    	"lib/jquery.tinysort":["jquery"]
+    	"lib/jquery.tinysort":["jquery"],
+    	"lib/farbtastic":["jquery"],
+    	"lib/jquery-ui-1.8.21.custom.min":["jquery"],
+    	"lib/jquery-ui-timepicker-addon":["jquery"]
     }
 });
 
-define(['jquery', 'lib/django-ajax'], function() {
-	
-});
+require(['jquery', 'lib/django-ajax']);

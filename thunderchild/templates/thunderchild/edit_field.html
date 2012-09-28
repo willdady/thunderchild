@@ -49,11 +49,8 @@
 
 {% block javascript %}
 {% if debug %}
-	<script src="{{ STATIC_URL }}thunderchild/js_src/fields.js"></script>
+	<script data-main="{{ STATIC_URL }}thunderchild/js_src/fields-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
 {% else %}
 	<script src="{{ STATIC_URL }}thunderchild/js/fields-min.js"></script>
 {% endif %}
-<script>
-	Utilities.autoAlphanumeric( $("#id_field_name"), $("#id_field_short_name") );
-</script>
 {% endblock %}
