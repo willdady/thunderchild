@@ -79,26 +79,20 @@
 		{% block post_content %}{% endblock %}
 		
 		
-		<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+		<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="{{ STATIC_URL }}thunderchild/js/jquery-1.7.2.min.js"><\/script>')</script>
 		
 		<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+		
 		<script src="{{ STATIC_URL }}thunderchild/js/plugins.js"></script>
+		
 		{% if debug %}
 		<script src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
 		{% else %}
 		<script src="{{ STATIC_URL }}thunderchild/js/utilities-min.js"></script>
 		{% endif %}
-		
-		<script>
-			// Initialize the dropdowns in the main nav
-			$(".dropdown-toggle").dropdown();
-			// This stops label elements from triggering their associated fields when clicked.
-			$(".field_label_holder label").click(function(e){
-				e.preventDefault();
-			});
-		</script>
+		-->
 		
 		{% block javascript %}{% endblock %}
 	</body>

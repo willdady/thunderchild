@@ -74,7 +74,7 @@
 	</div>
 	<div class="modal-footer">
 		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
-		<a href="#" class="btn btn-primary" id="categorygroup-form-modal-ok-button">Create</a>
+		<a href="#" class="btn btn-primary" id="categorygroup-form-modal-ok-button">Save</a>
 	</div>
 </div>
 
@@ -88,7 +88,7 @@
 	</div>
 	<div class="modal-footer">
 		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
-		<a href="#" class="btn btn-primary" id="category-form-modal-ok-button">Create</a>
+		<a href="#" class="btn btn-primary" id="category-form-modal-ok-button">Save</a>
 	</div>
 </div>
 
@@ -113,7 +113,7 @@
 		var categoryData = {{ categories_json|safe }};
 	</script>
 	{% if debug %}
-		<script src="{{ STATIC_URL }}thunderchild/js_src/categories.js"></script>
+		<script data-main="{{ STATIC_URL }}thunderchild/js_src/categories-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
 	{% else %}
 		<script src="{{ STATIC_URL }}thunderchild/js/categories-min.js"></script>
 	{% endif %}
