@@ -38,6 +38,50 @@ body.media-chooser {
 textarea {
   resize: none;
 }
+.required {
+  color: red;
+  font-weight: bold;
+}
+.field-holder,
+.field_holder {
+  padding: 5px 0;
+}
+.field-holder ul,
+.field_holder ul {
+  margin: 0px 0px 5px 0px;
+  padding: 0;
+  display: inline-block;
+  list-style: none;
+}
+.field-holder ul li,
+.field_holder ul li {
+  float: left;
+  margin-right: 10px;
+}
+.field-holder ul li label,
+.field_holder ul li label {
+  margin: 0;
+}
+.field-holder ul li label input,
+.field_holder ul li label input {
+  margin: 0 2px 4px 0;
+}
+.field_label_holder label,
+.field_label_holder p {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+.field_label_holder label {
+  width: auto;
+  display: inline-block;
+}
 .modal form {
   margin: 0;
 }
@@ -527,9 +571,6 @@ div.ui-datepicker {
   top: 30px;
   bottom: 0;
 }
-#template-view .tab-content #settings-pane .field-holder {
-  float: left;
-}
 #preview-link-holder {
   position: absolute;
   right: 0;
@@ -559,56 +600,19 @@ div.ui-datepicker {
   margin-bottom: 20px;
 }
 .field_holder {
-  padding-left: 10px;
-  padding-right: 20px;
+  padding: 0 20px 0 10px;
   margin: 6px 0px 0px 0px;
-}
-.field_label_holder {
-  padding: 5px 10px 0px 8px;
-}
-.field_label_holder label,
-.field_label_holder p {
-  margin: 0;
-  padding: 0;
-  font-weight: bold;
-  cursor: default;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
-.field_label_holder label {
-  width: auto;
-  display: inline-block;
-}
-.field_label_holder .required {
-  color: red;
-  font-weight: bold;
-}
-.field_label_holder .alert-error {
-  margin-top: 10px;
 }
 .accordion-group {
   background: #e6eaed;
   border-color: #d7dee2;
   margin-bottom: 6px;
 }
-.accordion-group ul {
-  margin: 0px 0px 5px 0px;
-  padding: 0;
-  display: inline-block;
-  list-style: none;
+.accordion-group .field_label_holder {
+  padding: 5px 10px 0px 8px;
 }
-.accordion-group ul li {
-  float: left;
-  margin-right: 10px;
-}
-.accordion-group ul li label {
-  margin: 0;
-}
-.accordion-group ul li label input {
-  margin: 0 2px 4px 0;
+.accordion-group .field_label_holder .alert-error {
+  margin-top: 10px;
 }
 #categories ul li {
   clear: both;

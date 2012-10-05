@@ -19,7 +19,7 @@ define(['jquery', 'categories/models/AppModel', 'lib/backbone'], function($, app
 		},
 		
 		setMessage : function(msg) {
-			$("#confirm-delete-message").html("Are you sure you want to <b>permanently</b> delete this category group including all of it's categories?");
+			$("#confirm-delete-message").html(msg);
 		},
 
 		openConfirmDeleteCategoryGroupModal : function(model) {
@@ -30,7 +30,7 @@ define(['jquery', 'categories/models/AppModel', 'lib/backbone'], function($, app
 
 		openConfirmDeleteCategoryModal : function(model) {
 			this.model = model;
-			this.setMessage.html("Are you sure you want to <b>permanently</b> delete this category?");
+			this.setMessage("Are you sure you want to <b>permanently</b> delete this category?");
 			this.open();
 		},
 
