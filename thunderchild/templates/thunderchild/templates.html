@@ -95,20 +95,20 @@
 				<form id="settings-form">
 					{% for field in template_form %}
 						{% if not field.is_hidden %}
-						<div id="{{ field.label|slugify }}-group" class="accordion-group">
-								<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
-									<i class="chevron"></i>
+							<div id="{{ field.html_name|slugify }}-field-group" class="field-group">
+								<div class="field_label_holder">
 									{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
-									{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
 								</div>
-								<div id="form_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} in">
+								<div class="field-holder">
 									{{ field }}
-									{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
+									{% if field.help_text %}
+										<p class="help_text">{{ field.help_text }}</p>
+									{% endif %}
 								</div>
-						</div>
+							</div>
 						{% else %}
 							{% if field.label != 'Content' %}
-							{{ field }}
+								{{ field }}
 							{% endif %}
 						{% endif %}
 					{% endfor %}

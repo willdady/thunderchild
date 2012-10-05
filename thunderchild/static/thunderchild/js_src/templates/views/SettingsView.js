@@ -76,13 +76,11 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 
 		populateFromModel : function() {
 			if (this.templateModel.get("template_short_name")) {
-				$("#id_template_short_name").val(this.templateModel.get("template_short_name"));
-				$("#id_template_content_type").val(this.templateModel.get("template_content_type"));
-				$("#id_template_cache_timeout").val(this.templateModel.get("template_cache_timeout"));
-				$("#id_template_redirect_type").val(this.templateModel.get("template_redirect_type"));
-				$("#id_template_redirect_url").val(this.templateModel.get("template_redirect_url"));
-				$("#id_templategroup").val(this.templateModel.get("templategroup"));
-
+				
+				$.each(this.templateModel.toJSON(), function(key, value) {
+					$("#settings-form input[name='"+key+"']").val(value);
+				});
+				
 				if (this.templateModel.get("template_is_private")) {
 					$("input:radio[name=template_is_private][value='True']").prop("checked", true);
 					$("input:radio[name=template_is_private][value='False']").prop("checked", false);
@@ -95,9 +93,9 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 
 				// As index templates are forbidden from being renamed we hide the input
 				if (this.templateModel.get("template_short_name") == 'index') {
-					$("#id_template_short_name").parent().parent().hide();
+					$("#template_short_name-field-group").hide();
 				} else {
-					$("#id_template_short_name").parent().parent().show();
+					$("#template_short_name-field-group").show();
 				}
 			}
 		}
