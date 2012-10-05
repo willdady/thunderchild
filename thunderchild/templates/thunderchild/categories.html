@@ -22,6 +22,11 @@
 	</div>
 	<div id="group-content-<%= id %>" class="group-content collapse">
 		<table class="table">
+			<thead>
+				<th>Name</th>
+				<th>Short name</th>
+				<th></th>
+			</thead>
 			<tbody>
 			</tbody>
 		</table>
@@ -32,7 +37,7 @@
 	<tr data-category-id="<%= id %>">
 		<td><a href="#" class="category-name"><%= category_name %></a></td>
 		<td>{ <%= category_short_name %> }</td>
-		<td class="pull-right"><a class="btn btn-mini btn-link delete-category-button">Delete</a></td>
+		<td><a class="btn btn-mini btn-link delete-category-button pull-right">Delete</a></td>
 	</tr>
 </script>
 <script id="form-error-template" type="text/html">
