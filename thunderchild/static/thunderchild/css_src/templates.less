@@ -39,19 +39,6 @@
           color:@linkColor;
         }
       }
-      .chevron {
-        display:block;
-        float:left;
-        width:15px;
-        height:15px;
-        margin-right:2px;
-        background:url('images/chevron-sprite-sheet-white.png') no-repeat;
-      }
-      &.in {
-        .chevron {
-          background-position:-15px;
-        }
-      }
       .group-header {
         font-weight:bold;
         background:@baseColor;
@@ -67,6 +54,20 @@
         }
         a {
           padding:0;
+        }
+        .chevron {
+          display:block;
+          float:left;
+          width:15px;
+          height:15px;
+          margin-right:2px;
+          background:url('images/chevron-sprite-sheet-white.png') no-repeat;
+          background-position:-15px;
+        }
+        &.collapsed {
+          .chevron {
+            background-position:0;
+          }
         }
         ul {
           &.controls {

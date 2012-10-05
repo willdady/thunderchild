@@ -228,7 +228,12 @@ class Template(models.Model):
                
 class CategoryGroup(models.Model):
     categorygroup_name = models.CharField(max_length=255, verbose_name='Name')
-    categorygroup_short_name = models.CharField(max_length=255, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric])
+    categorygroup_short_name = models.CharField(max_length=255, 
+                                                unique=True, 
+                                                verbose_name='Short name', 
+                                                db_index=True, 
+                                                validators=[validate_alphanumeric],
+                                                error_messages={'unique':'A category group already exists with that short name.'})
     
     def as_dict(self):
         data = {

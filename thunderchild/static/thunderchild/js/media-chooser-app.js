@@ -1,0 +1,1 @@
+require(["./common"],function(e){require(["./media_chooser/Main"])})

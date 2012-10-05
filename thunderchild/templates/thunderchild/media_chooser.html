@@ -1,106 +1,74 @@
-<!DOCTYPE HTML>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+{% extends "thunderchild/_base.html" %}
+
+{% block title %}Media Chooser{% endblock %}
+
+{% block body_classes %}media-chooser{% endblock %}
+
+{% block body %}
+	<a href="#" id="media_chooser_upload_button" class="btn btn-primary"><i class="icon-arrow-up icon-white"></i> Upload</a>
 	
-	<head>
-		<meta charset="utf-8">
-    	<title>Media Chooser</title>
-    	<meta name="robots" content="noindex">
-    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		
-		<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" type="text/css" media="screen"/>
-		{% if debug %}
-			<link rel="stylesheet/less" href="{{ STATIC_URL }}thunderchild/css_src/thunderchild.less" type="text/css" media="screen"/>
-			<script src="{{ STATIC_URL }}thunderchild/js/less-1.3.0.min.js"></script>
-		{% else %}
-			<link rel="stylesheet" href="{{ STATIC_URL }}thunderchild/css/thunderchild.css" type="text/css" media="screen"/>
-		{% endif %}
-		<script src="{{ STATIC_URL }}thunderchild/js/modernizr-2.5.3.min.js"></script>
-	</head>
-	
-	<body class="media-chooser">		
-		
-		<a href="#" id="media_chooser_upload_button" class="btn btn-primary"><i class="icon-arrow-up icon-white"></i> Upload</a>
-		
-		{% if media_assets %}
-		<ul id="media_chooser_thumbnails_list" class="thumbnails">
-			{% for media_asset in media_assets%}
-			<li>
-				<a href="#" target="_blank">
-					<div class="thumbnail" data-id="{{ media_asset.id }}" data-url="{{ media_asset.url }}">
-						<div class="img-wrapper{% if media_asset.type == 'image/png' %} transparency{% endif %}">
-							<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" />
-						</div>
-						<ul>
-							<li><label for="thumbnail_{{ media_asset.id }}_checkbox">{{ media_asset.filename|truncatechars:20 }}</label></li>
-							<li class="size">{{ media_asset.size|filesizeformat }}</li>
-							{% if media_asset.is_image %}
-							<li>{{ media_asset.width }} x {{ media_asset.height }}</li>
-							{% else %}
-							<li>N/A</li>
-							{% endif %}
-						</ul>
+	{% if media_assets %}
+	<ul id="media_chooser_thumbnails_list" class="thumbnails">
+		{% for media_asset in media_assets%}
+		<li>
+			<a href="#" target="_blank">
+				<div class="thumbnail" data-id="{{ media_asset.id }}" data-url="{{ media_asset.url }}">
+					<div class="img-wrapper{% if media_asset.type == 'image/png' %} transparency{% endif %}">
+						<img src="{{ media_asset.thumbnail_url }}" alt="media asset thumbnail" />
 					</div>
-				</a>
-			</li>
-			{% endfor %}
-		</ul>
-		{% else %}
-		<p class="no-media-message">You have not yet uploaded any media. Begin by clicking Upload above.</p>
-		{% endif %}
-		
-		{% if media_assets.paginator.num_pages > 1 %}
-		<div class="pagination pagination-centered">
-			<ul>
-				{% if media_assets.has_previous %}
-					<li><a href="?page={{ media_assets.previous_page_number }}">«</a></li>
-				{% endif %}
-				{% for num in media_assets.paginator.page_range %}
-					{% ifequal media_assets.number num %}
-						<li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
-					{% else %}
-						<li><a href="?page={{ num }}">{{ num }}</a></li>
-					{% endifequal %}
-				{% endfor %}
-				{% if media_assets.has_next %}
-					<li><a href="?page={{ media_assets.next_page_number }}">»</a></li>
-				{% endif %}
-			</ul>
-		</div>
-		{% endif %}
-		
-		{% include "thunderchild/includes/upload_modal.html" %}
-				
-				
-		<script>
-			var mediaChooserURL = "{% url thunderchild.media_views.media_chooser %}";
-			var uploadURL = "{% url thunderchild.media_views.upload %}";
-			var replaceURL = "{% url thunderchild.media_views.replace %}";
-			var assetsURL = "{% url thunderchild.media_views.assets %}";
-		</script>
-		<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline 
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="{{ STATIC_URL }}thunderchild/js/jquery-1.7.2.min.js"><\/script>')</script>
-		<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
-		<script src="{{ STATIC_URL }}thunderchild/js/plugins.js"></script>
-		-->
-		
-		{% if debug %}
-		<!--
-		<script src="{{ STATIC_URL }}thunderchild/js_src/utilities.js"></script>
-		<script src="{{ STATIC_URL }}thunderchild/js_src/media-upload-service.js"></script>
-		<script src="{{ STATIC_URL }}thunderchild/js_src/media-chooser.js"></script>
-		-->
-		<script data-main="{{ STATIC_URL }}thunderchild/js_src/media-chooser-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
-		{% else %}
-		<!--
-		<script src="{{ STATIC_URL }}thunderchild/js/utilities-min.js"></script>
-		<script src="{{ STATIC_URL }}thunderchild/js/media-upload-service-min.js"></script>
-		<script src="{{ STATIC_URL }}thunderchild/js/media-chooser-min.js"></script>
-		-->
-		{% endif %}
-	</body>
+					<ul>
+						<li><label for="thumbnail_{{ media_asset.id }}_checkbox">{{ media_asset.filename|truncatechars:20 }}</label></li>
+						<li class="size">{{ media_asset.size|filesizeformat }}</li>
+						{% if media_asset.is_image %}
+						<li>{{ media_asset.width }} x {{ media_asset.height }}</li>
+						{% else %}
+						<li>N/A</li>
+						{% endif %}
+					</ul>
+				</div>
+			</a>
+		</li>
+		{% endfor %}
+	</ul>
+	{% else %}
+	<p class="no-media-message">You have not yet uploaded any media. Begin by clicking Upload above.</p>
+	{% endif %}
 	
-</html>
+	{% if media_assets.paginator.num_pages > 1 %}
+	<div class="pagination pagination-centered">
+		<ul>
+			{% if media_assets.has_previous %}
+				<li><a href="?page={{ media_assets.previous_page_number }}">«</a></li>
+			{% endif %}
+			{% for num in media_assets.paginator.page_range %}
+				{% ifequal media_assets.number num %}
+					<li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
+				{% else %}
+					<li><a href="?page={{ num }}">{{ num }}</a></li>
+				{% endifequal %}
+			{% endfor %}
+			{% if media_assets.has_next %}
+				<li><a href="?page={{ media_assets.next_page_number }}">»</a></li>
+			{% endif %}
+		</ul>
+	</div>
+	{% endif %}
+	
+	{% include "thunderchild/includes/upload_modal.html" %}
+	
+{% endblock %}
+
+{% block javascript%}
+	<script>
+		var mediaChooserURL = "{% url thunderchild.media_views.media_chooser %}";
+		var uploadURL = "{% url thunderchild.media_views.upload %}";
+		var replaceURL = "{% url thunderchild.media_views.replace %}";
+		var assetsURL = "{% url thunderchild.media_views.assets %}";
+	</script>
+	
+	{% if debug %}
+	<script data-main="{{ STATIC_URL }}thunderchild/js_src/media-chooser-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
+	{% else %}
+	<script data-main="{{ STATIC_URL }}thunderchild/js/media-chooser-app.js" src="{{ STATIC_URL }}thunderchild/js/lib/require.js"></script>
+	{% endif %}
+{% endblock %}

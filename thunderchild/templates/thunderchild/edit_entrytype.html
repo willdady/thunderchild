@@ -1,4 +1,4 @@
-{% extends "thunderchild/base.html" %}
+{% extends "thunderchild/_page.html" %}
 
 {% block title %}Edit Entry Type{% endblock %}
 {% block title_bar_title %}Edit Entry Type{% endblock %}
@@ -48,6 +48,11 @@
 {% endblock %}
 
 {% block javascript %}
+{% if debug %}
+	<script data-main="{{ STATIC_URL }}thunderchild/js_src/common.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
+{% else %}
+	<script data-main="{{ STATIC_URL }}thunderchild/js/common.js" src="{{ STATIC_URL }}thunderchild/js/lib/require.js"></script>
+{% endif %}
 <script>
 	Utilities.autoAlphanumeric( $("#id_entrytype_name"), $("#id_entrytype_short_name") );
 </script>

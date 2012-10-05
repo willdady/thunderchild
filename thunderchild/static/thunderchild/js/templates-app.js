@@ -1,0 +1,1 @@
+require(["./common"],function(e){require(["./templates/Main"])})

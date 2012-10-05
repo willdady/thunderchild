@@ -1,4 +1,4 @@
-{% extends "thunderchild/base.html" %}
+{% extends "thunderchild/_page.html" %}
 
 {% block title %}Media{% endblock %}
 {% block title_bar_title %}Media{% endblock %}
@@ -117,9 +117,6 @@
 {% if debug %}
 	<script data-main="{{ STATIC_URL }}thunderchild/js_src/media-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
 {% else %}
-<!--
-	<script src="{{ STATIC_URL }}thunderchild/js/media-upload-service-min.js"></script>
-	<script src="{{ STATIC_URL }}thunderchild/js/media-min.js"></script>
--->
+	<script data-main="{{ STATIC_URL }}thunderchild/js/media-app.js" src="{{ STATIC_URL }}thunderchild/js/lib/require.js"></script>
 {% endif %}
 {% endblock %}

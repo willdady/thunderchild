@@ -1,4 +1,4 @@
-define(['jquery', 'media_chooser/models/AppModel', 'lib/backbone'], function($, appModel) {
+define(['jquery', 'media_chooser/models/AppModel', 'lib/jquery-ui-timepicker-addon', 'lib/backbone'], function($, appModel) {
 
 	var UploadModalView = Backbone.View.extend({
 
@@ -19,10 +19,10 @@ define(['jquery', 'media_chooser/models/AppModel', 'lib/backbone'], function($, 
 			this.replaceAssetControlsDisabled = false;
 
 			appModel.on("showUploadModal", this.show, this);
-			this.options.uploadService.on("progress", this.uploadProgressHandler, this);
-			this.options.uploadService.on("complete", this.uploadCompleteHandler, this);
-			this.options.uploadService.on("nameConflict", this.uploadNameConflictHandler, this);
-			this.options.uploadService.on("replaceComplete", this.replaceCompleteHandler, this);
+			appModel.on("progress", this.uploadProgressHandler, this);
+			appModel.on("complete", this.uploadCompleteHandler, this);
+			appModel.on("nameConflict", this.uploadNameConflictHandler, this);
+			appModel.on("replaceComplete", this.replaceCompleteHandler, this);
 		},
 
 		events : {
@@ -43,7 +43,7 @@ define(['jquery', 'media_chooser/models/AppModel', 'lib/backbone'], function($, 
 			if (file_list.length > 0) {
 				file = file_list[0];
 				this.showState(this.UPLOADING_STATE);
-				this.options.uploadService.uploadFile(file);
+				appModel.uploadFile(file);
 			}
 			e.preventDefault();
 		},
@@ -81,7 +81,7 @@ define(['jquery', 'media_chooser/models/AppModel', 'lib/backbone'], function($, 
 			if (!this.replaceAssetControlsDisabled) {
 				var uploadResponse = appModel.get("uploadResponse");
 				this.replaceAssetControlsDisabled = true;
-				this.options.uploadService.replaceAsset(uploadResponse.name_conflict.id, uploadResponse.id);
+				appModel.replaceAsset(uploadResponse.name_conflict.id, uploadResponse.id);
 			}
 			e.preventDefault();
 		},
@@ -101,5 +101,7 @@ define(['jquery', 'media_chooser/models/AppModel', 'lib/backbone'], function($, 
 			e.preventDefault();
 		}
 	})
+
+	return UploadModalView;
 
 }); 

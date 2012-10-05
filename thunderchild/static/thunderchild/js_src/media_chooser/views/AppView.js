@@ -1,4 +1,4 @@
-define(['jquery', 'media_chooser/views/AssetItemView', 'media_chooser/models/AppModel', 'lib/backbone'], function($, AssetItemView, appModel) {
+define(['jquery', 'media_chooser/views/AssetItemView', 'media_chooser/views/UploadModalView', 'media_chooser/models/AppModel', 'lib/backbone'], function($, AssetItemView, UploadModalView, appModel) {
 
 
 	var AppView = Backbone.View.extend({
@@ -11,6 +11,8 @@ define(['jquery', 'media_chooser/views/AssetItemView', 'media_chooser/models/App
 					el : val
 				})
 			}, this));
+			
+			var uploadModalView = new UploadModalView();
 		},
 
 		events : {

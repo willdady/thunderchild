@@ -2,12 +2,14 @@ define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryGroup
 	
 	var CategoryGroupModalView = Backbone.View.extend({
 		
+		el:"#categorygroup-modal",
+		
 		initialize: function() {
 		    this.EDIT_MODE = "editMode";
 		    this.CREATE_MODE = "createMode";
 		    appModel.on("openCreateCategoryGroupModal", this.openCreateCategoryGroupModal, this);
 		    appModel.on("openEditCategoryGroupModal", this.openEditCategoryGroupModal, this);
-		    Utilities.autoSlug( $("#id_categorygroup_name"), $("#id_categorygroup_short_name") );
+		    Utilities.autoAlphanumeric( $("#id_categorygroup_name"), $("#id_categorygroup_short_name") );
 		},
   
 	  	events:{
@@ -25,12 +27,14 @@ define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryGroup
 	  
 	  	addErrors: function(errors) {
 	    	var errors_html = '';
+	    	var formErrorTemplate = _.template($("#form-error-template").text());
 	    	_.each(errors, function(value, key) {
-		      	_.each(value, function(el, i) {
-			        errors_html += _.template("<li><%= error %></li>", {error:el});
-			      	$("#id_"+key).before( _.template($("#form-error-template").text(), {errors:errors_html}) );
-			      	$("#id_"+key).parent().addClass("error");
+		      	_.each(value, function(value) {
+			        errors_html += "<li>"+value+"</li>";
 		      	});
+		      	$("#id_"+key).before( formErrorTemplate({errors:errors_html}) );
+			    $("#id_"+key).parent().addClass("error");
+		      	errors_html = '';
 	     	});
 	   	},
 	  
@@ -81,8 +85,9 @@ define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryGroup
 	  	openCreateCategoryGroupModal: function() {
 	    	this.mode = this.CREATE_MODE;
 	    	this.setTitle("Create category group");
+	    	$("#categorygroup-modal-form")[0].reset();
 	    	this.open();
-	    	$("#id_categorygroup_name").focus();
+	    	$("#categorygroup-modal-form *:input[type!=hidden]:first").focus();
 	   	},
 	    
 	  	openEditCategoryGroupModal: function(categoryGroupModel) {

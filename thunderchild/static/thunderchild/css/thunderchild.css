@@ -38,11 +38,32 @@ body.media-chooser {
 textarea {
   resize: none;
 }
-.alert-error {
-  padding-bottom: 4px;
+.modal form {
+  margin: 0;
 }
-.alert-error .errorlist {
-  margin: 0px;
+.modal label {
+  font-weight: bold;
+}
+.modal input[type="text"] {
+  width: 516px;
+}
+.modal .alert {
+  margin-bottom: 10px;
+}
+.modal .alert li {
+  float: none;
+}
+.modal ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.modal ul li {
+  float: left;
+  margin-right: 10px;
+}
+.modal ul li label input {
+  margin: 0 2px 4px 0;
 }
 .error input[type="text"],
 .error input[type="password"],
@@ -131,6 +152,12 @@ a:hover {
 .btn-primary:active,
 .btn-primary.active {
   background-color: #247e6a \9;
+}
+.btn-link {
+  color: #25826d;
+}
+.btn-link:hover {
+  color: #1a5a4c;
 }
 .group {
   background: #e6eaed;
@@ -319,6 +346,16 @@ a:hover {
 #content_container header h2 {
   margin: 0;
 }
+.chevron {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background: url("images/chevron-sprite-sheet.png") no-repeat;
+  background-position: -15px 0;
+}
+.collapsed .chevron {
+  background-position: 0 0;
+}
 div.ui-datepicker {
   font-size: 11px;
   -webkit-box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.35);
@@ -345,9 +382,6 @@ div.ui-datepicker {
   overflow: visible;
   position: static;
   width: auto;
-}
-#login {
-  padding: 0;
 }
 #login_form_holder {
   position: absolute;
@@ -401,6 +435,7 @@ div.ui-datepicker {
   overflow: auto;
   background: #ffffff;
   border: solid 1px #dddddd;
+  padding: 4px;
 }
 #template-browser .btn-primary {
   margin-top: 5px;
@@ -428,17 +463,6 @@ div.ui-datepicker {
   text-decoration: none;
   color: #25826d;
 }
-#template-browser ul li .chevron {
-  display: block;
-  float: left;
-  width: 15px;
-  height: 15px;
-  margin-right: 2px;
-  background: url('images/chevron-sprite-sheet-white.png') no-repeat;
-}
-#template-browser ul li.in .chevron {
-  background-position: -15px;
-}
 #template-browser ul li .group-header {
   font-weight: bold;
   background: #25826d;
@@ -455,6 +479,18 @@ div.ui-datepicker {
 }
 #template-browser ul li .group-header a {
   padding: 0;
+}
+#template-browser ul li .group-header .chevron {
+  display: block;
+  float: left;
+  width: 15px;
+  height: 15px;
+  margin-right: 2px;
+  background: url('images/chevron-sprite-sheet-white.png') no-repeat;
+  background-position: -15px;
+}
+#template-browser ul li .group-header.collapsed .chevron {
+  background-position: 0;
 }
 #template-browser ul li .group-header ul.controls {
   background: none;
@@ -493,39 +529,6 @@ div.ui-datepicker {
 }
 #template-view .tab-content #settings-pane .field-holder {
   float: left;
-}
-#create-template-modal label,
-#create-templategroup-modal label,
-#edit-templategroup-modal label {
-  font-weight: bold;
-}
-#create-template-modal input[type="text"],
-#create-templategroup-modal input[type="text"],
-#edit-templategroup-modal input[type="text"] {
-  width: 516px;
-}
-#create-template-modal .alert,
-#create-templategroup-modal .alert,
-#edit-templategroup-modal .alert {
-  margin-bottom: 10px;
-}
-#create-template-modal ul,
-#create-templategroup-modal ul,
-#edit-templategroup-modal ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-#create-template-modal ul li,
-#create-templategroup-modal ul li,
-#edit-templategroup-modal ul li {
-  float: left;
-  margin-right: 10px;
-}
-#create-template-modal ul li label input,
-#create-templategroup-modal ul li label input,
-#edit-templategroup-modal ul li label input {
-  margin: 0 2px 4px 0;
 }
 #preview-link-holder {
   position: absolute;
@@ -606,15 +609,6 @@ div.ui-datepicker {
 }
 .accordion-group ul li label input {
   margin: 0 2px 4px 0;
-}
-.accordion-group .chevron {
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  background: url("images/chevron-sprite-sheet.png") no-repeat;
-}
-.accordion-group.in .chevron {
-  background-position: -15px 0;
 }
 #categories ul li {
   clear: both;
@@ -888,6 +882,33 @@ ul.thumbnails li .thumbnail:hover {
 }
 .img-wrapper.transparency {
   background: url("images/transparency_grid.gif");
+}
+.accordion-group .group-header,
+.accordion-group .group-content {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.accordion-group .group-header h3 {
+  display: inline-block;
+  margin: 0;
+  font-size: 18px;
+  cursor: default;
+}
+.accordion-group .group-header .controls {
+  margin-top: 7px;
+}
+.accordion-group .group-content .table {
+  margin-bottom: 5px;
+  table-layout: fixed;
+}
+.accordion-group .group-content .no-categories-msg {
+  padding: 8px;
+}
+.categories .modal input[type='text'] {
+  width: 516px;
+}
+.categories .modal label {
+  font-weight: bold;
 }
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header {

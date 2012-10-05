@@ -1,0 +1,53 @@
+{% extends "thunderchild/_base.html" %}
+		
+{% block body %}
+	<nav class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<ul class="nav">
+				<li><a href="{% url thunderchild.views.dashboard %}">Dashboard</a></li>
+				<li><a href="{% url thunderchild.template_views.templates %}">Templates</a></li>
+				<li><a href="{% url thunderchild.media_views.media %}">Media</a></li>
+				<li><a href="{% url thunderchild.entry_views.entries %}">Entries</a></li>
+				<li><a href="{% url thunderchild.comment_views.comments %}">Comments</a></li>
+				<li><a href="{% url thunderchild.views.users %}">Users</a></li>
+			</ul>
+			<ul class="nav pull-right">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					Admin <b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="{% url thunderchild.field_views.fields %}">Fields</a></li>
+						<li><a href="{% url thunderchild.entry_views.entrytypes %}">Entry Types</a></li>
+						<li><a href="{% url thunderchild.category_views.categories %}">Categories</a></li>
+						<li><a href="{% url thunderchild.form_views.contactforms %}">Contact Forms</a></li>
+					</ul>
+				</li>
+				<li><a href="#">Account</a></li>
+				<li><a href="{% url thunderchild.views.logout %}">Logout</a></li>
+			</ul>
+		</div>
+	</nav>
+	
+	<div id="content-bar">
+		<div class="breadcrumbs-bar">
+			{% block breadcrumbs %}{% endblock %}
+		</div>
+		<header class="title-bar">
+			<h1>{% block title_bar_title %}{% endblock %}</h1>
+		</header>
+		{% block pre_action_bar %}{% endblock %}
+		<div class="action-bar">
+			<div class="action-bar-inner">
+			{% block action_bar %}{% endblock %}
+			</div>
+		</div>
+	</div>
+	
+	<section id="content_container" class="container-fluid {% block content_classes %}{% endblock %}">
+		{% block content %}{% endblock %}
+	</section>
+	{% block post_content %}{% endblock %}
+
+{% endblock %}		
+		

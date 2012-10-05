@@ -232,7 +232,7 @@ class CategoryForm(ModelForm):
             # We check whether we have a Category in the parent group with the same name
             category_exists = models.Category.objects.filter(category_short_name__exact=category_short_name, categorygroup__exact=categorygroup).exists()
             if category_exists:
-                self._errors['category_short_name'] = self.error_class([u"A Category with this short name already exists within the parent Category Group."])
+                self._errors['category_short_name'] = self.error_class([u"A category with this short name already exists within this group."])
                 del cleaned_data['category_short_name']
         return cleaned_data
         

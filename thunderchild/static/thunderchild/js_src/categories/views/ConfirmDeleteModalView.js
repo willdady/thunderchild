@@ -1,6 +1,8 @@
 define(['jquery', 'categories/models/AppModel', 'lib/backbone'], function($, appModel) {
 	var ConfirmDeleteModalView = Backbone.View.extend({
 
+		el:"#confirm-delete-modal",
+
 		initialize : function() {
 			appModel.on("openConfirmDeleteCategoryGroupModal", this.openConfirmDeleteCategoryGroupModal, this);
 			appModel.on("openConfirmDeleteCategoryModal", this.openConfirmDeleteCategoryModal, this);
@@ -15,16 +17,20 @@ define(['jquery', 'categories/models/AppModel', 'lib/backbone'], function($, app
 			this.close();
 			e.preventDefault();
 		},
+		
+		setMessage : function(msg) {
+			$("#confirm-delete-message").html("Are you sure you want to <b>permanently</b> delete this category group including all of it's categories?");
+		},
 
 		openConfirmDeleteCategoryGroupModal : function(model) {
 			this.model = model;
-			$("#confirm-delete-message").html("Are you sure you want to <b>permanently</b> delete this category group including all of it's categories?");
+			this.setMessage("Are you sure you want to <b>permanently</b> delete this category group including all of it's categories?");
 			this.open();
 		},
 
 		openConfirmDeleteCategoryModal : function(model) {
 			this.model = model;
-			$("#confirm-delete-message").html("Are you sure you want to <b>permanently</b> delete this category?");
+			this.setMessage.html("Are you sure you want to <b>permanently</b> delete this category?");
 			this.open();
 		},
 

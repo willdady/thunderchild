@@ -1,10 +1,12 @@
-{% extends "thunderchild/base.html" %}
+{% extends "thunderchild/_page.html" %}
 
 {% block title %}Comments{% endblock %}
 {% block title_bar_title %}Comments{% endblock %}
 
-
+{% block pre_action_bar %}
 <form id="comments_form" action="{% url thunderchild.comment_views.bulk_action %}" method="post">{% csrf_token %}
+{% endblock %}
+
 {% block action_bar %}
 <div class="pull-right">
 	<ul>

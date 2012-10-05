@@ -5,26 +5,27 @@ requirejs(
 	'categories/models/CategoryGroupCollection',
 	'categories/views/AppView',
 	'categories/views/CategoryGroupModalView',
-	'categories/views/ConfirmDeleteModalView', 
-	'lib/backbone',
-	'lib/bootstrap',
+	'categories/views/ConfirmDeleteModalView',
+	'categories/views/CategoryModalView', 
 	'lib/log'],
 	function($, 
 			appModel, 
 			categoryCollection, 
 			categoryGroupCollection,
 			AppView,
-			CategoryGroupModalView,
-			ConfirmDeleteModalView) 
+			CategoryGroupModalView, 
+			ConfirmDeleteModalView,
+			CategoryModalView) 
 	{
 		
 		$(function(){
 			console.log("INIT!");
 			
-			var appView = new AppView({el : $(window)});
+			var appView = new AppView();
 			
-			var categoryGroupModalView = new CategoryGroupModalView({el : $("#categorygroup-modal")});
-			var confirmDeleteModalView = new ConfirmDeleteModalView({el : $("#confirm-delete-modal")});
+			var categoryGroupModalView = new CategoryGroupModalView();
+			var confirmDeleteModalView = new ConfirmDeleteModalView();
+			var categoryModalView = new CategoryModalView();
 			
 			categoryGroupCollection.reset( categoryGroupData );
 			categoryCollection.reset( categoryData );

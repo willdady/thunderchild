@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+	
+	<head>
+		<meta charset="utf-8">
+    	<title>{% block title %}{% endblock %}</title>
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<meta name="robots" content="noindex, nofollow">
+		
+		<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" type="text/css" media="screen"/>
+		{% if debug %}
+		<link rel="stylesheet/less" href="{{ STATIC_URL }}thunderchild/css_src/thunderchild.less" type="text/css" media="screen"/>
+		{% else %}
+		<link rel="stylesheet" href="{{ STATIC_URL }}thunderchild/css/thunderchild.css" type="text/css" media="screen"/>
+		{% endif %}
+		
+		{% block css %}{% endblock %}
+		
+		{% if debug %}
+			<script src="{{ STATIC_URL }}thunderchild/js_src/lib/less-1.3.0.min.js"></script>
+		{% endif %}
+		
+		<script src="{{ STATIC_URL }}thunderchild/js/lib/modernizr-2.5.3.min.js"></script>
+	</head>
+	
+	<body class="{% block body_classes %}{% endblock %}">		
+		
+		{% block body %}{% endblock %}
+		
+		{% if not debug %}
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="{{ STATIC_URL }}thunderchild/js/jquery-1.7.2.min.js"><\/script>')</script>
+		{% endif %}
+		
+		{% block javascript %}
+			{% if debug %}
+				<script data-main="{{ STATIC_URL }}thunderchild/js_src/common.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
+			{% else %}
+				<script data-main="{{ STATIC_URL }}thunderchild/js/common.js" src="{{ STATIC_URL }}thunderchild/js/lib/require.js"></script>
+			{% endif %}
+		{% endblock %}
+	</body>
+	
+</html>
