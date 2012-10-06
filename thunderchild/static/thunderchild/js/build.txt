@@ -38,6 +38,11 @@ lib/jquery-ui-timepicker-addon.js
 create_edit_entries/views/AppView.js
 create_edit_entries/Main.js
 
+entries/Main.js
+----------------
+entries/views/AppView.js
+entries/Main.js
+
 fields/Main.js
 ----------------
 fields/views/AppView.js

@@ -22,6 +22,10 @@
             exclude: ['common']
         },
         {
+            name: 'entries/Main',
+            exclude: ['common']
+        },
+        {
             name: 'fields/Main',
             exclude: ['common']
         },
