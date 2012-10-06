@@ -4,7 +4,7 @@
 {% block title_bar_title %}Entries{% endblock %}
 
 {% block action_bar %}
-<div id="create_controls" class="pull-right">
+<div id="create-controls" class="pull-right">
 	<label for="entry_type_select">Create a new</label>
 	<select id="entry_type_select">
 		{% for entry_type in entry_types %}
@@ -19,7 +19,7 @@
 
 {% block content %}
 
-		<form id="entries_filter_form" action="{% url thunderchild.entry_views.entries %}" method="get">
+		<form id="entries-filter-form" action="{% url thunderchild.entry_views.entries %}" method="get">
 			<ul>
 				{% for field in form %}
 				<li>{{ field.label_tag }}{{ field }}</li>

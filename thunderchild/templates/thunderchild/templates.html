@@ -96,13 +96,13 @@
 					{% for field in template_form %}
 						{% if not field.is_hidden %}
 							<div id="{{ field.html_name|slugify }}-field-group" class="field-group">
-								<div class="field_label_holder">
+								<div class="field-label-holder">
 									{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
 								</div>
 								<div class="field-holder">
 									{{ field }}
 									{% if field.help_text %}
-										<p class="help_text">{{ field.help_text }}</p>
+										<p class="help-text">{{ field.help_text }}</p>
 									{% endif %}
 								</div>
 							</div>
@@ -133,17 +133,17 @@
 			<div class="field-holder">
 				{{ new_template_form.template_short_name.label_tag }}
 				{{ new_template_form.template_short_name }}
-				<p class="help_text">{{ new_template_form.template_short_name.help_text }}</p>
+				<p class="help-text">{{ new_template_form.template_short_name.help_text }}</p>
 			</div>
 			<div class="field-holder">
 				{{ new_template_form.template_content_type.label_tag }}
 				{{ new_template_form.template_content_type }}
-				<p class="help_text">{{ new_template_form.template_content_type.help_text }}</p>
+				<p class="help-text">{{ new_template_form.template_content_type.help_text }}</p>
 			</div>
 			<div class="field-holder">
 				{{ new_template_form.template_is_private.label_tag }}
 				{{ new_template_form.template_is_private }}
-				<p class="help_text">{{ new_template_form.template_is_private.help_text }}</p>
+				<p class="help-text">{{ new_template_form.template_is_private.help_text }}</p>
 			</div>
 			{{ new_template_form.templategroup }}
 		</form>
@@ -178,7 +178,7 @@
 			<div class="field-holder">
 				{{ new_templategroup_form.templategroup_short_name.label_tag }}
 				{{ new_templategroup_form.templategroup_short_name }}
-				<p class="help_text">{{ new_templategroup_form.templategroup_short_name.help_text }}</p>
+				<p class="help-text">{{ new_templategroup_form.templategroup_short_name.help_text }}</p>
 			</div>
 		</form>
 	</div>
@@ -199,7 +199,7 @@
 			<div class="field-holder">
 				{{ field.label_tag }}
 				{{ field }}
-				<p class="help_text">{{ field.help_text }}</p>
+				<p class="help-text">{{ field.help_text }}</p>
 			</div>
 			{% endfor %}
 		</form>

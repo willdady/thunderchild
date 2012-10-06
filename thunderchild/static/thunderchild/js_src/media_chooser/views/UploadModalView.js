@@ -2,7 +2,7 @@ define(['jquery', 'media_chooser/models/AppModel', 'lib/jquery-ui-timepicker-add
 
 	var UploadModalView = Backbone.View.extend({
 
-		el : "#upload_modal",
+		el : "#upload-modal",
 
 		initialize : function() {
 			this.CHOOSE_FILE_STATE = "choose_file";

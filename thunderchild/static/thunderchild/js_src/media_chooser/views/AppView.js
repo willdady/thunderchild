@@ -16,7 +16,7 @@ define(['jquery', 'media_chooser/views/AssetItemView', 'media_chooser/views/Uplo
 		},
 
 		events : {
-			'click #media_chooser_upload_button' : 'uploadButtonClickHandler'
+			'click #media-chooser-upload-button' : 'uploadButtonClickHandler'
 		},
 
 		uploadButtonClickHandler : function(e) {

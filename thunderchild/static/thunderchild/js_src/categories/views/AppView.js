@@ -16,7 +16,7 @@ define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryGroup
 		},
 
 		categoryGroupResetHandler : function() {
-			var container = $("#content_container");
+			var container = $("#content-container");
 			_.each(categoryGroups.models, function(model) {
 				var view = new CategoryGroupView({
 					model : model
@@ -29,7 +29,7 @@ define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryGroup
 			view = new CategoryGroupView({
 				model : model
 			});
-			$("#content_container").append(view.el);
+			$("#content-container").append(view.el);
 		}
 	})
 

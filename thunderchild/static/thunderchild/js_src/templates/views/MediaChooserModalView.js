@@ -2,7 +2,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 
 	var MediaChooserModalView = Backbone.View.extend({
 		
-		el:"#media_chooser_modal",
+		el:"#media-chooser-modal",
 
 		initialize : function() {
 			appModel.on("openMediaChooserModal", this.open, this);

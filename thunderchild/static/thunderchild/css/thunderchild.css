@@ -43,31 +43,31 @@ textarea {
   font-weight: bold;
 }
 .field-holder,
-.field_holder {
+.field-holder {
   padding: 5px 0;
 }
 .field-holder ul,
-.field_holder ul {
+.field-holder ul {
   margin: 0px 0px 5px 0px;
   padding: 0;
   display: inline-block;
   list-style: none;
 }
 .field-holder ul li,
-.field_holder ul li {
+.field-holder ul li {
   float: left;
   margin-right: 10px;
 }
 .field-holder ul li label,
-.field_holder ul li label {
+.field-holder ul li label {
   margin: 0;
 }
 .field-holder ul li label input,
-.field_holder ul li label input {
+.field-holder ul li label input {
   margin: 0 2px 4px 0;
 }
-.field_label_holder label,
-.field_label_holder p {
+.field-label-holder label,
+.field-label-holder p {
   margin: 0;
   padding: 0;
   font-weight: bold;
@@ -78,7 +78,7 @@ textarea {
   -o-user-select: none;
   user-select: none;
 }
-.field_label_holder label {
+.field-label-holder label {
   width: auto;
   display: inline-block;
 }
@@ -114,7 +114,7 @@ textarea {
 .error textarea {
   border-color: #b94a48;
 }
-.help_text {
+.help-text {
   font-size: 11px;
   font-style: italic;
   color: #848484;
@@ -383,11 +383,11 @@ a:hover {
   margin-left: 5px;
   margin-right: 0px;
 }
-#content_container header {
+#content-container header {
   margin-bottom: 15px;
 }
-#content_container header h1,
-#content_container header h2 {
+#content-container header h1,
+#content-container header h2 {
   margin: 0;
 }
 .chevron {
@@ -427,7 +427,7 @@ div.ui-datepicker {
   position: static;
   width: auto;
 }
-#login_form_holder {
+#login-form-holder {
   position: absolute;
   background: #e6eaed;
   border: 1px solid #d7dee2;
@@ -442,17 +442,17 @@ div.ui-datepicker {
   -moz-border-radius: 8px;
   border-radius: 8px;
 }
-#login_form_holder form {
+#login-form-holder form {
   margin: 0;
 }
-#login_form_holder form.form-horizontal .control-label {
+#login-form-holder form.form-horizontal .control-label {
   width: auto;
 }
-#login_form_holder form.form-horizontal .controls {
+#login-form-holder form.form-horizontal .controls {
   margin: 0;
   float: right;
 }
-#login_form_holder .alert.alert-error ul {
+#login-form-holder .alert.alert-error ul {
   margin: 0;
   list-style: none;
 }
@@ -467,7 +467,7 @@ div.ui-datepicker {
   width: auto;
   float: left;
 }
-#content_container.templates {
+#content-container.templates {
   overflow: visible;
 }
 #template-browser {
@@ -599,7 +599,7 @@ div.ui-datepicker {
   height: 200px;
   margin-bottom: 20px;
 }
-.field_holder {
+.field-holder {
   padding: 0 20px 0 10px;
   margin: 6px 0px 0px 0px;
 }
@@ -608,24 +608,24 @@ div.ui-datepicker {
   border-color: #d7dee2;
   margin-bottom: 6px;
 }
-.accordion-group .field_label_holder {
+.accordion-group .field-label-holder {
   padding: 5px 10px 0px 8px;
 }
-.accordion-group .field_label_holder .alert-error {
+.accordion-group .field-label-holder .alert-error {
   margin-top: 10px;
 }
 #categories ul li {
   clear: both;
 }
-#create_controls label {
+#create-controls label {
   float: left;
   margin-right: 10px;
   padding: 4px 0px;
 }
-#create_controls a {
+#create-controls a {
   float: left;
 }
-#create_controls select {
+#create-controls select {
   float: left;
   margin-right: 10px;
 }
@@ -655,17 +655,17 @@ div.ui-datepicker {
   height: 499px;
   max-width: none;
 }
-.field_holder .textarea-controls {
+.field-holder .textarea-controls {
   width: 100%;
 }
-.field_holder .textarea-controls li {
+.field-holder .textarea-controls li {
   margin-right: 5px;
 }
-.field_holder .choose-file-button {
+.field-holder .choose-file-button {
   float: left;
   clear: both;
 }
-.field_holder .media-asset-thumbnail {
+.field-holder .media-asset-thumbnail {
   position: relative;
   float: left;
   clear: both;
@@ -679,20 +679,20 @@ div.ui-datepicker {
   text-align: center;
   margin-bottom: 15px;
 }
-.field_holder .media-asset-thumbnail img {
+.field-holder .media-asset-thumbnail img {
   margin-bottom: 5px;
 }
-.field_holder .media-asset-thumbnail ul {
+.field-holder .media-asset-thumbnail ul {
   margin: 0;
 }
-.field_holder .media-asset-thumbnail ul li {
+.field-holder .media-asset-thumbnail ul li {
   font-size: 10px;
   margin: 0;
   word-wrap: break-word;
   width: 130px;
   line-height: 1.3em;
 }
-.field_holder .media-asset-thumbnail a.remove-asset-button {
+.field-holder .media-asset-thumbnail a.remove-asset-button {
   -webkit-transition: opacity 0.25s;
   -moz-transition: opacity 0.25s;
   -ms-transition: opacity 0.25s;
@@ -726,50 +726,50 @@ div.ui-datepicker {
   right: 7px;
   border: 1px solid #b30000;
 }
-.field_holder .media-asset-thumbnail a.remove-asset-button:hover {
+.field-holder .media-asset-thumbnail a.remove-asset-button:hover {
   text-decoration: none;
 }
-.field_holder .media-asset-thumbnail:hover a.remove-asset-button {
+.field-holder .media-asset-thumbnail:hover a.remove-asset-button {
   display: block;
   opacity: 1;
 }
-.field_holder input[type="checkbox"] {
+.field-holder input[type="checkbox"] {
   margin: 2px 5px 8px 0;
 }
-.field_holder input[data-field-type="color"] {
+.field-holder input[data-field-type="color"] {
   float: left;
   margin-top: 83px;
 }
-.field_holder .picker {
+.field-holder .picker {
   float: left;
   margin-left: 20px;
   margin-bottom: 10px;
 }
-#entries_filter_form {
+#entries-filter-form {
   float: left;
   margin-bottom: 15px;
 }
-#entries_filter_form ul {
+#entries-filter-form ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-#entries_filter_form ul li {
+#entries-filter-form ul li {
   display: block;
   float: left;
   margin-right: 20px;
 }
-#entries_filter_form ul li label {
+#entries-filter-form ul li label {
   font-size: 12px;
   margin: 3px 6px 0px 0px;
   float: left;
 }
-#entries_filter_form ul li select,
-#entries_filter_form ul li input {
+#entries-filter-form ul li select,
+#entries-filter-form ul li input {
   font-size: 12px;
   margin-bottom: 0;
 }
-#entries_filter_form ul li select {
+#entries-filter-form ul li select {
   float: left;
   width: auto;
   padding: 2px;
@@ -779,7 +779,7 @@ div.ui-datepicker {
 .no-media-message {
   text-align: center;
 }
-#thumbnails_form {
+#thumbnails-form {
   margin: 0;
 }
 ul.thumbnails {
@@ -826,47 +826,47 @@ ul.thumbnails li .thumbnail p {
 ul.thumbnails li .thumbnail:hover {
   border-color: #6bd5bd;
 }
-#preview_modal {
+#preview-modal {
   width: 952px;
   margin: -380px 0px 0px -476px;
 }
-#preview_modal .modal-body {
+#preview-modal .modal-body {
   overflow: visible;
   max-height: none;
   text-align: center;
 }
-#preview_modal .modal-body img {
+#preview-modal .modal-body img {
   max-width: 935px;
   max-height: 600px;
 }
-#preview_modal .modal-body ul {
+#preview-modal .modal-body ul {
   margin: 10px 0px 0px 0px;
   list-style: none;
   font-size: 11px;
 }
-#preview_modal .modal-body ul li {
+#preview-modal .modal-body ul li {
   line-height: 1.5em;
 }
-#media_chooser_modal {
+#media-chooser-modal {
   width: 952px;
   height: 676px;
   margin: -338px 0 0 -476px;
 }
-#media_chooser_modal .modal-body {
+#media-chooser-modal .modal-body {
   max-height: none;
 }
-#media_chooser_modal .modal-body iframe {
+#media-chooser-modal .modal-body iframe {
   width: 922px;
   height: 590px;
   border: none;
 }
-#media_chooser_upload_button {
+#media-chooser-upload-button {
   margin-bottom: 14px;
 }
 .media-chooser .modal-backdrop {
   background-color: #ffffff;
 }
-.media-chooser #upload_modal {
+.media-chooser #upload-modal {
   top: 370px;
 }
 .media-chooser .thumbnails {

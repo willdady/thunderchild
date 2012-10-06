@@ -30,7 +30,7 @@ define([
 				dateFormat : 'yy-mm-dd'
 			});
 			var mediaChooserModal = new MediaChooserModalView({
-				el : $("#media_chooser_modal"),
+				el : $("#media-chooser-modal"),
 				model : appModel
 			});
 			$('[data-field-type="file"]').each(function() {

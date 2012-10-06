@@ -23,14 +23,14 @@
 	{% for field in form %}
 		{% if not field.is_hidden %}
 		<div class="accordion-group">
-				<div class="field_label_holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
+				<div class="field-label-holder" data-toggle="collapse" data-target="#form_fieldholder_{{ forloop.counter }}">
 					<i class="chevron"></i>
 					{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
 					{% if field.errors %}<div class="alert alert-error">{{ field.errors }}</div>{% endif %}
 				</div>
-				<div id="form_fieldholder_{{ forloop.counter }}" class="collapse control-group field_holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
+				<div id="form_fieldholder_{{ forloop.counter }}" class="collapse control-group field-holder {% if field.errors %}error{% endif %} {% if not field.field.field_collapsed_by_default %}in{% endif %}">
 					{{ field }}
-					{% if field.help_text %}<p class="help_text">{{ field.help_text }}</p>{% endif %}
+					{% if field.help_text %}<p class="help-text">{{ field.help_text }}</p>{% endif %}
 				</div>
 		</div>
 		{% else %}
