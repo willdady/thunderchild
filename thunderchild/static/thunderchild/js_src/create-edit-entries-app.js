@@ -1,3 +1,3 @@
 require(['./common'], function (common) {
-    require(['./entries/Main']);
+    require(['./create_edit_entries/Main']);
 });

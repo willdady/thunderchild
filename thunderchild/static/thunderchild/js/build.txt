@@ -25,18 +25,18 @@ categories/views/ConfirmDeleteModalView.js
 categories/views/CategoryModalView.js
 categories/Main.js
 
-entries/Main.js
+create_edit_entries/Main.js
 ----------------
-entries/models/AppModel.js
-entries/views/MediaChooserModalView.js
-entries/views/TextAreaModalView.js
-entries/views/RichTextAreaView.js
-entries/views/MediaChooserWidgetView.js
+create_edit_entries/models/AppModel.js
+create_edit_entries/views/MediaChooserModalView.js
+create_edit_entries/views/TextAreaModalView.js
+create_edit_entries/views/RichTextAreaView.js
+create_edit_entries/views/MediaChooserWidgetView.js
 lib/farbtastic.js
 lib/jquery-ui-1.8.21.custom.min.js
 lib/jquery-ui-timepicker-addon.js
-entries/views/AppView.js
-entries/Main.js
+create_edit_entries/views/AppView.js
+create_edit_entries/Main.js
 
 fields/Main.js
 ----------------

@@ -42,27 +42,22 @@ textarea {
   color: red;
   font-weight: bold;
 }
-.field-holder,
 .field-holder {
   padding: 5px 0;
 }
-.field-holder ul,
 .field-holder ul {
   margin: 0px 0px 5px 0px;
   padding: 0;
   display: inline-block;
   list-style: none;
 }
-.field-holder ul li,
 .field-holder ul li {
   float: left;
   margin-right: 10px;
 }
-.field-holder ul li label,
 .field-holder ul li label {
   margin: 0;
 }
-.field-holder ul li label input,
 .field-holder ul li label input {
   margin: 0 2px 4px 0;
 }
@@ -590,9 +585,6 @@ div.ui-datepicker {
 }
 #preview-link-holder p {
   line-height: 22px;
-}
-#id_template_content {
-  height: 550px;
 }
 .dashboard-panel {
   background: #aaa;

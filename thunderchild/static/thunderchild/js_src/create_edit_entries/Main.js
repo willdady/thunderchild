@@ -1,7 +1,7 @@
 requirejs(
 	['jquery', 
-	'entries/models/AppModel',
-	'entries/views/AppView', 
+	'create_edit_entries/models/AppModel',
+	'create_edit_entries/views/AppView', 
 	'lib/backbone',
 	'lib/bootstrap',
 	'lib/log'

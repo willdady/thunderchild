@@ -200,8 +200,8 @@
 {% block javascript %}
 
 {% if debug %}
-	<script data-main="{{ STATIC_URL }}thunderchild/js_src/entry-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
+	<script data-main="{{ STATIC_URL }}thunderchild/js_src/create-edit-entries-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
 {% else %}
-	<script data-main="{{ STATIC_URL }}thunderchild/js/entry-app.js" src="{{ STATIC_URL }}thunderchild/js/lib/require.js"></script>
+	<script data-main="{{ STATIC_URL }}thunderchild/js/create-edit-entries-app.js" src="{{ STATIC_URL }}thunderchild/js/lib/require.js"></script>
 {% endif %}
 {% endblock %}

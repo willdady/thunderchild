@@ -18,7 +18,7 @@
             exclude: ['common']
         },
 		{
-            name: 'entries/Main',
+            name: 'create_edit_entries/Main',
             exclude: ['common']
         },
         {
