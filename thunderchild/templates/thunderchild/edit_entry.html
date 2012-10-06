@@ -20,11 +20,11 @@
 <form action="{% url thunderchild.entry_views.edit_entry entry_id %}" method="post">{% csrf_token %}
 {% endblock %}
 {% block action_bar %}
-<div class="pull-right">
-	<a class="btn btn-mini btn-link" data-toggle="modal" href="#confirm_delete_modal">Delete</a>
-	<input class="btn" name="submit-button" type="submit" value="Save" />
-	<input class="btn btn-primary" name="submit-button" type="submit" value="Save and finish" />
-</div>
+<ul class="pull-right">
+	<li><a class="btn btn-mini btn-link" data-toggle="modal" href="#confirm_delete_modal">Delete</a></li>
+	<li><input class="btn" name="submit-button" type="submit" value="Save" /></li>
+	<li><input class="btn btn-primary" name="submit-button" type="submit" value="Save and finish" /></li>
+</ul>
 {% endblock %}
 
 {% block content %}

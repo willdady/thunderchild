@@ -378,6 +378,9 @@ a:hover {
   margin-left: 5px;
   margin-right: 0px;
 }
+#content-bar .action-bar .btn-link {
+  margin-top: 4px;
+}
 #content-container header {
   margin-bottom: 15px;
 }
@@ -591,10 +594,6 @@ div.ui-datepicker {
   height: 200px;
   margin-bottom: 20px;
 }
-.field-holder {
-  padding: 0 20px 0 10px;
-  margin: 6px 0px 0px 0px;
-}
 .accordion-group {
   background: #e6eaed;
   border-color: #d7dee2;
@@ -605,6 +604,10 @@ div.ui-datepicker {
 }
 .accordion-group .field-label-holder .alert-error {
   margin-top: 10px;
+}
+.accordion-group .field-holder {
+  padding: 0 20px 0 10px;
+  margin: 6px 0px 0px 0px;
 }
 #categories ul li {
   clear: both;
@@ -749,7 +752,7 @@ div.ui-datepicker {
 #entries-filter-form ul li {
   display: block;
   float: left;
-  margin-right: 20px;
+  margin-right: 15px;
 }
 #entries-filter-form ul li label {
   font-size: 12px;
@@ -838,6 +841,8 @@ ul.thumbnails li .thumbnail:hover {
 }
 #preview-modal .modal-body ul li {
   line-height: 1.5em;
+  float: none;
+  margin: 0;
 }
 #media-chooser-modal {
   width: 952px;
