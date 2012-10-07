@@ -5,6 +5,7 @@
 
 {% block action_bar %}
 <div id="create-controls" class="pull-right">
+	<a id="delete-selected-btn" href="#" class="btn btn-mini btn-link">Delete selected</a>
 	<label for="entry_type_select">Create a new</label>
 	<select id="entry_type_select">
 		{% for entry_type in entry_types %}
@@ -28,9 +29,10 @@
 			</ul>
 		</form>
 	
-		<table>
+		<table id="entries-table" class="table">
 			<thead>
 				<tr>
+					<th><input id="select-all-checkbox" type="checkbox" /></th>
 					<th>Title</th>
 					<th>Slug</th>
 					<th>Author</th>
@@ -42,7 +44,8 @@
 			</thead>
 			<tbody>
 				{% for entry in entries %}
-				<tr>
+				<tr data-id="{{ entry.id }}" class="entry">
+					<td><input type="checkbox" class="entry-checkbox" /></td>
 					<td><a href="{% url thunderchild.entry_views.edit_entry entry.id %}">{{ entry.title }}</a></td>
 					<td>{{ entry.slug }}</td>
 					<td>{{ entry.author.first_name }} {{ entry.author.last_name }}</td>
@@ -76,6 +79,22 @@
 	</div>
 	{% endif %}
 	
+{% endblock %}
+
+{% block post_content %}
+<div id="confirm-delete-modal" class="modal" style="display: none;">
+	<div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Confirm Delete</h3>
+	</div>
+	<div class="modal-body">
+		<p>Are you sure you want to permanently delete the selected entries?</p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal">Cancel</button>
+		<button class="btn btn-danger">Confirm Delete</button>
+	</div>
+</div>
 {% endblock %}
 
 {% block javascript %}
