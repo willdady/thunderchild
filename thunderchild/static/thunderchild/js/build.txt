@@ -40,7 +40,13 @@ create_edit_entries/Main.js
 
 entries/Main.js
 ----------------
+entries/models/AppModel.js
+entries/models/EntryModel.js
+entries/models/EntryModelCollection.js
+entries/views/EntryView.js
 entries/views/AppView.js
+entries/views/ConfirmDeleteModalView.js
+entries/views/ControlsView.js
 entries/Main.js
 
 fields/Main.js

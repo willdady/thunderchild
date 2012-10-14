@@ -151,6 +151,9 @@ table tbody tr td {
 table tbody tr:last-child {
   border: none;
 }
+table input[type="checkbox"] {
+  margin: 0;
+}
 h1 {
   margin-bottom: 15px;
 }
@@ -197,6 +200,9 @@ a:hover {
 }
 .btn-link:hover {
   color: #1a5a4c;
+}
+.btn-group.open .btn-primary.dropdown-toggle {
+  background-color: #2fa68b;
 }
 .group {
   background: #e6eaed;
@@ -364,22 +370,26 @@ a:hover {
 #content-bar .action-bar .action-bar-inner {
   margin: 14px 20px 0;
 }
-#content-bar .action-bar ul {
+#content-bar .action-bar .action-bar-inner > ul {
   list-style: none;
 }
-#content-bar .action-bar ul li {
+#content-bar .action-bar .action-bar-inner > ul > li {
   float: left;
   display: block;
   padding: 0;
   margin: 0;
   margin-right: 5px;
 }
-#content-bar .action-bar .pull-right li {
+#content-bar .action-bar .action-bar-inner > ul.pull-right > li {
   margin-left: 5px;
   margin-right: 0px;
 }
 #content-bar .action-bar .btn-link {
   margin-top: 4px;
+}
+#content-bar .action-bar .pull-right .dropdown-menu {
+  left: auto;
+  right: 0;
 }
 #content-container header {
   margin-bottom: 15px;
@@ -609,23 +619,11 @@ div.ui-datepicker {
   padding: 0 20px 0 10px;
   margin: 6px 0px 0px 0px;
 }
-#categories ul li {
-  clear: both;
-}
-#create-controls label {
-  float: left;
-  margin-right: 10px;
-  padding: 4px 0px;
-}
-#create-controls a {
-  float: left;
-}
-#create-controls select {
-  float: left;
-  margin-right: 10px;
-}
 .accordion-group a.choose-file-button {
   margin-bottom: 9px;
+}
+#categories ul li {
+  clear: both;
 }
 #textarea-modal {
   width: 952px;

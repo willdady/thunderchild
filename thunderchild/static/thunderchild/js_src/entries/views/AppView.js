@@ -1,4 +1,4 @@
-define(['jquery', 'entries/models/AppModel', 'entries/models/EntryModel', 'entries/views/EntryView', 'lib/backbone'], function($, appModel, EntryModel, EntryView) {
+define(['jquery', 'entries/models/AppModel', 'entries/models/EntryModel', 'entries/models/EntryModelCollection', 'entries/views/EntryView', 'lib/backbone'], function($, appModel, EntryModel, entryModelCollection, EntryView) {
 
 	var AppView = Backbone.View.extend({
 
@@ -6,6 +6,7 @@ define(['jquery', 'entries/models/AppModel', 'entries/models/EntryModel', 'entri
 
 		initialize : function() {
 
+			
 			$("#entries-table tbody tr").each(function() {
 				var entryModel = new EntryModel({
 					id : $(this).attr("data-id")
@@ -14,18 +15,16 @@ define(['jquery', 'entries/models/AppModel', 'entries/models/EntryModel', 'entri
 					el : this,
 					model : entryModel
 				});
-			});
+				entryModelCollection.add(entryModel, {
+					silent : true
+				});
+			}); 
+
 
 		},
 
 		events : {
-			"change #select-all-checkbox" : "selectAllChangeHandler",
-			"change #entry_type_select" : "entryTypeChangeHandler",
-			"click #delete-selected-btn" : "deleteSelectedClickHandler"
-		},
-
-		entryTypeChangeHandler : function(e) {
-			$("#go_button").attr("href", "/dashboard/entries/create/" + $(e.currentTarget).val());
+			"change #select-all-checkbox" : "selectAllChangeHandler"
 		},
 
 		selectAllChangeHandler : function() {
@@ -34,12 +33,8 @@ define(['jquery', 'entries/models/AppModel', 'entries/models/EntryModel', 'entri
 			} else {
 				appModel.selectNone();
 			}
-		},
-
-		deleteSelectedClickHandler : function(e) {
-			appModel.openConfirmDeleteModal();
-			e.preventDefault();
 		}
+		
 	});
 
 	return AppView;

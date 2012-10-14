@@ -4,18 +4,26 @@
 {% block title_bar_title %}Entries{% endblock %}
 
 {% block action_bar %}
-<div id="create-controls" class="pull-right">
-	<a id="delete-selected-btn" href="#" class="btn btn-mini btn-link">Delete selected</a>
-	<label for="entry_type_select">Create a new</label>
-	<select id="entry_type_select">
-		{% for entry_type in entry_types %}
-		<option value="{{ entry_type.id }}">{{ entry_type.entrytype_name }}</option>
-		{% endfor %}
-	</select>
-	{% with entry_types|first as first_entry_type %}
-	<a id="go_button" href="/dashboard/entries/create/{{ first_entry_type.id }}" class="btn btn-primary">Go</a>
-	{% endwith %}
-</div>
+<ul class="controls pull-right">
+	<li>
+		<a id="delete-selected-btn" href="#" class="btn btn-mini btn-link disabled">Delete selected</a>
+	</li>
+	<li>
+		<div class="btn-group">
+			<a href="{% url thunderchild.entry_views.create_entry entry_types.0.id %}" class="btn btn-primary">New {{ entry_types.0.entrytype_name }}</a>
+			<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				{% for entry_type in entry_types %}
+				<li>
+					<a href="#" data-id="{{ entry_type.id }}">{{ entry_type.entrytype_name }}</a>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</li>
+</ul>
 {% endblock %}
 
 {% block content %}
@@ -92,12 +100,15 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal">Cancel</button>
-		<button class="btn btn-danger">Confirm Delete</button>
+		<button id="confirm-delete-button" class="btn btn-danger">Confirm Delete</button>
 	</div>
 </div>
 {% endblock %}
 
 {% block javascript %}
+<script>
+	var deleteURL = "{{ delete_url }}";
+</script>
 {% if debug %}
 	<script data-main="{{ STATIC_URL }}thunderchild/js_src/entries-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
 {% else %}

@@ -7,7 +7,6 @@ define(['jquery', 'lib/backbone'], function($) {
 		},
 		
 		selectAll : function() {
-			console.log("select all");
 			this.trigger("selectAll");	
 		},
 		

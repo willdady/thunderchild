@@ -159,6 +159,13 @@ a {
     color:@linkColorHover;
   }
 }
+.btn-group.open {
+  .btn-primary{
+    &.dropdown-toggle {
+      background-color:@btnPrimaryBackgroundHighlight;  
+    }
+  }
+}
 .group {
   background: @groupBackgroundColor;
   border:solid 1px @groupBorderColor;
@@ -302,25 +309,31 @@ a {
     height:56px;
     .action-bar-inner {
       margin:14px 20px 0;
-    }
-    ul {
-      list-style:none;
-      li {
-        float:left;
-        display:block;
-        padding:0;
-        margin:0;
-        margin-right:5px;
-      }
-    }
-    .pull-right {
-      li {
-        margin-left:5px;
-        margin-right:0px;
+      > ul {
+        list-style:none;
+        > li {
+          float:left;
+          display:block;
+          padding:0;
+          margin:0;
+          margin-right:5px;
+        }
+        &.pull-right {
+         > li {
+            margin-left:5px;
+            margin-right:0px;
+          }
+        }
       }
     }
     .btn-link {
       margin-top:4px;
+    }
+    .pull-right {
+      .dropdown-menu {
+        left:auto;
+        right:0;
+      }
     }
   }
 }

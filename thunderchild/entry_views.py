@@ -5,7 +5,8 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from thunderchild import models
 from thunderchild import model_forms
-from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotAllowed, HttpResponse
+import json
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -77,7 +78,7 @@ def entries(request):
     if entrytype_id == '' and author_id == '' and is_published == '':
         return redirect('thunderchild.entry_views.entries')
     
-    paginator = Paginator(entry_objects, 30)
+    paginator = Paginator(entry_objects, 15)
     
     page = request.GET.get('page')
     try:
@@ -96,7 +97,6 @@ def entries(request):
     filter_query = '&'.join( ['{}={}'.format(key, val) for key, val in request.GET.items() if key != 'page'] )
     if filter_query != '':
         filter_query = '&'+filter_query
-    print filter_query
     
     form = model_forms.EntriesFilterForm(request.GET)
     
@@ -104,7 +104,8 @@ def entries(request):
                                                          'entries':entries, 
                                                          'entry_types':entry_types, 
                                                          'form':form,
-                                                         'filter_query':filter_query})
+                                                         'filter_query':filter_query,
+                                                         'delete_url':reverse('thunderchild.entry_views.delete_entry')})
     
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
@@ -229,7 +230,15 @@ def delete_entry(request):
     if request.method == 'POST':
         models.Entry.objects.filter(pk=request.POST['id']).delete()
         return redirect('thunderchild.entry_views.entries')
+    elif request.method == 'DELETE':
+        try:
+            data = json.loads(request.body)
+            id_list = [entry['id'] for entry in data]
+            models.Entry.objects.filter(id__in=id_list).delete()
+        except ValueError:
+            return HttpResponseBadRequest()
+        return HttpResponse(json.dumps(data), content_type="application/json")
     else:
-        return HttpResponseNotAllowed(permitted_methods=['POST'])
+        return HttpResponseNotAllowed(permitted_methods=['POST', 'DELETE'])
     
     

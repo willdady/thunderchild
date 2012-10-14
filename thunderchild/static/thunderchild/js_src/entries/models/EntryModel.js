@@ -4,9 +4,9 @@ define(['jquery', 'lib/backbone'], function($) {
 
 		isSelected : function(bool) {
 			if (bool !== undefined) {
-				this.set("_isSelected", bool === true);
+				this.set("isSelected", bool === true);
 			}
-			return this.get("_isSelected");
+			return this.get("isSelected");
 		}
 	});
 
