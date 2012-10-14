@@ -1,6 +1,6 @@
 require.config({
     paths: {
-        "jquery": "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min"
+        "jquery": "http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min"
     },
     shim: {
     	"lib/backbone": {

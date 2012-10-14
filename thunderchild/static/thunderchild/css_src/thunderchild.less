@@ -166,6 +166,22 @@ a {
     }
   }
 }
+.dropdown-menu {
+  li {
+    > a {
+      &:hover, &:focus {
+        .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
+      }
+    }
+  }
+}
+.dropdown-submenu {
+  &:hover{
+    > a {
+      .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
+    }
+  }
+}
 .group {
   background: @groupBackgroundColor;
   border:solid 1px @groupBorderColor;
