@@ -3,7 +3,7 @@ define(['jquery', 'media_chooser/views/AssetItemView', 'media_chooser/views/Uplo
 
 	var AppView = Backbone.View.extend({
 
-		el : window,
+		el : "body",
 
 		initialize : function() {
 			$(".thumbnail").each(_.bind(function(i, val) {

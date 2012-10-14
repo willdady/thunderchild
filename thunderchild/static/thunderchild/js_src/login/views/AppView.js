@@ -2,7 +2,7 @@ define(['jquery', 'lib/backbone'], function($) {
 	
 	var AppView = Backbone.View.extend({
 		
-		el:$(window),
+		el:"body",
 		
 		initialize : function() {
 			$("#id_username").focus();

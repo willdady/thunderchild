@@ -2,10 +2,9 @@ define(['jquery', 'entries/models/AppModel', 'entries/models/EntryModel', 'entri
 
 	var AppView = Backbone.View.extend({
 
-		el : $(window),
+		el : "body",
 
 		initialize : function() {
-
 			
 			$("#entries-table tbody tr").each(function() {
 				var entryModel = new EntryModel({

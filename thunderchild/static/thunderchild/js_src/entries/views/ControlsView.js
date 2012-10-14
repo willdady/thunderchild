@@ -24,7 +24,6 @@ define(['jquery', 'entries/models/AppModel', 'entries/models/EntryModelCollectio
 		},
 		
 		entryChangeHandler : function() {
-			console.log(entryModelCollection.numSelected());
 			if (entryModelCollection.numSelected() > 0) {
 				$("#delete-selected-btn").removeClass("disabled");
 			} else {

@@ -1,9 +1,10 @@
 define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryGroupCollection', 'categories/views/CategoryGroupView', 'lib/backbone'], function($, appModel, categoryGroups, CategoryGroupView) {
 
+	
 	var AppView = Backbone.View.extend({
-		
-		el:window,
-		
+
+		el : "body",
+
 		initialize : function() {
 			categoryGroups.on("reset", this.categoryGroupResetHandler, this);
 			categoryGroups.on("add", this.categoryGroupAddHandler, this);
@@ -34,5 +35,6 @@ define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryGroup
 	})
 
 	return AppView;
+
 
 });

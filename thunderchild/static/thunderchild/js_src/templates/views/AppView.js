@@ -29,7 +29,7 @@ define(
 
 	var AppView = Backbone.View.extend({
 
-		el : window,
+		el : "body",
 
 		initialize : function() {
 
