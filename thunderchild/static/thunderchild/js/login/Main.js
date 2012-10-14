@@ -1,0 +1,1 @@
+define("login/views/AppView",["jquery","lib/backbone"],function(e){var t=Backbone.View.extend({el:e(window),initialize:function(){e("#id_username").focus()}});return t}),requirejs(["jquery","login/views/AppView","lib/log"],function(e,t){e(function(){console.log("INIT!");var e=new t})}),define("login/Main",[],function(){})

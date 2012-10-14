@@ -30,6 +30,10 @@
             exclude: ['common']
         },
         {
+            name: 'login/Main',
+            exclude: ['common']
+        },
+        {
             name: 'media/Main',
             exclude: ['common']
         },

@@ -54,6 +54,11 @@ fields/Main.js
 fields/views/AppView.js
 fields/Main.js
 
+login/Main.js
+----------------
+login/views/AppView.js
+login/Main.js
+
 media/Main.js
 ----------------
 media/models/AppModel.js
