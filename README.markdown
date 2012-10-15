@@ -1,6 +1,6 @@
 # Thunderchild
 
-Thunderchild is a CMS solution built atop Django. It is inspired by ExpressionEngine by EllisLab.
+Thunderchild is a CMS solution built atop Django.
 
 ## Requirements
 
@@ -48,7 +48,7 @@ included as the last item.
 	python manage.py runserver
 	```
 	
-7. Assuming you mounted Thunderchild at the root of your website, you may now point your browser at localhost:8000/backend to login with the user you created in step 5.
+7. Assuming you mounted Thunderchild at the root of your website, you may now point your browser at localhost:8000/dashboard to login with the user you created in step 5.
 
 ## Settings
 
@@ -57,7 +57,7 @@ In addition to the default settings provided when creating a project with Django
 1. If you are installing in a development environment you should set DEBUG = True and must also add INTERNAL_IPS = ('127.0.0.1',). Remember to set Debug = False if deploying to a production environment.
 2. USE_TZ = True
 3. Edit TEMPLATE_LOADERS to add 'thunderchild.loaders.TemplateLoader'as the last item in the tuple.
-4. Add a [cached backend](https://docs.djangoproject.com/en/dev/topics/cache/). It is not a requirement to use a cache backend but will significantly reduced the number of database hits if you do. Eg.
+4. Add one of Django's [cached backends](https://docs.djangoproject.com/en/dev/topics/cache/). It is not a requirement to use a cache backend but will significantly reduced the number of database hits if you do. Eg.
 
 	```
 	CACHES = {
