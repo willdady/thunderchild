@@ -26,7 +26,7 @@
             exclude: ['common']
         },
         {
-            name: 'fields/Main',
+            name: 'create_edit_fields/Main',
             exclude: ['common']
         },
         {

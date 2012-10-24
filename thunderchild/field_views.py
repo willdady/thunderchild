@@ -2,19 +2,15 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from thunderchild import forms, model_forms, models
+import json
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def fields(request):
-    fieldgroups = models.FieldGroup.objects.all()
-    fields = models.Field.objects.all()
-    field_list = []
-    for fieldgroup in fieldgroups:
-        d = {}
-        d['fieldgroup'] = fieldgroup
-        d['fields'] = fields.filter(fieldgroup__exact=fieldgroup).order_by('field_display_order')
-        field_list.append(d)
-    return render(request, 'thunderchild/fields.html', {'field_list':field_list})
+def fields(request):    
+    return render(request, 'thunderchild/fields.html', {'fieldgroups_json' : json.dumps([model.as_dict() for model in models.FieldGroup.objects.all()]),
+                                                        'fields_json' : json.dumps([model.as_dict() for model in models.Field.objects.all()]),
+                                                        'fieldgroup_form' : model_forms.FieldGroupForm(),
+                                                        'field_form' : model_forms.FieldForm()})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))

@@ -89,6 +89,10 @@ class FieldGroup(models.Model):
     '''
     fieldgroup_name = models.CharField(max_length=100, unique=True)
     
+    def as_dict(self):
+        return {'id' : self.id,
+                'fieldgroup_name' : self.fieldgroup_name }
+    
     def __unicode__(self):
         return u'{}'.format(self.fieldgroup_name)
 
@@ -108,6 +112,18 @@ class Field(models.Model):
     field_display_order = models.IntegerField(default=0, verbose_name='Display order', help_text='The display order of this field in relation to other fields in this group.')
     field_collapsed_by_default = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Collapsed by default', help_text='A collapsed field will show only the field name by default and requires a click to expand. Useful for non-required fields.')
     field_options = models.CharField(max_length=1000)
+    
+    def as_dict(self):
+        return {'id' : self.id,
+                'fieldgroup' : self.fieldgroup.id,
+                'field_type' : self.field_type,
+                'field_name' : self.field_name,
+                'field_short_name' : self.field_short_name,
+                'field_instructions' : self.field_instructions,
+                'field_is_required' : self.field_is_required,
+                'field_display_order' : self.field_display_order,
+                'field_collapsed_by_default' : self.field_collapsed_by_default,
+                'field_options' : self.field_options }
     
     def __unicode__(self):
         return u'{}'.format(self.field_name)

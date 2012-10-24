@@ -46,8 +46,8 @@
 
 {% block javascript %}
 {% if debug %}
-	<script data-main="{{ STATIC_URL }}thunderchild/js_src/fields-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
+	<script data-main="{{ STATIC_URL }}thunderchild/js_src/create-edit-fields-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
 {% else %}
-	<script data-main="{{ STATIC_URL }}thunderchild/js/fields-app.js" src="{{ STATIC_URL }}thunderchild/js/lib/require.js"></script>
+	<script data-main="{{ STATIC_URL }}thunderchild/js/create-edit-fields-app.js" src="{{ STATIC_URL }}thunderchild/js/lib/require.js"></script>
 {% endif %}
 {% endblock %}

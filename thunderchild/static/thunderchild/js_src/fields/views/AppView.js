@@ -1,31 +1,40 @@
-define(['jquery', 'lib/utilities', 'lib/backbone'], function($, Utilities) {
+define(['jquery', 'fields/models/AppModel', 'fields/models/FieldGroupCollection', 'fields/views/FieldGroupView', 'lib/backbone'], function($, appModel, fieldGroups, FieldGroupView) {
 
-	AppView = Backbone.View.extend({
+	
+	var AppView = Backbone.View.extend({
+
+		el : "body",
 
 		initialize : function() {
-			this.typeChangeHandler()
-			Utilities.autoAlphanumeric( $("#id_field_name"), $("#id_field_short_name") );
+			fieldGroups.on("reset", this.fieldGroupResetHandler, this);
+			fieldGroups.on("add", this.fieldGroupAddHandler, this);
+			$("#create-fieldgroup-button").click(_.bind(this.createFieldGroupClickHandler, this));
 		},
 
-		events : {
-			'change #id_field_type' : 'typeChangeHandler'
+		createFieldGroupClickHandler : function(e) {
+			appModel.openCreateFieldGroupModal();
+			e.preventDefault();
 		},
 
-		typeChangeHandler : function() {
-			var type = $("#id_field_type option:selected").val();
-			if (type === 'text' || type === 'textarea') {
-				$("#max-length-group").show();
-			} else {
-				$("#max-length-group").hide();
-			}
-			if (type === 'select' || type === 'checkboxes' || type === 'radiobuttons') {
-				$("#field-choices-group").show();
-			} else {
-				$("#field-choices-group").hide();
-			}
+		fieldGroupResetHandler : function() {
+			var container = $("#content-container");
+			_.each(fieldGroups.models, function(model) {
+				var view = new FieldGroupView({
+					model : model
+				});
+				container.append(view.el);
+			});
+		},
+
+		fieldGroupAddHandler : function(model) {
+			view = new FieldGroupView({
+				model : model
+			});
+			$("#content-container").append(view.el);
 		}
-	});
+	})
 
 	return AppView;
 
-}); 
+
+});

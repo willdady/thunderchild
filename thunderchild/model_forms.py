@@ -57,8 +57,8 @@ FIELD_TYPES = (('text', 'Text'),
 
 class FieldForm(ModelForm):
     
-    max_length = forms.IntegerField(help_text='The maximum number of characters this field allows.', initial=128, required=False, widget=TextInput(attrs={'class':'input-small'}))
-    field_choices = thunderchild.forms.TextToChoicesField(help_text='One choice per line. Minimum 2 choices.', required=False, widget=Textarea(attrs={'class':'input-xxlarge'}))
+    max_length = forms.IntegerField(help_text='The maximum number of characters this field allows.', initial=128, required=False, widget=TextInput())
+    field_choices = thunderchild.forms.TextToChoicesField(help_text='One choice per line. Minimum 2 choices.', required=False, widget=Textarea())
     
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance')
@@ -109,10 +109,10 @@ class FieldForm(ModelForm):
         model = models.Field
         exclude = ['field_options'] # We don't render the field_options field as it's populated with JSON in the above clean method.
         widgets  = {
-                    'field_name':TextInput(attrs={'class':'input-xxlarge'}),
-                    'field_short_name':TextInput(attrs={'class':'input-xxlarge'}),
-                    'field_instructions':TextInput(attrs={'class':'input-xxlarge'}),
-                    'field_display_order':TextInput(attrs={'class':'input-small'}),
+                    'field_name':TextInput(),
+                    'field_short_name':TextInput(),
+                    'field_instructions':TextInput(),
+                    'field_display_order':TextInput(),
                     'field_is_required':RadioSelect(),
                     'field_collapsed_by_default':RadioSelect(),
                     'field_type':Select(choices=FIELD_TYPES),

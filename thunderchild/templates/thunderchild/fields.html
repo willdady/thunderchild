@@ -4,50 +4,126 @@
 {% block title_bar_title %}Fields{% endblock %}
 
 {% block action_bar %}
-<a class="btn btn-primary pull-right" href="{% url thunderchild.field_views.create_fieldgroup %}">Create field group</a>
+<a id="create-fieldgroup-button" class="btn btn-primary pull-right" href="#">Create field group</a>
 {% endblock %}
 
-{% block content %}
-	{% if field_list %}
-		{% for obj in field_list %}
-		<div class="row-fluid">
-			<h3>{{ obj.fieldgroup.fieldgroup_name }}</h3>
-			{% if obj.fields %}
-			<table border="1">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Short name</th>
-						<th>Type</th>
-						<th>Display order</th>
-						<th>Required</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for field in obj.fields %}
-					<tr>
-						<td><a href="{% url thunderchild.field_views.edit_field obj.fieldgroup.id field.id %}"}>{{ field.field_name }}</a></td>
-						<td>{{ field.field_short_name }}</td>
-						<td>{{ field.field_type }}</td>
-						<td>{{ field.field_display_order }}</td>
-						<td>{{ field.field_is_required }}</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			{% else %}
-				<p>Group is empty. Click 'Create field' below to create a field.</p>
-			{% endif %}
+{% block post_content %}
+<script type="text/html" id="fieldgroup-template">
+	<div class="group-header clearfix collapsed" data-toggle="collapse" data-target="#group-content-<%= id %>">
+		<i class="chevron"></i>
+		<h3><%= fieldgroup_name %></h3>
+		<div class="pull-right controls" style="display: none;">
+			<a class="btn btn-mini btn-link delete-group-button" href="#">Delete</a>
+			<a class="btn btn-small edit-group-button" href="#">Edit</a>
+			<a class="btn btn-small btn-primary create-field-button" href="#">Create field</a>
 		</div>
-		<div class="row-fluid">
-			<div class="pull-right">
-				<a class="btn btn-small" href="{% url thunderchild.field_views.edit_fieldgroup obj.fieldgroup.id %}">Edit group</a>
-				<a class="btn btn-small" href="{% url thunderchild.field_views.create_field obj.fieldgroup.id %}">Create field</a>
-			</div>
-		</div>
-		<hr />
-		{% endfor %}
+	</div>
+	<div id="group-content-<%= id %>" class="group-content collapse">
+		<table class="table">
+			<thead>
+				<th>Name</th>
+				<th>Short name</th>
+				<th></th>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<p class="hide no-fields-msg">Field group contains no fields. Click 'Create field' above to create one.</p>
+	</div>
+</script>
+
+<script type="text/html" id="field-template">
+	<tr data-field-id="<%= id %>">
+		<td><a href="#" class="field-name"><%= field_name %></a></td>
+		<td>{ <%= field_short_name %> }</td>
+		<td><a class="btn btn-mini btn-link delete-field-button pull-right">Delete</a></td>
+	</tr>
+</script>
+
+<script id="form-error-template" type="text/html">
+	<div class="alert alert-error"><ul class="errorlist"><%= errors %></ul></div>
+</script>
+
+
+<div id="fieldgroup-modal" class="modal hide">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>Create field group</h3>
+	</div>
+	<div class="modal-body">
+		<form id="fieldgroup-modal-form">
+			{% for field in fieldgroup_form %}
+				{% if not field.is_hidden %}
+					<div class="field-holder">
+						{{ field.label_tag }}
+						{{ field }}
+						{% if field.help_text %}
+						<p class="help-text">{{ field.help_text }}</p>
+						{% endif %}
+					</div>
+				{%else%}
+					{{ field }}
+				{%endif%}
+			{% endfor %}
+		</form>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="#" class="btn btn-primary" id="fieldgroup-form-modal-ok-button">Save</a>
+	</div>
+</div>
+
+<div id="field-modal" class="modal hide">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>Create field</h3>
+	</div>
+	<div class="modal-body">
+		<form id="field-form">
+			{% for field in field_form %}
+				{% if not field.is_hidden %}
+					<div class="field-holder">
+						{{ field.label_tag }}
+						{{ field }}
+						{% if field.help_text %}
+						<p class="help-text">{{ field.help_text }}</p>
+						{% endif %}
+					</div>
+				{%else%}
+					{{ field }}
+				{%endif%}
+			{% endfor %}
+		</form>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="#" class="btn btn-primary" id="field-form-modal-ok-button">Save</a>
+	</div>
+</div>
+
+<div id="confirm-delete-modal" class="modal hide">
+	<div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Confirm Delete</h3>
+	</div>
+	<div class="modal-body">
+		<p id="confirm-delete-message"></p>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="#" class="btn btn-danger" id="confirm-delete-button">Confirm Delete</a>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+	<script>
+		var fieldGroupData = {{ fieldgroups_json|safe }};
+		var fieldData = {{ fields_json|safe }};
+	</script>
+	{% if debug %}
+		<script data-main="{{ STATIC_URL }}thunderchild/js_src/fields-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
 	{% else %}
-		<p>There are currently no field groups defined. Click 'Create field group' above to create a field.</p>
+		<script data-main="{{ STATIC_URL }}thunderchild/js/fields-app.js" src="{{ STATIC_URL }}thunderchild/js/lib/require.js"></script>
 	{% endif %}
 {% endblock %}
