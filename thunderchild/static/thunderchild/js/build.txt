@@ -51,7 +51,18 @@ entries/Main.js
 
 fields/Main.js
 ----------------
+fields/models/AppModel.js
+fields/models/FieldModel.js
+fields/models/FieldCollection.js
+fields/models/FieldGroupModel.js
+fields/models/FieldGroupCollection.js
+fields/views/FieldView.js
+fields/views/FieldGroupView.js
 fields/views/AppView.js
+lib/jquery.serialize-object.js
+fields/views/FieldGroupModalView.js
+fields/views/ConfirmDeleteModalView.js
+fields/views/FieldModalView.js
 fields/Main.js
 
 login/Main.js

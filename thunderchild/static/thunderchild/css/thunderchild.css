@@ -43,7 +43,7 @@ textarea {
   font-weight: bold;
 }
 .field-holder {
-  padding: 5px 0;
+  margin-bottom: 4px;
 }
 .field-holder ul {
   margin: 0px 0px 5px 0px;
@@ -114,8 +114,8 @@ textarea {
   font-style: italic;
   color: #848484;
   clear: both;
-  padding-bottom: 10px;
   margin: 0;
+  padding: 0;
 }
 .non-editable p {
   height: 18px;
@@ -974,6 +974,13 @@ ul.thumbnails li .thumbnail:hover {
 }
 .categories .modal label {
   font-weight: bold;
+}
+#field-modal {
+  width: 575px;
+}
+#field-modal .modal-body textarea {
+  width: 517px;
+  height: 100px;
 }
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header {
