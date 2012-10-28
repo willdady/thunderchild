@@ -114,7 +114,7 @@ class Field(models.Model):
     field_options = models.CharField(max_length=1000)
     
     def as_dict(self):
-        return {'id' : self.id,
+        dict = {'id' : self.id,
                 'fieldgroup' : self.fieldgroup.id,
                 'field_type' : self.field_type,
                 'field_name' : self.field_name,
@@ -123,7 +123,16 @@ class Field(models.Model):
                 'field_is_required' : self.field_is_required,
                 'field_display_order' : self.field_display_order,
                 'field_collapsed_by_default' : self.field_collapsed_by_default,
-                'field_options' : self.field_options }
+                'max_length' : None,
+                'field_choices' : None
+                }
+        if self.field_options:
+            options = json.loads(self.field_options)
+            dict['max_length'] = options.get('max_length')
+            dict['field_choices'] = options.get('field_choices')
+            if dict['field_choices']:
+                dict['field_choices'] = '\n'.join([x for x, y in dict['field_choices']])
+        return dict
     
     def __unicode__(self):
         return u'{}'.format(self.field_name)

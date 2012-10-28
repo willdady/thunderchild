@@ -23,6 +23,7 @@
 			<thead>
 				<th>Name</th>
 				<th>Short name</th>
+				<th>Type</th>
 				<th></th>
 			</thead>
 			<tbody>
@@ -35,7 +36,8 @@
 <script type="text/html" id="field-template">
 	<tr data-field-id="<%= id %>">
 		<td><a href="#" class="field-name"><%= field_name %></a></td>
-		<td>{ <%= field_short_name %> }</td>
+		<td class="field-short-name">{ <%= field_short_name %> }</td>
+		<td class="field-type"><%= field_type %></td>
 		<td><a class="btn btn-mini btn-link delete-field-button pull-right">Delete</a></td>
 	</tr>
 </script>

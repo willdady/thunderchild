@@ -33,9 +33,9 @@ def categorygroup_post(request):
             return HttpResponse(json.dumps(model.as_dict()), content_type="application/json")
         else:
             return HttpResponseBadRequest(json.dumps({'errors':form.errors}), content_type="application/json")
-    if request.method == 'GET':
-        data = json.dumps([ model.as_dict() for model in models.CategoryGroup.objects.all()])
-        return HttpResponse(data, content_type="application/json")
+#    if request.method == 'GET':
+#        data = json.dumps([ model.as_dict() for model in models.CategoryGroup.objects.all()])
+#        return HttpResponse(data, content_type="application/json")
     else:
         return HttpResponseNotAllowed(permitted_methods=['POST'])
 

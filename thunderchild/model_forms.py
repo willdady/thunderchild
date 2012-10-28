@@ -96,13 +96,15 @@ class FieldForm(ModelForm):
         if field_type == 'text' or field_type == 'textarea':
             options = json.dumps({'max_length':max_length})
             cleaned_data['field_options'] = options
+            self.instance.field_options = cleaned_data['field_options']
         elif field_type == 'select' or field_type == 'checkboxes' or field_type == 'radiobuttons':
             options = json.dumps({'field_choices':field_choices})
             cleaned_data['field_options'] = options
+            self.instance.field_options = cleaned_data['field_options']
         
         del cleaned_data['max_length']
-        del cleaned_data['field_choices']        
-    
+        del cleaned_data['field_choices']
+        
         return cleaned_data
     
     class Meta:

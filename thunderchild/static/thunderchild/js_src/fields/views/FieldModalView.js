@@ -7,6 +7,7 @@ define(['jquery', 'fields/models/AppModel', 'fields/models/FieldCollection', 'li
 		initialize : function() {
 			this.EDIT_MODE = "editMode";
 		    this.CREATE_MODE = "createMode";
+		    this.okButton = $("#field-form-modal-ok-button");
 			appModel.on("openCreateFieldModal", this.openInCreateMode, this);
 			appModel.on("openEditFieldModal", this.openInEditMode, this);
 			Utilities.autoAlphanumeric( $("#id_field_name"), $("#id_field_short_name") );
@@ -24,12 +25,20 @@ define(['jquery', 'fields/models/AppModel', 'fields/models/FieldCollection', 'li
 
 		open : function() {
 			this.removeErrors();
+			this.okButtonDisabled(false);
 			this.$el.modal("show");
 			$("#field-form *:input[type!=hidden]:first").focus();
 		},
 
 		close : function() {
 			this.$el.modal("hide");
+		},
+		
+		okButtonDisabled : function(bool) {
+			if (bool !== undefined) {
+				this.okButton.toggleClass("disabled", bool);
+			}
+			return this.okButton.hasClass("disabled");
 		},
 		
 		removeErrors: function() {
@@ -50,14 +59,21 @@ define(['jquery', 'fields/models/AppModel', 'fields/models/FieldCollection', 'li
 	     	});
 	   	},
 		
-		fieldTypeChangeHandler : function(e) {
-			var val = $(e.currentTarget).val();
+		fieldTypeChangeHandler : function() {
+			var val = $("#id_field_type").val();
 			$("#id_field_choices").parent().toggle( val == 'select' || val == 'checkboxes' || val == 'radiobuttons' );
 			$("#id_max_length").parent().toggle( val == 'textarea' || val == 'text' );
 		},
 		
 		okButtonClickHandler : function(e) {
 			var formData = $("#field-form").serializeObject();
+			
+			if (this.okButtonDisabled() == true) {
+				e.preventDefault();
+				return;
+			}
+			this.okButtonDisabled(true);
+			
 			if (this.mode === this.CREATE_MODE) {
 				fieldCollection.create(formData, {
 					wait : true,
@@ -68,18 +84,20 @@ define(['jquery', 'fields/models/AppModel', 'fields/models/FieldCollection', 'li
 							resp = $.parseJSON(response.responseText);
 							this.addErrors(resp.errors);
 						}
+						this.okButtonDisabled(false);
 					}, this)
 				});
 			} else if (this.mode === this.EDIT_MODE) {
 				this.model.save(formData, {
 					wait : true,
 					success : _.bind(this.close, this),
-					error : _.bind(function() {
+					error : _.bind(function(model, response) {
 						this.removeErrors();
 						if (response.status == 400) {
 							resp = $.parseJSON(response.responseText);
 							this.addErrors(resp.errors);
 						}
+						this.okButtonDisabled(false);
 					}, this)
 				})
 			}
@@ -95,7 +113,6 @@ define(['jquery', 'fields/models/AppModel', 'fields/models/FieldCollection', 'li
 		
 		openInCreateMode : function(fieldGroupModel) {
 			this.mode = this.CREATE_MODE;
-			//$("#field-form")[0].reset();
 			this.resetForm();
 			this.setTitle("Create Field");
 			this.$("#id_fieldgroup").val( fieldGroupModel.get("id") );
@@ -110,10 +127,12 @@ define(['jquery', 'fields/models/AppModel', 'fields/models/FieldCollection', 'li
 				var field = $("#field-form input[name="+key+"]");
 				if (field.length > 0) {
 					switch(field.attr("type")) {
-						case "text" || "hidden" || "textarea":
+						case "text": 
+						case "hidden":
 							field.val(val);
 							break;
-						case "radio" || "checkbox":
+						case "radio":
+						case "checkbox":
 							if (val === true) {
 								field.filter("[value='True']").prop("checked", true);
 							} else {
@@ -122,9 +141,10 @@ define(['jquery', 'fields/models/AppModel', 'fields/models/FieldCollection', 'li
 							break;
 					}
 				} else {
-					$("#field-form select[name="+key+"]").val(val);
+					$("#field-form :input[name="+key+"]").val(val);
 				}
 			});
+			this.fieldTypeChangeHandler(); // This is called to show the correct option fields for the current field type.
 			this.open();
 		}
 		

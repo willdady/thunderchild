@@ -25,7 +25,9 @@ define(['jquery', 'categories/models/AppModel', 'lib/backbone'], function($, app
   		},
   		
   		render : function() {
-  			this.$el.replaceWith(this.template( this.model.toJSON()));
+  			var data = this.model.toJSON();
+  			this.$(".category-name").text(data.category_name);
+  			this.$(".category-short-name").text(data.category_short_name);
   		},
   		
   		destroyHandler : function() {

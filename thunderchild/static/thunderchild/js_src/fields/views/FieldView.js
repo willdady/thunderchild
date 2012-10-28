@@ -25,8 +25,11 @@ define(['jquery', 'fields/models/AppModel', 'lib/backbone'], function($, appMode
 		},
 
 		render : function() {
-			this.$el.replaceWith(this.template(this.model.toJSON()));
-		},
+			var data = this.model.toJSON();
+			this.$("tr[data-field-id]").attr("data-field-id", data.id);
+			this.$(".field-name").text(data.field_name);
+			this.$(".field-short-name").text("{ "+data.field_short_name+" }");
+			this.$(".field-type").text(data.field_type);		},
 
 		destroyHandler : function() {
 			this.$el.remove();

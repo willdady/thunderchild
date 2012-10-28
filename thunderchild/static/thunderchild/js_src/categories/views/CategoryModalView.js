@@ -7,6 +7,7 @@ define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryColle
 		initialize : function() {
 			this.EDIT_MODE = "editMode";
 		    this.CREATE_MODE = "createMode";
+		    this.okButton = $("#category-form-modal-ok-button");
 			appModel.on("openCreateCategoryModal", this.openInCreateMode, this);
 			appModel.on("openEditCategoryModal", this.openInEditMode, this);
 			Utilities.autoAlphanumeric( $("#id_category_name"), $("#id_category_short_name") );
@@ -22,12 +23,20 @@ define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryColle
 
 		open : function() {
 			this.removeErrors();
+			this.okButtonDisabled(false);
 			this.$el.modal("show");
 			$("#category-form *:input[type!=hidden]:first").focus();
 		},
 
 		close : function() {
 			this.$el.modal("hide");
+		},
+		
+		okButtonDisabled : function(bool) {
+			if (bool !== undefined) {
+				this.okButton.toggleClass("disabled", bool);
+			}
+			return this.okButton.hasClass("disabled");
 		},
 		
 		removeErrors: function() {
@@ -51,6 +60,13 @@ define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryColle
 		
 		okButtonClickHandler : function(e) {
 			var formData = $("#category-form").serializeObject();
+			
+			if (this.okButtonDisabled() == true) {
+				e.preventDefault();
+				return;
+			}
+			this.okButtonDisabled(true);
+			
 			if (this.mode === this.CREATE_MODE) {
 				categoryCollection.create(formData, {
 					wait : true,
@@ -61,18 +77,20 @@ define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryColle
 							resp = $.parseJSON(response.responseText);
 							this.addErrors(resp.errors);
 						}
+						this.okButtonDisabled(false);
 					}, this)
 				});
 			} else if (this.mode === this.EDIT_MODE) {
 				this.model.save(formData, {
 					wait : true,
 					success : _.bind(this.close, this),
-					error : _.bind(function() {
+					error : _.bind(function(model, response) {
 						this.removeErrors();
 						if (response.status == 400) {
 							resp = $.parseJSON(response.responseText);
 							this.addErrors(resp.errors);
 						}
+						this.okButtonDisabled(false);
 					}, this)
 				})
 			}
