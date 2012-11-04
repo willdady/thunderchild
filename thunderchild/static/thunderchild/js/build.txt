@@ -49,6 +49,18 @@ entries/views/ConfirmDeleteModalView.js
 entries/views/ControlsView.js
 entries/Main.js
 
+entry_types/Main.js
+----------------
+entry_types/models/AppModel.js
+entry_types/models/EntryTypeModel.js
+entry_types/models/EntryTypeCollection.js
+entry_types/views/EntryTypeView.js
+entry_types/views/AppView.js
+entry_types/views/ConfirmDeleteModalView.js
+lib/jquery.serialize-object.js
+entry_types/views/EntryTypeModalView.js
+entry_types/Main.js
+
 fields/Main.js
 ----------------
 fields/models/AppModel.js

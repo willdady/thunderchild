@@ -3,6 +3,9 @@
     dir: 'js',
     removeCombined: true,
     preserveLicenseComments: false,
+    paths : {
+    	jquery: "empty:"
+    },
     modules: [
         {
             name: 'common',
@@ -23,6 +26,10 @@
         },
         {
             name: 'entries/Main',
+            exclude: ['common']
+        },
+        {
+            name: 'entry_types/Main',
             exclude: ['common']
         },
         {

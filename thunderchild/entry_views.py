@@ -1,61 +1,62 @@
 from datetime import datetime
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse_lazy, reverse
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from thunderchild import models
-from thunderchild import model_forms
-from django.http import HttpResponseNotAllowed, HttpResponse
+from django.core.urlresolvers import reverse_lazy, reverse
+from django.http import HttpResponseNotAllowed, HttpResponse,\
+    HttpResponseBadRequest
+from django.shortcuts import render, redirect, get_object_or_404
+from thunderchild import model_forms, models
 import json
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def entrytypes(request):
-    entrytypes = models.EntryType.objects.all()
-    return render(request, 'thunderchild/entrytypes.html', {'entrytypes':entrytypes})
+    form = model_forms.EntryTypeForm()
+    entrytype_json = json.dumps([ model.as_dict() for model in models.EntryType.objects.all()])
+    return render(request, 'thunderchild/entrytypes.html', {'entrytype_json':entrytype_json,
+                                                            'form':form})
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def create_entrytype(request):
+def entrytypes_post(request):
     if request.method == 'POST':
-        form = model_forms.EntryTypeForm(request.POST)
-        if form.is_valid():
-            model = models.EntryType(**form.cleaned_data)
-            model.save()
-            return redirect('thunderchild.entry_views.entrytypes')
-        else:
-            return render(request, 'thunderchild/create_entrytype.html', {'form':form})
-    else:
-        form = model_forms.EntryTypeForm()
-        return render(request, 'thunderchild/create_entrytype.html', {'form':form})
-    
-    
-@login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def edit_entrytype(request, entrytype_id):
-    model = get_object_or_404(models.EntryType, pk=entrytype_id)
-    if request.method == 'POST':
-        form = model_forms.EntryTypeForm(request.POST, instance=model)
+        try:
+            data = json.loads(request.body)
+        except ValueError:
+            return HttpResponseBadRequest()
+        form = model_forms.EntryTypeForm(data)
         if form.is_valid():
             form.save()
-            return redirect('thunderchild.entry_views.entrytypes')
+            model = form.instance
+            return HttpResponse(json.dumps(model.as_dict()), content_type="application/json")
         else:
-            return render(request, 'thunderchild/edit_entrytype.html', {'form':form, 
-                                                                   'entrytype_id':entrytype_id,
-                                                                   'delete_url':reverse('thunderchild.entry_views.delete_entrytype')})
+            return HttpResponseBadRequest(json.dumps({'errors':form.errors}), content_type="application/json")
     else:
-        form = model_forms.EntryTypeForm(instance=model)
-        return render(request, 'thunderchild/edit_entrytype.html', {'form':form, 
-                                                               'entrytype_id':entrytype_id,
-                                                               'delete_url':reverse('thunderchild.entry_views.delete_entrytype')})
+        return HttpResponseNotAllowed(permitted_methods=['POST'])
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def delete_entrytype(request):
-    if request.method == 'POST':
-        models.EntryType.objects.filter(pk=request.POST['id']).delete()
-        return redirect('thunderchild.entry_views.entrytypes')
+def entrytypes_put_get_delete(request, id):
+    if request.method == 'PUT':
+        model = get_object_or_404(models.EntryType, pk=id)
+        try:
+            data = json.loads(request.body)
+        except ValueError:
+            return HttpResponseBadRequest()
+        form = model_forms.EntryTypeForm(data, instance=model)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(json.dumps(model.as_dict()), content_type="application/json")
+        else:
+            return HttpResponseBadRequest(json.dumps({'errors':form.errors}), content_type="application/json")
+    elif request.method == 'DELETE':
+        models.EntryType.objects.filter(pk=id).delete()
+        return HttpResponse("OK")
+    elif request.method == 'GET':
+        model = get_object_or_404(models.EntryType, pk=id)
+        return HttpResponse(json.dumps(model.as_dict()), content_type="application/json")
     else:
-        return HttpResponseNotAllowed(permitted_methods=['POST'])
+        return HttpResponseNotAllowed(permitted_methods=['POST', 'PUT', 'DELETE'])
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))

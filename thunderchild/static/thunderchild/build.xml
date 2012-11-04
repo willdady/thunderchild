@@ -2,10 +2,9 @@
 <project name="Thunderchild JS/CSS build" basedir=".">
 	
 	<description>
-		Compiles coffeescript and less + minifies js using yuicompressor.
+		Compiles less + minifies js using yuicompressor.
 	</description>
 
-	<property name="JAVA_COMMAND" value="java" />
 	<property name="LESSC_COMMAND" value="lessc.cmd" />
 	<property name="NODE_COMMAND" value="node" />
 	
@@ -21,7 +20,6 @@
 			<arg value="${r.js}" />
 			<arg value="-o" />
 			<arg value="build.js" />
-			<arg value="paths.jquery=empty:" />
 		</exec>
 	</target>
 	
@@ -39,7 +37,7 @@
 	
 	<target name="compile-less">
 		<description>
-			Compiles the main application .less file, thunderchild.less, to thunderchild.css outputting to the CSS_OUTPUT directory.
+			Compiles the main application file thunderchild.less, to thunderchild.css outputting to the CSS_OUTPUT directory.
 		</description>
 		<exec executable="${LESSC_COMMAND}" output="${CSS_OUTPUT}/thunderchild.css">
 			<arg value="${CSS_SOURCE}/thunderchild.less" />

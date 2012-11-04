@@ -22,6 +22,20 @@ class EntryType(models.Model):
     fieldgroup = models.ForeignKey('FieldGroup', blank=True, null=True, on_delete=models.SET_NULL)
     categorygroup = models.ForeignKey('CategoryGroup', blank=True, null=True, on_delete=models.SET_NULL)
     
+    def as_dict(self):
+        dict = {'id':self.id,
+                'entrytype_name':self.entrytype_name,
+                'entrytype_short_name':self.entrytype_short_name}
+        if self.fieldgroup:
+            dict['fieldgroup'] = self.fieldgroup.id
+        else:
+            dict['fieldgroup'] = None
+        if self.categorygroup:
+            dict['categorygroup'] = self.categorygroup.id
+        else:
+            dict['categorygroup'] = None
+        return dict
+            
     def get_form(self, *args, **kwargs):
         if not self.fieldgroup:
             return None
@@ -38,9 +52,9 @@ class Entry(models.Model):
     creation_date = models.DateTimeField(verbose_name='Created')
     last_modified_date = models.DateTimeField(auto_now=True, verbose_name='Last modified')
     expiration_date = models.DateTimeField(verbose_name='Expires', blank=True, null=True, help_text='A future date for when this entry should expire. Expired entries will not render to templates. Leave blank to never expire.')
-    is_published = models.BooleanField(default=True, verbose_name='Published?', choices=((False, 'No'),(True, 'Yes')))
+    is_published = models.BooleanField(default=True, verbose_name='Published?', choices=((False, 'No'), (True, 'Yes')))
     categories = models.ManyToManyField('Category', blank=True)
-    comments_enabled = models.BooleanField(default=False, verbose_name='Enable comments?', choices=((False, 'No'),(True, 'Yes')))
+    comments_enabled = models.BooleanField(default=False, verbose_name='Enable comments?', choices=((False, 'No'), (True, 'Yes')))
     comments_expiration_date = models.DateTimeField(verbose_name='Disallow comments after:', blank=True, null=True, help_text='A date from when new comments will no longer be accepted. Leave blank to allow comments indefinitely.')
 
     def get_comment_form(self, *args, **kwargs):
@@ -106,11 +120,11 @@ class Field(models.Model):
     fieldgroup = models.ForeignKey('FieldGroup')
     field_type = models.CharField(max_length=20, verbose_name='Type')
     field_name = models.CharField(max_length=80, verbose_name='Name')
-    field_short_name = models.CharField(max_length=80, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric,])
+    field_short_name = models.CharField(max_length=80, unique=True, verbose_name='Short name', db_index=True, validators=[validate_alphanumeric, ])
     field_instructions = models.CharField(max_length=500, blank=True, verbose_name='Instructions', help_text='Useful instructions on using this field. HTML is allowed.')
-    field_is_required = models.BooleanField(default=True, choices=((False, 'No'),(True, 'Yes')))
+    field_is_required = models.BooleanField(default=True, choices=((False, 'No'), (True, 'Yes')))
     field_display_order = models.IntegerField(default=0, verbose_name='Display order', help_text='The display order of this field in relation to other fields in this group.')
-    field_collapsed_by_default = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Collapsed by default', help_text='A collapsed field will show only the field name by default and requires a click to expand. Useful for non-required fields.')
+    field_collapsed_by_default = models.BooleanField(default=False, choices=((False, 'No'), (True, 'Yes')), verbose_name='Collapsed by default', help_text='A collapsed field will show only the field name by default and requires a click to expand. Useful for non-required fields.')
     field_options = models.CharField(max_length=1000)
     
     def as_dict(self):
@@ -219,7 +233,7 @@ class Template(models.Model):
     templategroup = models.ForeignKey('TemplateGroup')
     template_short_name = models.CharField(max_length=125, verbose_name='Name', validators=[validate_lowercase, validate_urlchars], help_text="A URL friendly name containing only letters, numbers and/or the special characters -, _, $, ., +.")
     template_content_type = models.CharField(max_length=50, default='text/html', verbose_name='Content type')
-    template_is_private = models.BooleanField(default=False, choices=((False, 'No'),(True, 'Yes')), verbose_name='Is private?', help_text="Private templates are not publicly accessible. They're intended for use as base templates to extend from or as fragments for including in other templates.")
+    template_is_private = models.BooleanField(default=False, choices=((False, 'No'), (True, 'Yes')), verbose_name='Is private?', help_text="Private templates are not publicly accessible. They're intended for use as base templates to extend from or as fragments for including in other templates.")
     template_uid = models.CharField(max_length=255, unique=True)
     template_cache_timeout = models.IntegerField(default=0, blank=True, null=True, verbose_name='Cache timeout', help_text='Number of seconds the rendered template should be cached before being re-rendered. Recommended for templates that do not change often.')
     template_redirect_type = models.IntegerField(blank=True, null=True, verbose_name='Redirect')
@@ -253,10 +267,10 @@ class Template(models.Model):
                
 class CategoryGroup(models.Model):
     categorygroup_name = models.CharField(max_length=255, verbose_name='Name')
-    categorygroup_short_name = models.CharField(max_length=255, 
-                                                unique=True, 
-                                                verbose_name='Short name', 
-                                                db_index=True, 
+    categorygroup_short_name = models.CharField(max_length=255,
+                                                unique=True,
+                                                verbose_name='Short name',
+                                                db_index=True,
                                                 validators=[validate_alphanumeric],
                                                 error_messages={'unique':'A category group already exists with that short name.'})
     
@@ -311,9 +325,9 @@ class MediaAsset(models.Model):
             return '{}thunderchild/images/media_icons/{}.png'.format(settings.STATIC_URL, ext)
         # If no match based on type, try match based on file extension.
         ext = filename.split('.')[-1]
-        extensions = ['aac', 'ai', 'aiff', 'avi', 'bmp', 'c', 'cpp', 'css', 'dat', 'dmg', 'doc', 'dotx', 'dwg', 'dxf', 'eps', 'exe', 
-                      'flv', 'h', 'hpp', 'html', 'ics', 'iso', 'java', 'js', 'key', 'less', 'mid', 'mp3', 'mp4', 'mpg', 'odf', 'ods', 'odt', 'otp', 
-                      'ots', 'ott', 'pdf', 'php', 'ppt', 'psd', 'py', 'qt', 'rar', 'rb', 'rtf', 'scss', 'sass', 'sql', 'tga', 'tgz', 'tiff', 'txt', 
+        extensions = ['aac', 'ai', 'aiff', 'avi', 'bmp', 'c', 'cpp', 'css', 'dat', 'dmg', 'doc', 'dotx', 'dwg', 'dxf', 'eps', 'exe',
+                      'flv', 'h', 'hpp', 'html', 'ics', 'iso', 'java', 'js', 'key', 'less', 'mid', 'mp3', 'mp4', 'mpg', 'odf', 'ods', 'odt', 'otp',
+                      'ots', 'ott', 'pdf', 'php', 'ppt', 'psd', 'py', 'qt', 'rar', 'rb', 'rtf', 'scss', 'sass', 'sql', 'tga', 'tgz', 'tiff', 'txt',
                       'wav', 'xls', 'xlsx', 'xml', 'yml', 'zip']
         if ext in extensions:
             return '{}thunderchild/images/media_icons/{}.png'.format(settings.STATIC_URL, ext)

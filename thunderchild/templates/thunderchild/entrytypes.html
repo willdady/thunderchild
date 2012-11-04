@@ -4,28 +4,86 @@
 {% block title_bar_title %}Entry Types{% endblock %}
 
 {% block action_bar %}
-<a class="btn btn-primary pull-right" href="{% url thunderchild.entry_views.create_entrytype %}">Create entry type</a>
+<button id="create-entrytype-button" class="btn btn-primary pull-right">Create entry type</button>
 {% endblock %}
 
 {% block content %}
-		{% if entrytypes %}
 		<table class="table">
 			<thead>
 				<tr>
 					<th>Name</th>
 					<th>Short name</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
-			{% for entrytype in entrytypes %}
-				<tr>
-					<td><a href="{% url thunderchild.entry_views.edit_entrytype entrytype.id %}">{{ entrytype.entrytype_name }}</a></td>
-					<td>{{ entrytype.entrytype_short_name }}</td>
-				</tr>
-			{% endfor %}
 			</tbody>
 		</table>
-		{% else %}
-		<p>There are currently no entry types defined. Click 'Create entry type' above to create one.</p>
-		{% endif %}
+{% endblock %}
+
+{% block post_content %}
+<div id="confirm-delete-modal" class="modal hide">
+	<div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Confirm Delete</h3>
+	</div>
+	<div class="modal-body">
+		<p>Are you sure you want to <b>permanently</b> delete this entry type?</p>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="#" class="btn btn-danger" id="confirm-delete-button">Confirm Delete</a>
+	</div>
+</div>
+
+<div id="entrytype-modal" class="modal hide">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>Create entry type</h3>
+	</div>
+	<div class="modal-body">
+		<form id="entrytype-form">
+			{% for field in form %}
+				{% if not field.is_hidden %}
+					<div class="field-holder">
+						{{ field.label_tag }}
+						{{ field }}
+						{% if field.help_text %}
+						<p class="help-text">{{ field.help_text }}</p>
+						{% endif %}
+					</div>
+				{%else%}
+					{{ field }}
+				{%endif%}
+			{% endfor %}
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal">Cancel</button>
+		<button class="btn btn-primary" id="entrytype-form-modal-ok-button">Save</button>
+	</div>
+</div>
+
+<script id="form-error-template" type="text/html">
+	<div class="alert alert-error"><ul class="errorlist"><%= errors %></ul></div>
+</script>
+
+<script type="text/html" id="entrytype_template">
+	<tr>
+		<td><a href="#" class="entrytype-name"><%= entrytype_name %></a></td>
+		<td class="entrytype-shortname">{ <%= entrytype_short_name %> }</td>
+		<td><a class="btn btn-mini btn-link delete-button pull-right">Delete</a></td>
+	</tr>
+</script>
+{% endblock %}
+
+{% block javascript %}
+	<script>
+		var entryTypeData = {{ entrytype_json|safe }};
+	</script>
+	{% if debug %}
+		<script data-main="{{ STATIC_URL }}thunderchild/js_src/entrytype-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
+	{% else %}
+		<script data-main="{{ STATIC_URL }}thunderchild/js/entrytype-app.js" src="{{ STATIC_URL }}thunderchild/js/lib/require.js"></script>
+	{% endif %}
 {% endblock %}
