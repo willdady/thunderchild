@@ -436,19 +436,17 @@ a:hover {
 #content-bar .action-bar .action-bar-inner {
   margin: 14px 20px 0;
 }
-#content-bar .action-bar .action-bar-inner > ul {
+#content-bar .action-bar .action-bar-inner > ul,
+#content-bar .action-bar .action-bar-inner .pull-right > ul {
   list-style: none;
 }
-#content-bar .action-bar .action-bar-inner > ul > li {
+#content-bar .action-bar .action-bar-inner > ul > li,
+#content-bar .action-bar .action-bar-inner .pull-right > ul > li {
   float: left;
   display: block;
   padding: 0;
   margin: 0;
   margin-right: 5px;
-}
-#content-bar .action-bar .action-bar-inner > ul.pull-right > li {
-  margin-left: 5px;
-  margin-right: 0px;
 }
 #content-bar .action-bar .btn-link {
   margin-top: 4px;

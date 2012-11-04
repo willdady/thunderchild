@@ -9,20 +9,9 @@ define(['jquery', 'entries/models/AppModel', 'entries/models/EntryModelCollectio
 		},
 
 		events : {
-			"click .dropdown-menu a" : "dropDownItemClickHandler",
 			"click #delete-selected-btn" : "deleteSelectedClickHandler"
 		},
 
-		dropDownItemClickHandler : function(e) {
-			var item = $(e.currentTarget);
-			var createButton = this.$(".btn-group > a");
-			var href = createButton.attr("href").split("/");
-			href = href.slice(0, href.length-1).join("/") + "/" + item.attr("data-id");
-			createButton.text( "New "+item.text() );
-			createButton.attr( "href", href );
-			e.preventDefault();
-		},
-		
 		entryChangeHandler : function() {
 			if (entryModelCollection.numSelected() > 0) {
 				$("#delete-selected-btn").removeClass("disabled");

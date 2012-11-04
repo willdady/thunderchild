@@ -10,14 +10,14 @@
 	</li>
 	<li>
 		<div class="btn-group">
-			<a href="{% url thunderchild.entry_views.create_entry entry_types.0.id %}" class="btn btn-primary">New {{ entry_types.0.entrytype_name }}</a>
-			<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+			<a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+				New Entry
 				<span class="caret"></span>
-			</button>
+			</a>
 			<ul class="dropdown-menu">
 				{% for entry_type in entry_types %}
 				<li>
-					<a href="#" data-id="{{ entry_type.id }}">{{ entry_type.entrytype_name }}</a>
+					<a href="{% url thunderchild.entry_views.create_entry entry_type.id %}" data-id="{{ entry_type.id }}">{{ entry_type.entrytype_name }}</a>
 				</li>
 				{% endfor %}
 			</ul>
