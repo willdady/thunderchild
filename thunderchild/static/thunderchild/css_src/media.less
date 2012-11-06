@@ -7,12 +7,11 @@
 ul {
   &.thumbnails {
     margin:0;
-    margin-left:-2%;
-    width:100%;
-    margin-bottom:-15px;
+    width:918px;
+    padding:0 1px;
     li {
-      width:14.666%;
-      margin:0 0 15px 2%;
+      width:143px;
+      margin:0 5px 10px 5px;
       a {
         text-decoration:none;
         color:@textColor;
@@ -28,10 +27,9 @@ ul {
         ul {
           position:absolute;
           bottom:6px;
-          text-align:center;
           list-style:none;
-          width:130px;
-          margin:4px 0px 0px 0px;
+          margin:0;
+          width:133px;
         }
         li, label, p {
           font-size:10px;
@@ -46,6 +44,11 @@ ul {
         }
       }
     }  
+  }
+}
+.media {
+  .pagination {
+    margin-top:10px;
   }
 }
 #preview-modal {
@@ -111,5 +114,27 @@ ul {
   display:inline-block;
   &.transparency {
     background:url("images/transparency_grid.gif")
+  }
+}
+
+@media (min-width:1280px) {
+  .media {
+    .container-fluid > .container {
+      width:1226px;
+    }
+  }
+  ul {
+    &.thumbnails {
+      width:1224px;
+      li {
+        .thumbnail {
+          height:160px;
+          padding: 8px 4px;
+          ul {
+            bottom:11px;
+          }
+        }  
+      }
+    }
   }
 }

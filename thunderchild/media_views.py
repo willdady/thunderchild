@@ -1,18 +1,17 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse_lazy
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import HttpResponse, HttpResponseNotFound
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
-from django.core import serializers
-from django.http import HttpResponseNotAllowed
-from django.template.defaultfilters import filesizeformat
-from thunderchild import models
-from thunderchild import forms
-import json
 from PIL import Image
 from datetime import date
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core import serializers
+from django.core.files.storage import FileSystemStorage
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.urlresolvers import reverse_lazy
+from django.http import HttpResponse, HttpResponseNotFound, \
+    HttpResponseNotAllowed
+from django.shortcuts import render, redirect, get_object_or_404
+from django.template.defaultfilters import filesizeformat
+from thunderchild import forms, models
+import json
 import os
 
 
@@ -51,13 +50,6 @@ def upload(request):
         fs = FileSystemStorage(location=settings.MEDIA_ROOT, base_url=settings.MEDIA_URL)
         
         filename = fs.get_valid_name(f.name)
-        if fs.exists(filename):
-            qs = models.MediaAsset.objects.filter(filename__exact=filename)
-            if len(qs) > 0:
-                existing_asset = qs[0]
-                name_conflict = {'original':filename, 'id':existing_asset.id}
-                filename = fs.get_available_name(filename)
-                resp['name_conflict'] = name_conflict
         #Save the file to disk
         disk_path = fs.save(filename, f)
         #Save a thumbnail to disk
@@ -95,49 +87,11 @@ def upload(request):
         
         resp['filename'] = filename
         resp['id'] = mediaAsset.id
-        resp['result'] = 'success'
         resp['url'] = fs.url(filename)
         resp['size'] = fs.size(filename)
         
         return HttpResponse(json.dumps(resp), content_type="text/json")
     return HttpResponseNotAllowed(permitted_methods=['POST'])
-  
-  
-@login_required(login_url=reverse_lazy('thunderchild.views.login'))
-def replace(request):
-    if request.method == 'POST':
-        existing_asset_id = request.POST.get('existing_asset_id')
-        new_asset_id = request.POST.get('new_asset_id')
-        
-        existing_asset = models.MediaAsset.objects.get(pk=existing_asset_id)
-        new_asset = models.MediaAsset.objects.get(pk=new_asset_id)
-        
-        existing_asset.delete_from_disk()
-        
-        os.rename(new_asset.file_path, existing_asset.file_path)
-        if new_asset.is_image and existing_asset.is_image:
-            os.rename(new_asset.thumbnail_path, existing_asset.thumbnail_path)
-        elif new_asset.is_image:
-            existing_asset.thumbnail = new_asset.thumbnail
-        else:
-            existing_asset.thumbnail = ''
-        
-        existing_asset.base_url = new_asset.base_url
-        existing_asset.type = new_asset.type
-        existing_asset.width = new_asset.width
-        existing_asset.height = new_asset.height
-        existing_asset.size = new_asset.size
-        existing_asset.created = new_asset.created
-        
-        existing_asset.save()
-        new_asset.delete()
-        
-        resp = {'response':'OK'}
-        
-        return HttpResponse(json.dumps(resp), content_type="text/json")
-        
-    else:
-        return HttpResponseNotAllowed(permitted_methods=['POST'])
 
 
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))

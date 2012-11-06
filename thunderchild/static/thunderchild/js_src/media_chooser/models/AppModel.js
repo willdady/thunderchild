@@ -25,31 +25,14 @@ define(['jquery', 'lib/utilities', 'lib/backbone'], function($, Utilities) {
 
 			xhr.onload = _.bind(function(e) {
 				if (e.currentTarget.status == 200) {
-					var response = $.parseJSON(e.currentTarget.response);
-					if (response.name_conflict) {
-						this.trigger("nameConflict", response);
-					} else {
-						this.trigger("complete");
-					}
+					this.trigger("complete");
 				}
 			}, this);
 
 			xhr.setRequestHeader("X-CSRFToken", Utilities.getCookie('csrftoken'));
 			xhr.send(fd);
-		},
-
-		replaceAsset : function(existing_asset_id, new_asset_id) {
-			$.post(replaceURL, {
-				existing_asset_id : existing_asset_id,
-				new_asset_id : new_asset_id
-			}, _.bind(function(response) {
-				if (response.response == 'OK') {
-					this.trigger("replaceComplete");
-				} else {
-					this.trigger("replaceError");
-				}
-			}, this));
 		}
+		
 	}) 
 
 	return new AppModel();

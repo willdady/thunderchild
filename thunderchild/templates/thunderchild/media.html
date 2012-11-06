@@ -2,6 +2,7 @@
 
 {% block title %}Media{% endblock %}
 {% block title_bar_title %}Media{% endblock %}
+{% block body_classes %}media{% endblock %}
 
 {% block action_bar %}
 <ul class="pull-right">
@@ -111,7 +112,6 @@
 <script>
 	var mediaURL = "{% url thunderchild.media_views.media %}";
 	var uploadURL = "{% url thunderchild.media_views.upload %}";
-	var replaceURL = "{% url thunderchild.media_views.replace %}";
 	var assetsURL = "{% url thunderchild.media_views.assets %}";
 </script>
 {% if debug %}

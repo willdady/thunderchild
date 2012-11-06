@@ -8,7 +8,6 @@ urlpatterns = patterns('',
     
     (r'^dashboard/media$', 'thunderchild.media_views.media'),
     (r'^dashboard/media/upload$', 'thunderchild.media_views.upload'),
-    (r'^dashboard/media/replace$', 'thunderchild.media_views.replace'),
     (r'^dashboard/media/assets$', 'thunderchild.media_views.assets'),
     (r'^dashboard/media/chooser$', 'thunderchild.media_views.media_chooser'),
     

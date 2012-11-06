@@ -3,7 +3,6 @@
 		<button type="button" class="close" data-dismiss="modal">×</button>
 		<h3 data-state="choose_file">Upload</h3>
 		<h3 data-state="uploading">Uploading</h3>
-		<h3 data-state="name_conflict">Name conflict</h3>
 	</div>
 	<div class="modal-body">
 		<div data-state="choose_file">
@@ -17,19 +16,12 @@
 			<div class="progress">
 				<div class="bar"></div>
 			</div>
-		</div>	
-		<div data-state="name_conflict">
-			<p>A file with that name already exists. Would you like to replace the existing file?</p>
 		</div>		
 	</div>
 	<div class="modal-footer">
 		<div data-state="choose_file">
 			<a href="#" class="btn" data-dismiss="modal">Cancel</a>
 			<a href="#" id="modal_upload_button" class="btn btn-primary disabled">Upload</a>
-		</div>
-		<div data-state="name_conflict">
-			<a href="#" id="no-replace-button" class="btn" data-dismiss="modal">No</a>
-			<a href="#" id="yes-replace-button" class="btn btn-primary">Yes</a>
 		</div>
 	</div>
 </div>
