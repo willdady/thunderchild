@@ -8,14 +8,17 @@
 		<div data-state="choose_file">
 			<form id="modal_upload_form">
 				<label for="modal_file_field">Select a file</label>	
-				<input id="modal_file_field" name="file" type="file"/>
+				<input id="modal_file_field" name="file" type="file" multiple="multiple"/>
 			</form>
 		</div>
 		<div data-state="uploading">
+			<ul class="clearfix"></ul>
+			<!--
 			<p>Uploading</p>
 			<div class="progress">
 				<div class="bar"></div>
 			</div>
+			-->
 		</div>		
 	</div>
 	<div class="modal-footer">
@@ -25,3 +28,9 @@
 		</div>
 	</div>
 </div>
+<script id="upload-item-template" type="text/html">
+	<p class="name"><%= name %></p>
+	<div class="progress">
+		<div class="bar"></div>
+	</div>
+</script>
