@@ -60,10 +60,11 @@
 
 {% block javascript%}
 	<script>
-		var mediaChooserURL = "{% url thunderchild.media_views.media_chooser %}";
-		var uploadURL = "{% url thunderchild.media_views.upload %}";
-		var replaceURL = "{% url thunderchild.media_views.replace %}";
-		var assetsURL = "{% url thunderchild.media_views.assets %}";
+		var thunderchild = {
+			mediaChooserURL : "{% url thunderchild.media_views.media_chooser %}",
+			uploadURL : "{% url thunderchild.media_views.upload %}",
+			assetsURL : "{% url thunderchild.media_views.assets %}"
+		};
 	</script>
 	
 	{% if debug %}

@@ -13,13 +13,13 @@ define(['jquery', 'media/models/AppModel', 'media/views/UploadItemView', 'lib/ba
 			this.progressBar = this.$el.find(".progress .bar");
 
 			appModel.on("showUploadModal", this.show, this);
-			appModel.on("uploadQueueComplete", this.uploadQueueCompleteHandler, this);
 			appModel.on("fileUploadQueued", this.fileUploadQueued, this);
 		},
 
 		events : {
 			'click #modal_upload_button' : 'uploadClickHandler',
 			'change #modal_file_field' : 'fileFieldChangeHandler',
+			'click #cancel-uploads-button' : 'cancelUploadsClickHandler'
 		},
 
 		showState : function(state) {
@@ -37,11 +37,6 @@ define(['jquery', 'media/models/AppModel', 'media/views/UploadItemView', 'lib/ba
 			e.preventDefault();
 		},
 
-		uploadQueueCompleteHandler : function() {
-			//this.$el.modal("hide");
-			//window.location.replace(mediaURL); // We reload the page (without url parameters, taking us to the first page)
-		},
-
 		show : function() {
 			this.uploadButton.addClass("disabled"); // We disable the upload button and reset the form when displaying the modal
 			$("#modal_upload_form")[0].reset();
@@ -56,6 +51,11 @@ define(['jquery', 'media/models/AppModel', 'media/views/UploadItemView', 'lib/ba
 		fileUploadQueued : function(model) {
 			var view = new UploadItemView({model : model});
 			this.$(".modal-body div[data-state=uploading] ul").append(view.el);
+		},
+		
+		cancelUploadsClickHandler : function(e) {
+			appModel.cancelAllUploads();
+			e.preventDefault();
 		}
 
 	})

@@ -7,24 +7,21 @@
 	<div class="modal-body">
 		<div data-state="choose_file">
 			<form id="modal_upload_form">
-				<label for="modal_file_field">Select a file</label>	
+				<label for="modal_file_field" class="visuallyhidden">Choose files</label>	
 				<input id="modal_file_field" name="file" type="file" multiple="multiple"/>
 			</form>
 		</div>
 		<div data-state="uploading">
 			<ul class="clearfix"></ul>
-			<!--
-			<p>Uploading</p>
-			<div class="progress">
-				<div class="bar"></div>
-			</div>
-			-->
 		</div>		
 	</div>
 	<div class="modal-footer">
 		<div data-state="choose_file">
 			<a href="#" class="btn" data-dismiss="modal">Cancel</a>
 			<a href="#" id="modal_upload_button" class="btn btn-primary disabled">Upload</a>
+		</div>
+		<div data-state="uploading">
+			<a id="cancel-uploads-button" href="#" class="btn">Cancel Uploads</a>
 		</div>
 	</div>
 </div>

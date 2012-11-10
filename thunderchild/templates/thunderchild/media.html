@@ -110,9 +110,11 @@
 
 {% block javascript %}
 <script>
-	var mediaURL = "{% url thunderchild.media_views.media %}";
-	var uploadURL = "{% url thunderchild.media_views.upload %}";
-	var assetsURL = "{% url thunderchild.media_views.assets %}";
+	var thunderchild = {
+		mediaURL : "{% url thunderchild.media_views.media %}",
+		uploadURL : "{% url thunderchild.media_views.upload %}",
+		assetsURL : "{% url thunderchild.media_views.assets %}"
+	};
 </script>
 {% if debug %}
 	<script data-main="{{ STATIC_URL }}thunderchild/js_src/media-app.js" src="{{ STATIC_URL }}thunderchild/js_src/lib/require.js"></script>
