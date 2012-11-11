@@ -94,6 +94,7 @@ textarea{
     clear:both;
     margin:0;
     padding:0;
+    line-height:1.5em;
 }
 .non-editable {
   p {
@@ -338,6 +339,12 @@ a {
     }
     .btn-link {
       margin-top:4px;
+      &.disabled {
+        &:hover {
+          color:@linkColorDisabled;
+          text-decoration:none;
+        }
+      }
     }
     .pull-right {
       .dropdown-menu {
