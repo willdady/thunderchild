@@ -839,15 +839,34 @@ div.ui-datepicker {
 #thumbnails-form {
   margin: 0;
 }
+#upload-modal .modal-body ul li {
+  display: block;
+  float: left;
+  width: 100%;
+}
+#upload-modal .modal-body ul li p.name {
+  float: left;
+  margin: 0;
+}
+#upload-modal .modal-body ul li .progress {
+  width: 280px;
+  float: right;
+  margin-bottom: 7px;
+}
+#upload-modal .modal-footer .alert {
+  margin: 0;
+  width: 450px;
+  text-align: left;
+  padding: 4px 8px;
+}
 ul.thumbnails {
   margin: 0;
-  margin-left: -2%;
-  width: 100%;
-  margin-bottom: -15px;
+  width: 918px;
+  padding: 0 1px;
 }
 ul.thumbnails li {
-  width: 14.666%;
-  margin: 0 0 15px 2%;
+  width: 143px;
+  margin: 0 5px 10px 5px;
 }
 ul.thumbnails li a {
   text-decoration: none;
@@ -856,7 +875,7 @@ ul.thumbnails li a {
 ul.thumbnails li .thumbnail {
   text-align: center;
   background: #ffffff;
-  height: 155px;
+  height: 160px;
   position: relative;
 }
 ul.thumbnails li .thumbnail img {
@@ -864,11 +883,10 @@ ul.thumbnails li .thumbnail img {
 }
 ul.thumbnails li .thumbnail ul {
   position: absolute;
-  bottom: 6px;
-  text-align: center;
+  bottom: 0;
   list-style: none;
-  width: 130px;
-  margin: 4px 0px 0px 0px;
+  margin: 0;
+  width: 133px;
 }
 ul.thumbnails li .thumbnail li,
 ul.thumbnails li .thumbnail label,
@@ -882,6 +900,14 @@ ul.thumbnails li .thumbnail p {
 }
 ul.thumbnails li .thumbnail:hover {
   border-color: #6bd5bd;
+}
+ul.thumbnails li .thumbnail input[type=checkbox] {
+  margin: 0;
+  height: 28px;
+  width: 100%;
+}
+.media .pagination {
+  margin-top: 10px;
 }
 #preview-modal {
   width: 952px;
@@ -934,6 +960,9 @@ ul.thumbnails li .thumbnail:hover {
 .media-chooser .thumbnails .thumbnail {
   height: 140px;
 }
+.media-chooser .thumbnails .thumbnail ul {
+  bottom: 6px;
+}
 .media-chooser .pagination {
   float: left;
   width: 100%;
@@ -945,6 +974,17 @@ ul.thumbnails li .thumbnail:hover {
 }
 .img-wrapper.transparency {
   background: url("images/transparency_grid.gif");
+}
+@media (min-width: 1280px) {
+  .media .container-fluid > .container {
+    width: 1226px;
+  }
+  ul.thumbnails {
+    width: 1224px;
+  }
+  ul.thumbnails li .thumbnail {
+    padding: 8px 4px;
+  }
 }
 .accordion-group .group-header,
 .accordion-group .group-content {

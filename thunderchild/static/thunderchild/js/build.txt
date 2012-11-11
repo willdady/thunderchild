@@ -84,7 +84,9 @@ login/Main.js
 
 media/Main.js
 ----------------
+media/models/FileUploadModel.js
 media/models/AppModel.js
+media/views/UploadItemView.js
 media/views/UploadModalView.js
 media/views/DeleteSelectedModalView.js
 media/views/PreviewModalView.js
@@ -96,12 +98,12 @@ media/Main.js
 
 media_chooser/Main.js
 ----------------
-media_chooser/models/AppModel.js
+media/models/FileUploadModel.js
+media/models/AppModel.js
 media_chooser/views/AssetItemView.js
-lib/jquery-ui-1.8.21.custom.min.js
-lib/jquery-ui-timepicker-addon.js
-media_chooser/views/UploadModalView.js
 media_chooser/views/AppView.js
+media/views/UploadItemView.js
+media/views/UploadModalView.js
 media_chooser/Main.js
 
 templates/Main.js
