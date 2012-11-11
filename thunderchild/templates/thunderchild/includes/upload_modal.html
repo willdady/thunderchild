@@ -1,27 +1,30 @@
 <div class="modal hide" id="upload-modal">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">×</button>
-		<h3 data-state="choose_file">Upload</h3>
-		<h3 data-state="uploading">Uploading</h3>
+		<h3>Upload</h3>
 	</div>
 	<div class="modal-body">
-		<div data-state="choose_file">
+		<div data-state="choose-file">
 			<form id="modal_upload_form">
 				<label for="modal_file_field" class="visuallyhidden">Choose files</label>	
 				<input id="modal_file_field" name="file" type="file" multiple="multiple"/>
 			</form>
 		</div>
-		<div data-state="uploading">
+		<div data-state="uploading upload-errors">
 			<ul class="clearfix"></ul>
-		</div>		
+		</div>
 	</div>
 	<div class="modal-footer">
-		<div data-state="choose_file">
+		<div data-state="choose-file">
 			<a href="#" class="btn" data-dismiss="modal">Cancel</a>
 			<a href="#" id="modal_upload_button" class="btn btn-primary disabled">Upload</a>
 		</div>
 		<div data-state="uploading">
 			<a id="cancel-uploads-button" href="#" class="btn">Cancel Uploads</a>
+		</div>
+		<div data-state="upload-errors">
+			<div class="alert alert-error pull-left">One or more files failed to upload</div>
+			<a id="confirm-upload-errors-button" href="#" class="btn btn-primary">OK</a>
 		</div>
 	</div>
 </div>

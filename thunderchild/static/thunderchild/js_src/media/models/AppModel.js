@@ -1,4 +1,7 @@
-define(['jquery', 'media/models/FileUploadModel', 'lib/utilities', 'lib/backbone'], function($, FileUploadModel, Utilities) {
+define(['jquery', 
+		'media/models/FileUploadModel', 
+		'lib/utilities', 
+		'lib/backbone'], function($, FileUploadModel, Utilities) {
 
 	var AppModel = Backbone.Model.extend({
 
@@ -16,6 +19,7 @@ define(['jquery', 'media/models/FileUploadModel', 'lib/utilities', 'lib/backbone
 		
 		uploadFiles : function(files) {
 			this.uploadQueue = [];
+			this.uploadQueueHasErrors = false;
 			
 			_.each(files, function(file, i) {
 				var model = new FileUploadModel(file);
@@ -42,17 +46,20 @@ define(['jquery', 'media/models/FileUploadModel', 'lib/utilities', 'lib/backbone
 			this._dequeueFileUploadModel(model);
 			if (this.uploadQueue.length > 0) {
 				this.uploadQueue[0].upload();
+			} else if (this.uploadQueueHasErrors) {
+				this.trigger("uploadsCompleteWithErrors");
 			} else {
-				window.location = window.location.href.split("?")[0];
+				this.reloadPage();
 			}
 		},
 		
 		_uploadErrorHandler : function(model) {
 			this._dequeueFileUploadModel(model);
+			this.uploadQueueHasErrors = true;
 			if (this.uploadQueue.length > 0) {
 				this.uploadQueue[0].upload();
 			} else {
-				window.location = window.location.href.split("?")[0];
+				this.trigger("uploadsCompleteWithErrors");
 			}
 		},
 		
@@ -62,6 +69,10 @@ define(['jquery', 'media/models/FileUploadModel', 'lib/utilities', 'lib/backbone
 				  this.uploadQueue[i].abort();
 				};
 			}
+			this.reloadPage();
+		},
+		
+		reloadPage : function() {
 			window.location = window.location.href.split("?")[0];
 		}
 		

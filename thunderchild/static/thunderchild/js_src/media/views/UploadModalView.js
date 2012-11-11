@@ -5,8 +5,9 @@ define(['jquery', 'media/models/AppModel', 'media/views/UploadItemView', 'lib/ba
 		el : "#upload-modal",
 
 		initialize : function() {
-			this.CHOOSE_FILE_STATE = "choose_file";
+			this.CHOOSE_FILE_STATE = "choose-file";
 			this.UPLOADING_STATE = "uploading";
+			this.UPLOAD_ERRORS = "upload-errors";
 			
 			this.modalFileField = $("#modal_file_field");
 			this.uploadButton = $("#modal_upload_button");
@@ -14,18 +15,20 @@ define(['jquery', 'media/models/AppModel', 'media/views/UploadItemView', 'lib/ba
 
 			appModel.on("showUploadModal", this.show, this);
 			appModel.on("fileUploadQueued", this.fileUploadQueued, this);
+			appModel.on("uploadsCompleteWithErrors", this.uploadsCompleteWithErrors, this);
 		},
 
 		events : {
 			'click #modal_upload_button' : 'uploadClickHandler',
 			'change #modal_file_field' : 'fileFieldChangeHandler',
-			'click #cancel-uploads-button' : 'cancelUploadsClickHandler'
+			'click #cancel-uploads-button' : 'cancelUploadsClickHandler',
+			'click #confirm-upload-errors-button' : 'confirmUploadErrorsHandler'
 		},
 
 		showState : function(state) {
 			var stateElements = this.$el.find('[data-state]');
-			stateElements.filter("[data-state='"+state+"']").show();
-			stateElements.filter("[data-state!='"+state+"']").hide();
+			stateElements.filter("[data-state~='"+state+"']").show();
+			stateElements.filter(":not([data-state~='"+state+"'])").hide();
 		},
 
 		uploadClickHandler : function(e) {
@@ -50,11 +53,20 @@ define(['jquery', 'media/models/AppModel', 'media/views/UploadItemView', 'lib/ba
 		
 		fileUploadQueued : function(model) {
 			var view = new UploadItemView({model : model});
-			this.$(".modal-body div[data-state=uploading] ul").append(view.el);
+			this.$(".modal-body div[data-state~=uploading] ul").append(view.el);
 		},
 		
 		cancelUploadsClickHandler : function(e) {
 			appModel.cancelAllUploads();
+			e.preventDefault();
+		},
+		
+		uploadsCompleteWithErrors : function() {
+			this.showState(this.UPLOAD_ERRORS);
+		},
+		
+		confirmUploadErrorsHandler : function(e) {
+			appModel.reloadPage();
 			e.preventDefault();
 		}
 

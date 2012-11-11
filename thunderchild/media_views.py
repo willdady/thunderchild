@@ -43,6 +43,7 @@ def media(request):
 @login_required(login_url=reverse_lazy('thunderchild.views.login'))
 def upload(request):
     if request.method == 'POST':
+        
         f = request.FILES.get('file')
         
         resp = {}
