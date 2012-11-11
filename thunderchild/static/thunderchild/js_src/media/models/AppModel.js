@@ -74,6 +74,12 @@ define(['jquery',
 		
 		reloadPage : function() {
 			window.location = window.location.href.split("?")[0];
+		},
+		
+		assetSelectionCallback : function(obj) {
+			if (parent !== window) {
+				parent.appModel.assetSelectionCallback(obj);
+			}
 		}
 		
 	});

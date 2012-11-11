@@ -1,15 +1,16 @@
 requirejs(
 	['jquery', 
-	'media_chooser/models/AppModel',
-	'media_chooser/views/AppView', 
+	'media_chooser/views/AppView',
+	'media/views/UploadModalView',
 	'lib/log'
 	],
-	function($, appModel, AppView) 
+	function($, AppView, UploadModalView) 
 	{
-		
-		$(function(){
+		$(function() {
+			
 			var appView = new AppView();
+			var uploadModalView = new UploadModalView();
+			
 		});
-		
 	}
 );

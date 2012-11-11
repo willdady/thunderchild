@@ -1,4 +1,8 @@
-define(['jquery', 'media_chooser/views/AssetItemView', 'media_chooser/views/UploadModalView', 'media_chooser/models/AppModel', 'lib/backbone'], function($, AssetItemView, UploadModalView, appModel) {
+define(['jquery', 
+		'media_chooser/views/AssetItemView', 
+		'media/models/AppModel',
+		'lib/backbone'], 
+		function($, AssetItemView, appModel) {
 
 
 	var AppView = Backbone.View.extend({
@@ -11,8 +15,6 @@ define(['jquery', 'media_chooser/views/AssetItemView', 'media_chooser/views/Uplo
 					el : val
 				})
 			}, this));
-			
-			var uploadModalView = new UploadModalView();
 		},
 
 		events : {
@@ -20,9 +22,11 @@ define(['jquery', 'media_chooser/views/AssetItemView', 'media_chooser/views/Uplo
 		},
 
 		uploadButtonClickHandler : function(e) {
+			console.log("uploadButtonClickHandler", appModel);
 			appModel.showUploadModal();
 			e.preventDefault();
 		}
+		
 	})
 
 	return AppView;

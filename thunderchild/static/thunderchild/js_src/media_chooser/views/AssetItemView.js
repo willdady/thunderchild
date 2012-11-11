@@ -1,4 +1,7 @@
-define(['jquery', 'media_chooser/models/AppModel', 'lib/backbone'], function($, appModel) {
+define(['jquery', 
+		'media/models/AppModel', 
+		'lib/backbone'], 
+		function($, appModel) {
 
 	var AssetItemView = Backbone.View.extend({
 

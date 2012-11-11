@@ -38,7 +38,8 @@ define(['jquery', 'media/models/AppModel', 'lib/backbone'], function($, appModel
 		destroyHandler : function() {
 			this.$el.remove();
 			this.off();
-		},
+		}
+		
 	}); 
 	
 	return AssetItemView;

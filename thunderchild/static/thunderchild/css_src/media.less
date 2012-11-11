@@ -49,14 +49,14 @@ ul {
       .thumbnail {
         text-align:center;
         background:@white;
-        height:155px;
+        height:160px;
         position:relative;
         img {
           max-height:83px;
         }
         ul {
           position:absolute;
-          bottom:6px;
+          bottom:0;
           list-style:none;
           margin:0;
           width:133px;
@@ -71,6 +71,11 @@ ul {
         }
         &:hover {
           border-color:lighten(@linkColor, 30%);
+        }
+        input[type=checkbox] {
+          margin:0;
+          height:28px;
+          width:100%;
         }
       }
     }  
@@ -131,6 +136,9 @@ ul {
     margin-bottom:auto;
     .thumbnail {
       height:140px;
+      ul {
+        bottom:6px;
+      }
     }
   }
   .pagination {
@@ -158,11 +166,7 @@ ul {
       width:1224px;
       li {
         .thumbnail {
-          height:160px;
           padding: 8px 4px;
-          ul {
-            bottom:11px;
-          }
         }  
       }
     }
