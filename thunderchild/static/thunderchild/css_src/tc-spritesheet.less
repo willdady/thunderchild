@@ -1,0 +1,64 @@
+.but-tmpl-grp-action {
+  border:none; 
+  width:12px; 
+  height:12px;
+  background:url('images/tc-spritesheet.png') 0 -12px no-repeat; 
+  &.active {
+    background-position:0 0;
+  } 
+}
+
+.but-tmpl-action {
+  border:none;
+  width:12px; 
+  height:12px;
+  background:url('images/tc-spritesheet.png') 0 -36px no-repeat; 
+  &.active {
+    background-position:0 -24px;
+  } 
+}
+
+[class^="tc-icon-"], [class*=" tc-icon-"] {
+  display:inline-block;
+  background:url('images/tc-spritesheet.png') no-repeat;
+}
+
+.tc-icon-file { 
+  width:10px; 
+  height:12px; 
+  background-position:0 -48px; 
+}
+
+.tc-icon-file-fragment { 
+  width:10px; 
+  height:11px; 
+  background-position:0 -60px; 
+}
+
+.sml-triangle {
+  display:inline-block;
+  width:7px;
+  height:7px;
+  background:url('images/tc-spritesheet.png') no-repeat;
+  background-position:-2px -78px;
+  vertical-align:middle;
+}
+.collapsed {
+  .sml-triangle {
+    background-position:-2px -71px;
+  }
+}
+
+.sml-triangle-white {
+  display:inline-block;
+  width:7px;
+  height:7px;
+  background:url('images/tc-spritesheet.png') no-repeat;
+  background-position:-2px -92px;
+  vertical-align:middle;
+}
+.collapsed {
+  .sml-triangle-white {
+    background-position:-2px -85px;
+  }
+}

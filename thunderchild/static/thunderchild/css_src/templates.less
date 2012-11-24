@@ -22,18 +22,10 @@
     margin:0;
     background:@white;
     li {
-      &.active {
-        background:lighten(@baseColor, 50%);
-        &.unsaved {
-          background:lighten(@red, 28%);
-        }
-      }
-      &.unsaved {
-        background:lighten(@red, 35%);
-      }
       a {
-        display:block;
-        padding:3px 6px;
+        display:inline-block;
+        padding:6px;
+        line-height:1em;
         &:hover {
           text-decoration:none;
           color:@linkColor;
@@ -43,38 +35,53 @@
         font-weight:bold;
         background:@baseColor;
         color:@white;
-        padding:3px 6px;
+        padding:4px 6px;
         border-bottom:1px solid darken(@baseColor, 5%);
         border-top:1px solid lighten(spin(@baseColor, 5),3%);
         h3 {
-          float:left;
-          margin:0;
+          display:inline-block;
           font-size:14px;
-          line-height:19px;
+          line-height:1em;
+          margin:0;
+          position:relative;
+          top:-1px;
+          .sml-triangle-white {
+            margin-right:9px;
+          }
         }
         a {
           padding:0;
         }
-        .chevron {
-          display:block;
-          float:left;
-          width:15px;
-          height:15px;
-          margin-right:2px;
-          background:url('images/chevron-sprite-sheet-white.png') no-repeat;
-          background-position:-15px;
+        .but-tmpl-grp-action {
+          margin-top:3px;
         }
-        &.collapsed {
-          .chevron {
-            background-position:0;
-          }
-        }
+      }
+      &.template-group {
         ul {
-          &.controls {
-            background:none;
-            li {
+          li {
+            padding: 0 6px;
+            background:@templateItemBackgroundColor;
+            border-top:1px solid @templateItemBorderTopColor;
+            border-bottom:1px solid @templateItemBorderBottomColor;
+            cursor:pointer;
+            .controls {
+              margin-top:2px;
+            }
+            .loading-anim {
+              margin: 0 5px;
+            }
+            .tc-icon-file, .tc-icon-file-fragment {
               float:left;
-              margin-left:3px;
+              margin-top:7px;
+            }
+            &.active {
+              background:lighten(@baseColor, 50%);
+              &.unsaved {
+                background:lighten(@red, 28%);
+              }
+            }
+            &.unsaved {
+              background:lighten(@red, 35%);
             }
           }
         }
@@ -124,5 +131,39 @@
   }
   p {
     line-height:22px;
+  }
+}
+#action-drop-down {
+  display:none;
+  position:absolute;
+  z-index:9999;
+  margin:0;
+  top:0;
+  left:0;
+  list-style:none;
+  background:@dropdownMenuBackgroundColor;
+  .border-radius(4px);
+  li {
+    a {
+      color:@navbarLinkColor;
+      font-size:11px;
+      padding:1px 5px;
+      display:block;
+      &:hover {
+        background:@dropdownMenuHoverBackgroundColor;
+        color:@navbarLinkHoverColor;
+        text-decoration:none;
+      }
+    }
+    &:first-child {
+      a:hover {
+        .border-radius(4px 4px 0 0);
+      } 
+    }
+    &:last-child {
+      a:hover {
+        .border-radius(0 0 4px 4px);
+      } 
+    }
   }
 }

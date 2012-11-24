@@ -9,11 +9,34 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 
 		events : {
-			'click a' : 'clickHandler'
+			'click' : 'clickHandler',
+			'click a' : 'clickHandler',
+			'click .but-tmpl-action' : 'actionButtonClickHandler'
 		},
 
 		clickHandler : function(e) {
 			appModel.selectedTemplate(this.model);
+			e.preventDefault();
+		},
+		
+		actionButtonClickHandler : function(e) {
+			appModel.selectedTemplate(this.model);
+			var coords = $(e.currentTarget).offset();
+			var actions = [
+				{'Delete' : this.deleteAction},
+				{'Settings' : this.settingsAction}
+			];
+			appModel.showActionDropDown(coords.left, coords.top+15, actions);
+			e.stopPropagation();
+		},
+		
+		deleteAction : function(e) {
+			appModel.openConfirmDeleteTemplateModal();
+			e.preventDefault();
+		},
+		
+		settingsAction : function(e) {
+			alert("Settings");
 			e.preventDefault();
 		},
 

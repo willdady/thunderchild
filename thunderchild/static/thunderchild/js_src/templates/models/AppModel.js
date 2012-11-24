@@ -47,6 +47,10 @@ define(['jquery', 'lib/backbone'], function() {
 	
 		closeMediaChooserModal : function() {
 			this.trigger("closeMediaChooserModal");
+		},
+		
+		showActionDropDown : function(x, y, callbacks) {
+			this.trigger("showActionDropDown", x, y, callbacks);
 		}
 		
 	}) 

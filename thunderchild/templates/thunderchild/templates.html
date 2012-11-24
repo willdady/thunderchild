@@ -22,32 +22,37 @@
 	<div id="template-browser">
 		<ul>
 			{% for t in templates %}
-			<li data-id="{{ t.templategroup.id }}">
+			<li data-id="{{ t.templategroup.id }}" class="template-group">
 				<div class="group-header collapsed clearfix" data-toggle="collapse" data-target="#template-group-{{ t.templategroup.id }}">
-					<i class="chevron"></i>
 					{% if t.templategroup.templategroup_short_name == "root" %}
-					<h3><em>{{ t.templategroup.templategroup_short_name }}</em></h3>
-					<ul class="controls pull-right">
-						<li><a href="#" class="new-template-button"><i class="icon-plus icon-white"></i></a></li>
-					</ul>
+					<h3><i class="sml-triangle-white"></i><em>{{ t.templategroup.templategroup_short_name }}</em></h3>
 					{% else %}
-					<h3>{{ t.templategroup.templategroup_short_name }}</h3>
-					<ul class="controls pull-right">
-						<li><a href="#" class="edit-templategroup-button"><i class="icon-cog icon-white"></i></a></li>
-						<li><a href="#" class="new-template-button"><i class="icon-plus icon-white"></i></a></li>
-					</ul>
+					<h3><i class="sml-triangle-white"></i>{{ t.templategroup.templategroup_short_name }}</h3>
 					{% endif %}
+					<button class="but-tmpl-grp-action pull-right"></button>
 				</div>
 				<ul id="template-group-{{ t.templategroup.id }}" class="collapse">
 				{% for template in t.templates %}
 					{% spaceless %}
 					{% if template.template_short_name == 'index' %}
 					<li data-id="{{ template.id }}" data-is-index="1">
-						<a href="#"><em>{{ template.template_short_name }}</em></a>
+						<i class="tc-icon-file"></i>
+						<a href="#">
+							<em>{{ template.template_short_name }}</em>
+						</a>
+						<div class="pull-right controls">
+							<img src="{{ STATIC_URL }}thunderchild/images/template-loading.gif" class="loading-anim" />
+							<button class="but-tmpl-action"></button>
+						</div>
 					</li>
 					{% else %}
 					<li data-id="{{ template.id }}">
+						<i class="tc-icon-file"></i>
 						<a href="#">{{ template.template_short_name }}</a>
+						<div class="pull-right controls">
+							<img src="{{ STATIC_URL }}thunderchild/images/template-loading.gif" class="loading-anim" />
+							<button class="but-tmpl-action"></button>
+						</div>
 					</li>
 					{% endif %}
 					{% endspaceless %}
@@ -58,20 +63,23 @@
 		</ul>
 	</div>
 	<script id="templategroup-list-item-template" type="text/html">
-		<li data-id="<%= id %>">
+		<li data-id="<%= id %>" class="template-group">
 			<div class="group-header clearfix" data-toggle="collapse" data-target="#template-group-<%= id %>">
-				<i class="chevron"></i>
-				<h3><%= templategroup_short_name %></h3>
-				<ul class="controls pull-right">
-					<li><a href="#" class="edit-templategroup-button"><i class="icon-cog icon-white"></i></a></li>
-					<li><a href="#" class="new-template-button"><i class="icon-plus icon-white"></i></a></li>
-				</ul>
+				<h3><i class="sml-triangle-white"></i><%= templategroup_short_name %></h3>
+				<button class="but-tmpl-grp-action pull-right"></button>
 			</div>
 			<ul id="template-group-<%= id %>" class="collapse in"></ul>
 		</li>
 	</script>
 	<script id="template-list-item-template" type="text/html">
-		<li data-id="<%= id %>"><a href="#"><%= template_short_name %></a></li>
+		<li data-id="<%= id %>">
+			<i class="tc-icon-file"></i>
+			<a href="#"><%= template_short_name %></a>
+			<div class="pull-right controls">
+				<img src="{{ STATIC_URL }}thunderchild/images/template-loading.gif" class="loading-anim" />
+				<button class="but-tmpl-action"></button>
+			</div>
+		</li>
 	</script>
 		
 	<div id="template-view">
@@ -224,6 +232,11 @@
 		<a href="#" class="btn btn-danger" id="confirm-delete-templategroup-button">Delete</a>
 	</div>
 </div>
+
+<ul id="action-drop-down"></ul>
+<script id="action-drop-down-item-template" type="text/html">
+	<li><a href="#"><%= action_name %></a></li>
+</script>
 
 {% include 'thunderchild/includes/media_chooser_modal.html' %}
 {% endblock %}
