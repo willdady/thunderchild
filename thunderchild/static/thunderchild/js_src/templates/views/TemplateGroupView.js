@@ -52,7 +52,7 @@ define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateModel',
 		},
 
 		deleteAction : function(e) {
-			alert("NOT IMPLEMENTED");
+			appModel.openConfirmDeleteTemplateGroupModal(this.model);
 			e.preventDefault();
 		},
 
