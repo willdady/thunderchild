@@ -25,7 +25,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			this.templateGroupModel = templateGroupModel;
 			// We clean up the modal by removing any previously entered values and error alerts
 			this.removeErrors();
-			this.$el.find("form").each(function() {
+			this.$("form").each(function() {
 				this.reset()
 			});
 			// Show the modal
@@ -35,8 +35,8 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 
 		removeErrors : function() {
-			this.$el.find(".alert").remove();
-			this.$el.find(".error").removeClass("error");
+			this.$(".alert").remove();
+			this.$(".error").removeClass("error");
 		},
 
 		close : function() {
@@ -44,7 +44,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 
 		saveTemplateGroupButtonClickHandler : function(e) {
-			var formData = this.$el.find("form").serializeObject();
+			var formData = this.$("form").serializeObject();
 			// If the form data is the same as the model we don't need to save
 			if (formData.templategroup_short_name == this.templateGroupModel.get("templategroup_short_name")) {
 				this.close()

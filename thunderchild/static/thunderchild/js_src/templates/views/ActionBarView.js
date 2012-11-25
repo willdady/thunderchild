@@ -31,7 +31,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 
 		deleteTemplateClickHandler : function(e) {
 			if (!$("#delete-template-button").hasClass("disabled")) {
-				appModel.openConfirmDeleteTemplateModal();
+				appModel.openConfirmDeleteTemplateModal(appModel.selectedTemplate());
 			}
 			e.preventDefault()
 		},

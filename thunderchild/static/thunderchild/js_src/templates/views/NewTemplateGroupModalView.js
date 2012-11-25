@@ -31,7 +31,7 @@ define(
 		open : function() {
 			// We clean up the modal by removing any previously entered values and error alerts
 			this.removeErrors();
-			this.$el.find("form").each(function() {
+			this.$("form").each(function() {
 				this.reset();
 			});
 			// Show the modal
@@ -41,8 +41,8 @@ define(
 		},
 
 		removeErrors : function() {
-			this.$el.find(".alert").remove();
-			this.$el.find(".error").removeClass("error");
+			this.$(".alert").remove();
+			this.$(".error").removeClass("error");
 		},
 
 		close : function() {
@@ -50,7 +50,7 @@ define(
 		},
 
 		createTemplateGroupButtonClickHandler : function(e) {
-			var formData = this.$el.find("form").serializeObject();
+			var formData = this.$("form").serializeObject();
 			$.post(templateGroupRoot, JSON.stringify(formData), _.bind(function(data, textStatus, jqXHR) {
 				if (jqXHR.status == 200) {
 					var templategroup_model = new TemplateGroupModel(data.templategroup);

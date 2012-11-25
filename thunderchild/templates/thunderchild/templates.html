@@ -33,29 +33,14 @@
 				</div>
 				<ul id="template-group-{{ t.templategroup.id }}" class="collapse">
 				{% for template in t.templates %}
-					{% spaceless %}
-					{% if template.template_short_name == 'index' %}
-					<li data-id="{{ template.id }}" data-is-index="1">
-						<i class="tc-icon-file"></i>
-						<a href="#">
-							<em>{{ template.template_short_name }}</em>
-						</a>
-						<div class="pull-right controls">
-							<img src="{{ STATIC_URL }}thunderchild/images/template-loading.gif" class="loading-anim" />
-							<button class="but-tmpl-action"></button>
-						</div>
-					</li>
-					{% else %}
-					<li data-id="{{ template.id }}">
-						<i class="tc-icon-file"></i>
+					<li data-id="{{ template.id }}" {% if template.template_is_private %}class="is-fragment"{% endif %} {% if template.template_short_name == 'index' %}data-is-index="1"{% endif %}>
+						<i class="icon"></i>
 						<a href="#">{{ template.template_short_name }}</a>
 						<div class="pull-right controls">
 							<img src="{{ STATIC_URL }}thunderchild/images/template-loading.gif" class="loading-anim" />
 							<button class="but-tmpl-action"></button>
 						</div>
 					</li>
-					{% endif %}
-					{% endspaceless %}
 				{% endfor %}
 				</ul>
 			</li>
@@ -73,10 +58,10 @@
 	</script>
 	<script id="template-list-item-template" type="text/html">
 		<li data-id="<%= id %>">
-			<i class="tc-icon-file"></i>
+			<i class="icon"></i>
 			<a href="#"><%= template_short_name %></a>
 			<div class="pull-right controls">
-				<img src="{{ STATIC_URL }}thunderchild/images/template-loading.gif" class="loading-anim" />
+				<img src="{{ STATIC_URL }}thunderchild/images/template-loading.gif" width="12" height="12" class="loading-anim" />
 				<button class="but-tmpl-action"></button>
 			</div>
 		</li>

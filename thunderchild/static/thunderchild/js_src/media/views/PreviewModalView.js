@@ -11,7 +11,7 @@ define(['jquery', 'media/models/AppModel', 'lib/backbone', 'lib/bootstrap'], fun
 		},
 
 		show : function(assetModel) {
-			var modal_body = this.$el.find(".modal-body");
+			var modal_body = this.$(".modal-body");
 			modal_body.html(this.imageTemplate(assetModel.toJSON()));
 			if (assetModel.get("type") === "image/png") {
 				modal_body.find(".img-wrapper").addClass("transparency");

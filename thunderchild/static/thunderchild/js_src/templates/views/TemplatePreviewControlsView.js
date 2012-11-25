@@ -29,7 +29,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			} else {
 				var templateUID = templateGroupName + "/" + templateName;
 			}
-			this.$el.find(".template-uid").text(templateUID);
+			this.$(".template-uid").text(templateUID);
 			this.resetPreviewButtonHref()
 		}
 	})

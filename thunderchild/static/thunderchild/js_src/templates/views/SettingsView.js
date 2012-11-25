@@ -15,7 +15,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 
 		inputChangeHander : function() {
 			if (this.templateModel) {
-				var formData = this.$el.find("form").serializeObject();
+				var formData = this.$("form").serializeObject();
 				this.templateModel.set(formData, {
 					silent : true
 				});
@@ -52,8 +52,8 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 
 		removeErrors : function() {
-			this.$el.find(".alert").remove();
-			this.$el.find(".error").removeClass("error");
+			this.$(".alert").remove();
+			this.$(".error").removeClass("error");
 		},
 
 		renderErrors : function(errors) {

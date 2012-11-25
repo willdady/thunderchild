@@ -25,7 +25,7 @@ define(['jquery',
 		},
 		
 		setTitle: function(text) {
-			this.$el.find(".modal-header h3").text(text);
+			this.$(".modal-header h3").text(text);
 	 	},
 
 		open : function() {

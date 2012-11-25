@@ -33,8 +33,8 @@ define(['jquery', 'lib/backbone'], function() {
 			this.trigger("openEditTemplateGroupModal", templateGroupModel);
 		},
 	
-		openConfirmDeleteTemplateModal : function() {
-			this.trigger("openConfirmDeleteTemplateModal");
+		openConfirmDeleteTemplateModal : function(model) {
+			this.trigger("openConfirmDeleteTemplateModal", model);
 		},
 	
 		openConfirmDeleteTemplateGroupModal : function(templateGroupModel) {

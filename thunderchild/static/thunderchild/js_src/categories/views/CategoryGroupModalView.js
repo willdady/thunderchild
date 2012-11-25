@@ -17,12 +17,12 @@ define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryGroup
 	  	},
 	  
 		setTitle: function(text) {
-			this.$el.find(".modal-header h3").text(text);
+			this.$(".modal-header h3").text(text);
 	 	},
 	    
 	    removeErrors: function() {
-    		this.$el.find(".alert").remove();
-			this.$el.find(".error").removeClass("error");
+    		this.$(".alert").remove();
+			this.$(".error").removeClass("error");
   		},
 	  
 	  	addErrors: function(errors) {

@@ -12,7 +12,8 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			"click #confirm-delete-template-button" : "confirmDeleteHandler"
 		},
 
-		open : function() {
+		open : function(model) {
+			this.templateModel = model;
 			this.$el.modal("show");
 		},
 
@@ -21,11 +22,10 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 
 		confirmDeleteHandler : function(e) {
-			var templateModel = appModel.get("selectedTemplate");
-			templateModel.destroy();
+			this.templateModel.destroy();
 			this.close();
 			// Select the index template of the group the deleted template belonged to
-			appModel.selectedTemplate(templateModel.templateGroupModel().indexTemplateModel());
+			appModel.selectedTemplate(this.templateModel.templateGroupModel().indexTemplateModel());
 			e.preventDefault();
 		}
 	})

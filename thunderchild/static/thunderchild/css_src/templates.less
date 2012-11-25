@@ -65,14 +65,14 @@
             border-bottom:1px solid @templateItemBorderBottomColor;
             cursor:pointer;
             .controls {
-              margin-top:2px;
+              margin-top:7px;
+              width:30px;
+            }
+            .but-tmpl-action {
+              float:right;
             }
             .loading-anim {
-              margin: 0 5px;
-            }
-            .tc-icon-file, .tc-icon-file-fragment {
               float:left;
-              margin-top:7px;
             }
             &.active {
               background:lighten(@baseColor, 50%);
@@ -82,6 +82,20 @@
             }
             &.unsaved {
               background:lighten(@red, 35%);
+            }
+            .icon {
+              float:left;
+              margin-top:7px;
+              display:inline-block;
+              width:10px; 
+              height:12px; 
+              background:url('images/tc-spritesheet.png') 0 -48px no-repeat;
+            }
+            &.is-fragment {
+              .icon {
+                height:11px; 
+                background-position:0 -60px;
+              } 
             }
           }
         }

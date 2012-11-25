@@ -6,6 +6,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			appModel.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
 			this.model.on("destroy", this.modelDestroyHandler, this);
 			this.model.on("change requiresSave", this.render, this);
+			this.render();
 		},
 
 		events : {
@@ -20,18 +21,17 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 		
 		actionButtonClickHandler : function(e) {
-			appModel.selectedTemplate(this.model);
 			var coords = $(e.currentTarget).offset();
 			var actions = [
-				{'Delete' : this.deleteAction},
-				{'Settings' : this.settingsAction}
+				{'Delete' : _.bind(this.deleteAction, this)},
+				{'Settings' : _.bind(this.settingsAction, this)}
 			];
 			appModel.showActionDropDown(coords.left, coords.top+15, actions);
 			e.stopPropagation();
 		},
 		
 		deleteAction : function(e) {
-			appModel.openConfirmDeleteTemplateModal();
+			appModel.openConfirmDeleteTemplateModal(this.model);
 			e.preventDefault();
 		},
 		
@@ -57,16 +57,9 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 
 		render : function() {
-			if (this.model.templateGroupModel().indexTemplateModel() == this.model) {
-				this.$el.find("a em").text(this.model.get("template_short_name"));
-			} else {
-				this.$el.find("a").text(this.model.get("template_short_name"));
-			}
-			if (this.model.requiresSave()) {
-				this.$el.addClass("unsaved");
-			} else {
-				this.$el.removeClass("unsaved");
-			}
+			this.$("a").text(this.model.get("template_short_name"));
+			this.$el.toggleClass("unsaved", this.model.requiresSave() === true);
+			this.$el.toggleClass("is-fragment", this.model.get("template_is_private") === true);
 		}
 	})
 	
