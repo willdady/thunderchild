@@ -85,33 +85,12 @@
 				<pre id="editor"></pre>
 			</div>
 			<div id="settings-pane" class="tab-pane">
-				<form id="settings-form">
-					{% for field in template_form %}
-						{% if not field.is_hidden %}
-							<div id="{{ field.html_name|slugify }}-field-group" class="field-group">
-								<div class="field-label-holder">
-									{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
-								</div>
-								<div class="field-holder">
-									{{ field }}
-									{% if field.help_text %}
-										<p class="help-text">{{ field.help_text }}</p>
-									{% endif %}
-								</div>
-							</div>
-						{% else %}
-							{% if field.label != 'Content' %}
-								{{ field }}
-							{% endif %}
-						{% endif %}
-					{% endfor %}
-				</form>
+				
+				
+				
 			</div>
 		</div>
 	</div>
-	<script id="form-error-template" type="text/html">
-		<div class="alert alert-error"><ul class="errorlist"><%= errors %></ul></div>
-	</script>
 		
 {% endblock %}
 
@@ -227,7 +206,7 @@
 		<form id="settings-form-">
 			{% for field in template_form %}
 				{% if not field.is_hidden %}
-					<div class="field-holder">
+					<div class="field-holder {{ field.html_name }}">
 						{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
 						{{ field }}
 						{% if field.help_text %}
@@ -247,6 +226,9 @@
 		<a href="#" class="btn btn-primary" id="confirm-template-settings-button">Save</a>
 	</div>
 </div>
+<script id="form-error-template" type="text/html">
+	<div class="alert alert-error"><ul class="errorlist"><%= errors %></ul></div>
+</script>
 
 <ul id="action-drop-down"></ul>
 <script id="action-drop-down-item-template" type="text/html">

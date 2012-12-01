@@ -36,7 +36,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 		
 		settingsAction : function(e) {
-			alert("Settings");
+			appModel.showTemplateSettingsModal(this.model);
 			e.preventDefault();
 		},
 

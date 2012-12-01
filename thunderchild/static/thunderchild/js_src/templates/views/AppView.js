@@ -4,7 +4,6 @@ define(
 	'templates/views/TemplatePreviewControlsView',
 	'templates/views/TemplateBrowserView',
 	'templates/views/TemplateEditorView',
-	'templates/views/SettingsView',
 	'templates/views/NewTemplateModalView',
 	'templates/views/ConfirmDeleteTemplateModalView',
 	'templates/views/MediaChooserModalView',
@@ -12,6 +11,7 @@ define(
 	'templates/views/EditTemplateGroupModalView',
 	'templates/views/ConfirmDeleteTemplateGroupModalView',
 	'templates/views/ActionDropDownView',
+	'templates/views/TemplateSettingsModal',
 	'lib/backbone',
 	'lib/bootstrap'], 
 	function($, 
@@ -19,14 +19,14 @@ define(
 		TemplatePreviewControlsView, 
 		TemplateBrowserView, 
 		TemplateEditorView, 
-		SettingsView, 
 		NewTemplateModalView, 
 		ConfirmDeleteTemplateModalView, 
 		MediaChooserModalView, 
 		NewTemplateGroupModalView, 
 		EditTemplateGroupModalView, 
 		ConfirmDeleteTemplateGroupModalView,
-		ActionDropDownView) {
+		ActionDropDownView,
+		TemplateSettingsModal) {
 
 
 	var AppView = Backbone.View.extend({
@@ -39,7 +39,6 @@ define(
 			var templatePreviewControlsView = new TemplatePreviewControlsView();
 			var templateBrowserView = new TemplateBrowserView();
 			var templateEditorView = new TemplateEditorView();
-			var settingsView = new SettingsView();
 			var newTemplateModal = new NewTemplateModalView();
 			var confirmDeleteTemplateModal = new ConfirmDeleteTemplateModalView();
 			var mediaChooserModal = new MediaChooserModalView();
@@ -47,6 +46,7 @@ define(
 			var editTemplateGroupModal = new EditTemplateGroupModalView();
 			var confirmDeleteTemplateGroupModal = new ConfirmDeleteTemplateGroupModalView();
 			var actionDropDownView = new ActionDropDownView();
+			var templateSettingsModal = new TemplateSettingsModal();
 
 			$("#tabs a").click(this.tabClickHandler);
 			$("#tabs a:first").tab("show");
