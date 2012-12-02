@@ -68,27 +68,16 @@
 	</script>
 		
 	<div id="template-view">
-		<ul class="nav nav-tabs" id="tabs">
-		  <li class="active"><a href="#editor-pane">Editor</a></li>
-		  <li><a href="#settings-pane">Settings</a></li>
-		</ul>
-		
+
 		<div id="preview-link-holder">
 			<p class="preview-url"><span class="template-dynamic-url">{{ absolute_dynamic_url }}</span><span class="template-uid"></span></p>
 			<input class="preview-url-parameters" type="text" />
 			<a id="preview-template-button" href="#" target="_blank" class="btn btn-mini">Preview</a>
 		</div>
 		
-		<div class="tab-content">
-			<div id="editor-pane" class="tab-pane active">
-				<a id="media_chooser_button" href="#" class="btn btn-mini"><i class="icon-picture"></i> Media Chooser</a>
-				<pre id="editor"></pre>
-			</div>
-			<div id="settings-pane" class="tab-pane">
-				
-				
-				
-			</div>
+		<div id="editor-pane" class="tab-pane active">
+			<a id="media_chooser_button" href="#" class="btn btn-mini"><i class="icon-picture"></i> Media Chooser</a>
+			<pre id="editor"></pre>
 		</div>
 	</div>
 		
@@ -222,8 +211,8 @@
 		</form>
 	</div>
 	<div class="modal-footer">
-		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
-		<a href="#" class="btn btn-primary" id="confirm-template-settings-button">Save</a>
+		<button class="btn" data-dismiss="modal">Cancel</button>
+		<button class="btn btn-primary" id="confirm-template-settings-button">Save</button>
 	</div>
 </div>
 <script id="form-error-template" type="text/html">

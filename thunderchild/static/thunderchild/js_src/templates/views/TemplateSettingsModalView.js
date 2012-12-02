@@ -1,6 +1,6 @@
 define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appModel) {
 	
-	var TemplateSettingsModal = Backbone.View.extend({
+	var TemplateSettingsModalView = Backbone.View.extend({
 		
 		el : "#template-settings-modal",
 		
@@ -9,7 +9,8 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 		
 		events : {
-			"change input[type=radio][name=template_is_private]" : "isPrivateChangeHander"
+			"change input[type=radio][name=template_is_private]" : "isPrivateChangeHander",
+			"click #confirm-template-settings-button" : "saveClickHandler"
 		},
 
 		isPrivateChangeHander : function() {
@@ -18,6 +19,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		
 		open : function(model) {
 			this.model = model;
+			this.removeErrors();
 			this.$el.modal("show");
 				
 			$.each(this.model.toJSON(), function(key, value) {
@@ -43,20 +45,47 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			this.$el.modal("hide");
 		},
 		
-		saveClickHandler : function() {
-			if (this.model) {
-				var formData = this.$("form").serializeObject();
-				console.log(formData);
-				this.model.set(formData, {
-					silent : true
-				});
-				this.model.requiresSave(true);
-			}
-		}
+		removeErrors : function() {
+			this.$(".alert").remove();
+			this.$(".error").removeClass("error");
+		},
 		
+		saveClickHandler : function(e) {
+			if($(e.currentTarget).hasClass('disabled')) return;
+			
+			$(e.currentTarget).addClass('disabled');
+			
+			var formData = this.$("form").serializeObject();
+			this.removeErrors();
+			this.model.save(formData, {
+				wait : true,
+				success : _.bind(function(model, reponse, options) {
+					$(e.currentTarget).removeClass('disabled');
+					this.close();
+				}, this),
+				error : _.bind(function(model, response) {
+					$(e.currentTarget).removeClass('disabled');
+					if (response.status == 400) {
+						var resp = $.parseJSON(response.responseText);
+						var errors_html = ''
+						// Loop over each field in the errors object. The errors object contains fields in the format {<field name>:["error", "error", ...], ...}
+						_.each(resp.errors, function(value, key) {
+							_.each(value, function(el, i) {
+								errors_html += _.template("<li><%= error %></li>", {
+									error : el
+								});
+							});
+							$(".field-holder." + key).before(_.template($("#form-error-template").text(), {
+								errors : errors_html
+							})).addClass("error");
+						})
+					}
+				}, this)
+			});
+		}
 		
 	});
 	
-	return TemplateSettingsModal;
+	return TemplateSettingsModalView;
 	
 });
