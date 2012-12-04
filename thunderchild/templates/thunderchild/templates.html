@@ -68,17 +68,15 @@
 	</script>
 		
 	<div id="template-view">
-
-		<div id="preview-link-holder">
-			<p class="preview-url"><span class="template-dynamic-url">{{ absolute_dynamic_url }}</span><span class="template-uid"></span></p>
-			<input class="preview-url-parameters" type="text" />
-			<a id="preview-template-button" href="#" target="_blank" class="btn btn-mini">Preview</a>
+		<div id="template-editor-controls">
+			<button id="media_chooser_button" class="btn btn-mini"><i class="icon-picture"></i> Media Chooser</button>
+			<div id="preview-template-control" class="pull-right">
+				<p class="preview-url"><span class="template-dynamic-url">{{ absolute_dynamic_url }}</span><span class="template-uid"></span></p>
+				<input class="preview-url-parameters" type="text" />
+				<a id="preview-template-button" href="#" target="_blank" class="btn btn-mini">Preview</a>
+			</div>
 		</div>
-		
-		<div id="editor-pane" class="tab-pane active">
-			<a id="media_chooser_button" href="#" class="btn btn-mini"><i class="icon-picture"></i> Media Chooser</a>
-			<pre id="editor"></pre>
-		</div>
+		<pre id="editor"></pre>
 	</div>
 		
 {% endblock %}

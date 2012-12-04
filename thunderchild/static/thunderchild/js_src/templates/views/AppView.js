@@ -1,7 +1,7 @@
 define(
 	['jquery', 
 	'templates/views/ActionBarView',
-	'templates/views/TemplatePreviewControlsView',
+	'templates/views/TemplateEditorControlsView',
 	'templates/views/TemplateBrowserView',
 	'templates/views/TemplateEditorView',
 	'templates/views/NewTemplateModalView',
@@ -16,7 +16,7 @@ define(
 	'lib/bootstrap'], 
 	function($, 
 		ActionBarView, 
-		TemplatePreviewControlsView, 
+		TemplateEditorControlsView, 
 		TemplateBrowserView, 
 		TemplateEditorView, 
 		NewTemplateModalView, 
@@ -36,7 +36,7 @@ define(
 		initialize : function() {
 
 			var actionBarView = new ActionBarView();
-			var templatePreviewControlsView = new TemplatePreviewControlsView();
+			var templateEditorControlsView = new TemplateEditorControlsView();
 			var templateBrowserView = new TemplateBrowserView();
 			var templateEditorView = new TemplateEditorView();
 			var newTemplateModal = new NewTemplateModalView();

@@ -2,14 +2,19 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 
 	var TemplatePreviewControlsView = Backbone.View.extend({
 		
-		el:"#preview-link-holder",
+		el : "#template-editor-controls",
 
 		initialize : function() {
 			appModel.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
 		},
 
 		events : {
-			"change .preview-url-parameters" : "resetPreviewButtonHref"
+			"change #preview-template-control .preview-url-parameters" : "resetPreviewButtonHref",
+			"click #media_chooser_button" : "mediaChooserClickHandler"
+		},
+		
+		mediaChooserClickHandler : function() {
+			appModel.openMediaChooserModal();
 		},
 
 		resetPreviewButtonHref : function() {

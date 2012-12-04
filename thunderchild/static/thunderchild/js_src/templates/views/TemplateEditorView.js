@@ -21,17 +21,8 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			appModel.on("assetSelected", this.assetSelectedHandler, this);
 		},
 
-		events : {
-			"click #media_chooser_button" : "mediaChooserButtonClickHandler"
-		},
-
 		assetSelectedHandler : function(obj) {
 			this.editor.insert(obj.url);
-		},
-
-		mediaChooserButtonClickHandler : function(e) {
-			appModel.openMediaChooserModal();
-			e.preventDefault();
 		},
 
 		tabShownHandler : function(e) {
