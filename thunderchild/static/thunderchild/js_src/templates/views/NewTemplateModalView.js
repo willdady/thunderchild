@@ -57,8 +57,8 @@ define([
 			var formData = this.$("form").serializeObject();
 			// This value is not part of the form but is required so we set it here.
 			formData.template_cache_timeout = 0;
-			this.temp_model = new TemplateModel(formData);
-			this.temp_model.save({}, {
+			this.temp_model = new TemplateModel();
+			this.temp_model.save(formData, {
 				success : _.bind(function(model, response) {
 					model.templateGroupModel(this.templateGroupModel);
 					templateCollection.add(model);

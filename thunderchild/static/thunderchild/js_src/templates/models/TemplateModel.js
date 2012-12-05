@@ -3,14 +3,37 @@ define(['jquery', 'lib/backbone'], function($) {
 	var TemplateModel = Backbone.Model.extend({
 
 		urlRoot : templateRoot,
+		
+		save : function(attributes, options) {
+			this.trigger("save");
+			var _options = {
+				wait : true,
+				success : _.bind(function(model, response) {
+					this.trigger("saveSuccess", model, response);
+					if (options.hasOwnProperty('success')) {
+						options.success(model, response);
+					}
+				}, this),
+				error : _.bind(function(model, response) {
+					this.trigger("saveError", model, response);
+					if (options.hasOwnProperty('error')) {
+						options.error(model, response);
+					}
+				}, this)
+			}
+			Backbone.Model.prototype.save.call(this, attributes, _options);
+		},
 
+		
+/*
 		initialFetch : function() {
 			this.fetch({
 				success : _.bind(function() {
 					this.trigger("initialFetchComplete");
 				}, this)
 			});
-		},
+		},*/
+
 
 		templateGroupModel : function(model) {
 			if (model) {

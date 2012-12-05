@@ -5,7 +5,9 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		initialize : function() {
 			appModel.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
 			this.model.on("destroy", this.modelDestroyHandler, this);
-			this.model.on("change requiresSave", this.render, this);
+			this.model.on("change, requiresSave", this.render, this);
+			this.model.on("save", this.saveHandler, this);
+			this.model.on("saveSuccess", this.saveSuccessHandler, this);
 			this.render();
 		},
 
@@ -21,6 +23,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 		
 		actionButtonClickHandler : function(e) {
+			appModel.selectedTemplate(this.model);
 			var coords = $(e.currentTarget).offset();
 			var actions = [
 				{'Delete' : _.bind(this.deleteAction, this)},
@@ -44,7 +47,8 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			var model = appModel.get("selectedTemplate");
 			if (model == this.model) {
 				if (!this.model.has("template_content")) {
-					this.model.initialFetch();
+					//this.model.initialFetch();
+					this.model.fetch();
 				}
 				this.$el.addClass("active");
 			} else {
@@ -60,6 +64,14 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			this.$("a").text(this.model.get("template_short_name"));
 			this.$el.toggleClass("unsaved", this.model.requiresSave() === true);
 			this.$el.toggleClass("is-fragment", this.model.get("template_is_private") === true);
+		},
+		
+		saveHandler : function() {
+			this.$(".loading-anim").removeClass("hide");
+		},
+		
+		saveSuccessHandler : function() {
+			this.$(".loading-anim").addClass("hide");
 		}
 	})
 	

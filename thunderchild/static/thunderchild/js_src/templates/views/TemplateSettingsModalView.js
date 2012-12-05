@@ -22,9 +22,10 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			this.removeErrors();
 			this.$el.modal("show");
 				
-			$.each(this.model.toJSON(), function(key, value) {
-				$("#settings-form- input[name='"+key+"']").not("[type=radio]").val(value);
-			});
+			$.each(this.model.toJSON(), _.bind(function(key, value) {
+				console.log(key , value);
+				this.$(":input[name='"+key+"']").not("[type=radio]").val(value);
+			}, this));
 			
 			if (this.model.get("template_is_private")) {
 				this.$("input[type=radio][name=template_is_private][value='True']").prop("checked", true);
@@ -61,6 +62,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 				wait : true,
 				success : _.bind(function(model, reponse, options) {
 					$(e.currentTarget).removeClass('disabled');
+					this.model.requiresSave(false);
 					this.close();
 				}, this),
 				error : _.bind(function(model, response) {

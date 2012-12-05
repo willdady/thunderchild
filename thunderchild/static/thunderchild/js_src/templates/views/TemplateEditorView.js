@@ -1,8 +1,8 @@
 define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appModel) {
 
 	var TemplateEditorView = Backbone.View.extend({
-		
-		el:"#editor-pane",
+
+		el : "#editor-pane",
 
 		initialize : function() {
 			this.editor = ace.edit("editor");
@@ -13,8 +13,6 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			appModel.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
 
 			this.selectedTemplateChangeHandler();
-			// We need to listen to changes in the tabs to refresh the editor. It won't update it's content if hidden when new text is entered.
-			$("#tabs").on("shown", _.bind(this.tabShownHandler, this));
 
 			this.ignoreEditorChange = false;
 			// Listen to event triggered from the media chooser to add the URL of chosen asset to the editor at the cursor.
@@ -25,36 +23,30 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			this.editor.insert(obj.url);
 		},
 
-		tabShownHandler : function(e) {
-			if (this.$el.hasClass("active") && this.templateModel) {
-				this.setValue(this.templateModel.get("template_content"))
-				if (this.getMode() !== this.templateModel.getMode()) {
-					this.setMode(this.templateModel.getMode());
-				}
-			}
-		},
-
 		editorChangeHandler : function(e) {
-			if (this.ignoreEditorChange)
+			if (this.ignoreEditorChange || !this.templateModel)
 				return;
-			this.templateModel = appModel.get("selectedTemplate");
 			this.templateModel.requiresSave(true);
-			this.templateModel.set("template_content", this.editor.getSession().getValue());
+			this.templateModel.set({
+				template_content : this.editor.getSession().getValue()
+			}, {
+				silent : true
+			});
 		},
 
 		selectedTemplateChangeHandler : function() {
 			if (this.templateModel) {
-				this.templateModel.off("initialFetchComplete", this.initialFetchCompleteHandler, this);
-				this.templateModel.off("change:template_content_type", this.contentTypeChangeHandler, this);
+				this.templateModel.off("change", this.changeHandler, this);
 			}
 			this.templateModel = appModel.get("selectedTemplate");
-			this.templateModel.on("initialFetchComplete", this.initialFetchCompleteHandler, this);
-			this.templateModel.on("change:template_content_type", this.contentTypeChangeHandler, this);
+			this.templateModel.on("change", this.changeHandler, this);
 			this.setValue(this.templateModel.get("template_content"));
 			this.setMode(this.templateModel.getMode());
 		},
 
-		contentTypeChangeHandler : function() {
+		changeHandler : function() {
+			console.log("change!");
+			this.setValue(this.templateModel.get("template_content"));
 			this.setMode(this.templateModel.getMode());
 		},
 
@@ -65,11 +57,6 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			this.ignoreEditorChange = false;
 		},
 
-		initialFetchCompleteHandler : function() {
-			this.setValue(this.templateModel.get("template_content"));
-			this.setMode(this.templateModel.getMode());
-		},
-
 		setMode : function(mode) {
 			this.editor.getSession().setMode(mode);
 		},
@@ -78,7 +65,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			this.editor.getSession().getMode().$id
 		}
 	})
-	
+
 	return TemplateEditorView;
 
-}); 
+});
