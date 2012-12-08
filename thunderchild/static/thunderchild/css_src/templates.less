@@ -10,7 +10,7 @@
   bottom:10px;
   width:300px;
   overflow:auto;
-  background:@white;
+  background:#FFF;
   border:solid 1px @baseBorderColor;
   padding:4px;
   .btn-primary {
@@ -20,12 +20,13 @@
   ul {
     list-style:none;
     margin:0;
-    background:@white;
+    background:#FFF;
     li {
       a {
         display:inline-block;
         padding:6px;
         line-height:1em;
+        .user-select(none);
         &:hover {
           text-decoration:none;
           color:@linkColor;
@@ -33,11 +34,13 @@
       }
       .group-header {
         font-weight:bold;
-        background:@baseColor;
-        color:@white;
+        background:@templateGroupHeaderBackgroundColor;
+        color:#FFF;
         padding:4px 6px;
-        border-bottom:1px solid darken(@baseColor, 5%);
-        border-top:1px solid lighten(spin(@baseColor, 5),3%);
+        border-bottom:1px solid @templateGroupHeaderBorderBottomColor;
+        border-top:1px solid @templateGroupHeaderBorderTopColor;
+        cursor:pointer;
+        .user-select(none);
         h3 {
           display:inline-block;
           font-size:14px;
@@ -75,13 +78,13 @@
               float:left;
             }
             &.active {
-              background:lighten(@baseColor, 50%);
+              background:@templateItemBackgroundColorActive;
               &.unsaved {
-                background:lighten(@red, 28%);
+                background:@templateItemBackgroundColorActiveUnsaved;
               }
             }
             &.unsaved {
-              background:lighten(@red, 35%);
+              background:@templateItemBackgroundColorUnsaved;
             }
             .icon {
               float:left;
@@ -97,6 +100,13 @@
                 background-position:0 -60px;
               } 
             }
+          }
+        }
+        &.active {
+          .group-header {
+            background:@templateGroupHeaderBackgroundColorActive;
+            border-bottom-color:@templateGroupHeaderBorderBottomColorActive;
+            border-top-color:@templateGroupHeaderBorderTopColorActive;
           }
         }
       }
@@ -145,17 +155,17 @@
   top:0;
   left:0;
   list-style:none;
-  background:@dropdownMenuBackgroundColor;
+  background:@actionDropDownBackgroundColor;
   .border-radius(4px);
+  .box-shadow(0px 1px 4px 0px rgba(0, 0, 0, 0.4));
   li {
     a {
-      color:@navbarLinkColor;
+      color:@actionDropDownTextColor;
       font-size:11px;
       padding:1px 5px;
       display:block;
       &:hover {
-        background:@dropdownMenuHoverBackgroundColor;
-        color:@navbarLinkHoverColor;
+        background:@actionDropDownItemHoverBackgroundColor;
         text-decoration:none;
       }
     }

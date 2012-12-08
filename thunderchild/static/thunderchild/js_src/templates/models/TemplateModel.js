@@ -2,7 +2,7 @@ define(['jquery', 'lib/backbone'], function($) {
 
 	var TemplateModel = Backbone.Model.extend({
 
-		urlRoot : templateRoot,
+		urlRoot : thunderchild.templateRoot, // thunderchild object is global obj defined in templates.html.
 		
 		save : function(attributes, options) {
 			this.trigger("save");
@@ -23,18 +23,7 @@ define(['jquery', 'lib/backbone'], function($) {
 			}
 			Backbone.Model.prototype.save.call(this, attributes, _options);
 		},
-
 		
-/*
-		initialFetch : function() {
-			this.fetch({
-				success : _.bind(function() {
-					this.trigger("initialFetchComplete");
-				}, this)
-			});
-		},*/
-
-
 		templateGroupModel : function(model) {
 			if (model) {
 				this._templateGroupModel = model;

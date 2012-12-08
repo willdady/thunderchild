@@ -23,8 +23,17 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 
 		selectedTemplateChangeHandler : function(model, templateModel) {
+			if (this.templateModel) {
+				this.templateModel.off("change:template_is_private", this.templatePrivacyChangeHandler);
+			}
+			if (this.templateModel !== templateModel) {
+				this.templateModel = templateModel;
+				this.templateModel.on("change:template_is_private", this.templatePrivacyChangeHandler, this);
+			}
+			
 			var templateName = templateModel.get("template_short_name");
-			templateGroupName = templateModel.templateGroupModel().get("templategroup_short_name");
+			var templateGroupName = templateModel.templateGroupModel().get("templategroup_short_name");
+			
 			if (templateGroupName == 'root' && templateName == 'index') {
 				var templateUID = '';
 			} else if (templateGroupName == 'root' && templateName !== 'index') {
@@ -35,7 +44,18 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 				var templateUID = templateGroupName + "/" + templateName;
 			}
 			this.$(".template-uid").text(templateUID);
-			this.resetPreviewButtonHref()
+			this.templatePrivacyChangeHandler(templateModel);
+		},
+		
+		templatePrivacyChangeHandler : function(model) {
+			// If the template is private, hide the preview template controls (can't preview private templates).
+			var isPrivate = model.get("template_is_private");
+			if (isPrivate) {
+				this.$("#preview-template-control").addClass("hide");
+			} else {
+				this.$("#preview-template-control").removeClass("hide");
+				this.resetPreviewButtonHref();
+			}
 		}
 	})
 

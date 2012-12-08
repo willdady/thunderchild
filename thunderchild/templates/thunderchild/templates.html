@@ -227,9 +227,10 @@
 
 {% block javascript %}
 	<script>
-	// Set paths needed by templates.js
-	var templateRoot = "{% url thunderchild.template_views.template_create %}";
-	var templateGroupRoot = "{% url thunderchild.template_views.group_create %}";
+		var thunderchild = {
+			templateRoot : "{% url thunderchild.template_views.template_create %}",
+			templateGroupRoot : "{% url thunderchild.template_views.group_create %}"
+		};
 	</script>
 	<script src="{{ STATIC_URL }}thunderchild/js/lib/ace/ace.js"></script>
 	<script src="{{ STATIC_URL }}thunderchild/js/lib/ace/theme-twilight.js"></script>

@@ -7,7 +7,6 @@ requirejs(
 	{
 		
 		$(function(){
-			console.log("INIT!");
 			var appView = new AppView();
 		});
 		

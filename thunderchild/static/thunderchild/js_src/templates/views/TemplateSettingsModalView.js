@@ -23,7 +23,6 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			this.$el.modal("show");
 				
 			$.each(this.model.toJSON(), _.bind(function(key, value) {
-				console.log(key , value);
 				this.$(":input[name='"+key+"']").not("[type=radio]").val(value);
 			}, this));
 			

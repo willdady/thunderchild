@@ -51,7 +51,7 @@ define(
 
 		createTemplateGroupButtonClickHandler : function(e) {
 			var formData = this.$("form").serializeObject();
-			$.post(templateGroupRoot, JSON.stringify(formData), _.bind(function(data, textStatus, jqXHR) {
+			$.post(thunderchild.templateGroupRoot, JSON.stringify(formData), _.bind(function(data, textStatus, jqXHR) {
 				if (jqXHR.status == 200) {
 					var templategroup_model = new TemplateGroupModel(data.templategroup);
 					var template_model = new TemplateModel(data.template);

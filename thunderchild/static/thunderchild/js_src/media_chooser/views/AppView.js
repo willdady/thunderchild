@@ -22,7 +22,6 @@ define(['jquery',
 		},
 
 		uploadButtonClickHandler : function(e) {
-			console.log("uploadButtonClickHandler", appModel);
 			appModel.showUploadModal();
 			e.preventDefault();
 		}

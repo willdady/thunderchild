@@ -47,8 +47,10 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			var model = appModel.get("selectedTemplate");
 			if (model == this.model) {
 				if (!this.model.has("template_content")) {
-					//this.model.initialFetch();
-					this.model.fetch();
+					this.$(".loading-anim").removeClass("hide");
+					this.model.fetch({success : _.bind(function(){
+						this.$(".loading-anim").addClass("hide");
+					},this)});
 				}
 				this.$el.addClass("active");
 			} else {

@@ -27,6 +27,7 @@ define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateModel',
 			templateCollection.on("add", this.templateAddedHandler, this);
 			this.model.on("destroy", this.destroyHandler, this);
 			this.model.on("change", this.render, this);
+			appModel.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
 		},
 
 		events : {
@@ -93,6 +94,11 @@ define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateModel',
 
 		destroyHandler : function() {
 			this.$el.remove()
+		},
+		
+		selectedTemplateChangeHandler : function() {
+			var templateModel = appModel.get("selectedTemplate");
+			this.$el.toggleClass("active", templateModel.templateGroupModel() === this.model);
 		},
 
 		render : function() {

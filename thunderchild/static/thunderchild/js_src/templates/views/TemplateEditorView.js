@@ -2,7 +2,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 
 	var TemplateEditorView = Backbone.View.extend({
 
-		el : "#editor-pane",
+		el : "#editor",
 
 		initialize : function() {
 			this.editor = ace.edit("editor");
@@ -45,7 +45,6 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 
 		changeHandler : function() {
-			console.log("change!");
 			this.setValue(this.templateModel.get("template_content"));
 			this.setMode(this.templateModel.getMode());
 		},
