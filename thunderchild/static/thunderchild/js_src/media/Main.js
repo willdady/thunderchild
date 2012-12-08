@@ -12,7 +12,6 @@ requirejs(
 	{
 		
 		$(function(){
-			console.log("INIT!");
 			var uploadModal = new UploadModalView();
 			var deleteSelectedModal = new DeleteSelectedModalView();
 			var previewModal = new PreviewModalView();

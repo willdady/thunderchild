@@ -19,8 +19,6 @@ requirejs(
 	{
 		
 		$(function(){
-			console.log("INIT!");
-			
 			var appView = new AppView();
 			
 			var categoryGroupModalView = new CategoryGroupModalView();

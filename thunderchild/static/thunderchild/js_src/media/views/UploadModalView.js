@@ -11,7 +11,7 @@ define(['jquery', 'media/models/AppModel', 'media/views/UploadItemView', 'lib/ba
 			
 			this.modalFileField = $("#modal_file_field");
 			this.uploadButton = $("#modal_upload_button");
-			this.progressBar = this.$el.find(".progress .bar");
+			this.progressBar = this.$(".progress .bar");
 
 			appModel.on("showUploadModal", this.show, this);
 			appModel.on("fileUploadQueued", this.fileUploadQueued, this);
@@ -26,7 +26,7 @@ define(['jquery', 'media/models/AppModel', 'media/views/UploadItemView', 'lib/ba
 		},
 
 		showState : function(state) {
-			var stateElements = this.$el.find('[data-state]');
+			var stateElements = this.$('[data-state]');
 			stateElements.filter("[data-state~='"+state+"']").show();
 			stateElements.filter(":not([data-state~='"+state+"'])").hide();
 		},

@@ -8,9 +8,9 @@
   left:20px;
   top:170px;
   bottom:10px;
-  right:81%;
+  width:300px;
   overflow:auto;
-  background:@white;
+  background:#FFF;
   border:solid 1px @baseBorderColor;
   padding:4px;
   .btn-primary {
@@ -20,20 +20,13 @@
   ul {
     list-style:none;
     margin:0;
-    background:@white;
+    background:#FFF;
     li {
-      &.active {
-        background:lighten(@baseColor, 50%);
-        &.unsaved {
-          background:lighten(@red, 28%);
-        }
-      }
-      &.unsaved {
-        background:lighten(@red, 35%);
-      }
       a {
-        display:block;
-        padding:3px 6px;
+        display:inline-block;
+        padding:6px;
+        line-height:1em;
+        .user-select(none);
         &:hover {
           text-decoration:none;
           color:@linkColor;
@@ -41,41 +34,79 @@
       }
       .group-header {
         font-weight:bold;
-        background:@baseColor;
-        color:@white;
-        padding:3px 6px;
-        border-bottom:1px solid darken(@baseColor, 5%);
-        border-top:1px solid lighten(spin(@baseColor, 5),3%);
+        background:@templateGroupHeaderBackgroundColor;
+        color:#FFF;
+        padding:4px 6px;
+        border-bottom:1px solid @templateGroupHeaderBorderBottomColor;
+        border-top:1px solid @templateGroupHeaderBorderTopColor;
+        cursor:pointer;
+        .user-select(none);
         h3 {
-          float:left;
-          margin:0;
+          display:inline-block;
           font-size:14px;
-          line-height:19px;
+          line-height:1em;
+          margin:0;
+          position:relative;
+          top:-1px;
+          .sml-triangle-white {
+            margin-right:9px;
+          }
         }
         a {
           padding:0;
         }
-        .chevron {
-          display:block;
-          float:left;
-          width:15px;
-          height:15px;
-          margin-right:2px;
-          background:url('images/chevron-sprite-sheet-white.png') no-repeat;
-          background-position:-15px;
+        .but-tmpl-grp-action {
+          margin-top:3px;
         }
-        &.collapsed {
-          .chevron {
-            background-position:0;
+      }
+      &.template-group {
+        ul {
+          li {
+            padding: 0 6px;
+            background:@templateItemBackgroundColor;
+            border-top:1px solid @templateItemBorderTopColor;
+            border-bottom:1px solid @templateItemBorderBottomColor;
+            cursor:pointer;
+            .controls {
+              margin-top:7px;
+              width:30px;
+            }
+            .but-tmpl-action {
+              float:right;
+            }
+            .loading-anim {
+              float:left;
+            }
+            &.active {
+              background:@templateItemBackgroundColorActive;
+              &.unsaved {
+                background:@templateItemBackgroundColorActiveUnsaved;
+              }
+            }
+            &.unsaved {
+              background:@templateItemBackgroundColorUnsaved;
+            }
+            .icon {
+              float:left;
+              margin-top:7px;
+              display:inline-block;
+              width:10px; 
+              height:12px; 
+              background:url('images/tc-spritesheet.png') 0 -48px no-repeat;
+            }
+            &.is-fragment {
+              .icon {
+                height:11px; 
+                background-position:0 -60px;
+              } 
+            }
           }
         }
-        ul {
-          &.controls {
-            background:none;
-            li {
-              float:left;
-              margin-left:3px;
-            }
+        &.active {
+          .group-header {
+            background:@templateGroupHeaderBackgroundColorActive;
+            border-bottom-color:@templateGroupHeaderBorderBottomColorActive;
+            border-top-color:@templateGroupHeaderBorderTopColorActive;
           }
         }
       }
@@ -84,34 +115,24 @@
 }
 #template-view {
   position:absolute;
-  left:20%;
+  left:340px;
   right:20px;
   top:170px;
   bottom:10px;
-  .tab-content {
+  min-width:580px;
+  #editor {
+    margin:0;
+    padding:0;
+    border:none;
+    .border-radius(0);
     position:absolute;
     left:0;
     right:0;
-    top:42px;
+    top:30px;
     bottom:0;
-    overflow:visible;
-    #editor {
-      margin:0;
-      padding:0;
-      border:none;
-      .border-radius(0);
-      position:absolute;
-      left:0;
-      right:0;
-      top:30px;
-      bottom:0;
-    }
   }
 }
-#preview-link-holder {
-  position:absolute;
-  right:0;
-  top:4px;
+#preview-template-control {
   .preview-url, input, a {
     float:left;
     display:inline-block;
@@ -124,5 +145,45 @@
   }
   p {
     line-height:22px;
+  }
+}
+#action-drop-down {
+  display:none;
+  position:absolute;
+  z-index:9999;
+  margin:0;
+  top:0;
+  left:0;
+  list-style:none;
+  background:@actionDropDownBackgroundColor;
+  .border-radius(4px);
+  .box-shadow(0px 1px 4px 0px rgba(0, 0, 0, 0.4));
+  li {
+    a {
+      color:@actionDropDownTextColor;
+      font-size:11px;
+      padding:1px 5px;
+      display:block;
+      &:hover {
+        background:@actionDropDownItemHoverBackgroundColor;
+        text-decoration:none;
+      }
+    }
+    &:first-child {
+      a:hover {
+        .border-radius(4px 4px 0 0);
+      } 
+    }
+    &:last-child {
+      a:hover {
+        .border-radius(0 0 4px 4px);
+      } 
+    }
+  }
+}
+#template-settings-modal {
+  width:575px;
+  select {
+    width:260px;
   }
 }

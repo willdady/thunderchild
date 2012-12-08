@@ -2,7 +2,7 @@ define(['jquery', 'templates/models/TemplateModel', 'lib/backbone'], function($,
 
 	var TemplateCollection = Backbone.Collection.extend({
 		model : TemplateModel,
-		url : templateRoot
+		url : thunderchild.templateRoot // thunderchild object is global obj defined in templates.html.
 	});
 
 	return new TemplateCollection();

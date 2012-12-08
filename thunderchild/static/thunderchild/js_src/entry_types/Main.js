@@ -15,8 +15,6 @@ requirejs(
 	{
 		
 		$(function(){
-			console.log("INIT!");
-			
 			var appView = new AppView();
 			
 			var confirmDeleteModalView = new ConfirmDeleteModalView();

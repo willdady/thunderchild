@@ -83,12 +83,8 @@ def template(request, id):
         else:
             return HttpResponseBadRequest(json.dumps({'errors':form.errors}), content_type="application/json")
     elif request.method == 'DELETE':
-        model = get_object_or_404(models.Template, pk=id)
-        if model.template_short_name == 'index':
-            return HttpResponseBadRequest(json.dumps({'error':'Deleting index templates is forbidden.'}), content_type="application/json")
-        else:
-            model.delete()
-            return HttpResponse("OK")
+        models.Template.objects.filter(pk=id).delete()
+        return HttpResponse("OK")
     elif request.method == 'GET':
         model = models.Template.objects.filter(pk=id)[0]
         return HttpResponse(json.dumps(model.as_dict()), content_type="application/json")

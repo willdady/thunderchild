@@ -2,16 +2,28 @@ define(['jquery', 'lib/backbone'], function($) {
 
 	var TemplateModel = Backbone.Model.extend({
 
-		urlRoot : templateRoot,
-
-		initialFetch : function() {
-			this.fetch({
-				success : _.bind(function() {
-					this.trigger("initialFetchComplete");
+		urlRoot : thunderchild.templateRoot, // thunderchild object is global obj defined in templates.html.
+		
+		save : function(attributes, options) {
+			this.trigger("save");
+			var _options = {
+				wait : true,
+				success : _.bind(function(model, response) {
+					this.trigger("saveSuccess", model, response);
+					if (options.hasOwnProperty('success')) {
+						options.success(model, response);
+					}
+				}, this),
+				error : _.bind(function(model, response) {
+					this.trigger("saveError", model, response);
+					if (options.hasOwnProperty('error')) {
+						options.error(model, response);
+					}
 				}, this)
-			});
+			}
+			Backbone.Model.prototype.save.call(this, attributes, _options);
 		},
-
+		
 		templateGroupModel : function(model) {
 			if (model) {
 				this._templateGroupModel = model;

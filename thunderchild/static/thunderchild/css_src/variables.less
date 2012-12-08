@@ -22,17 +22,33 @@
 @breadcrumbBarTextColor:lighten(spin(@baseColor, 5), 25%);
 @breadcrumbBarLinkColor:@breadcrumbBarTextColor;
 
-@navbarLinkColor:darken(@white, 30%);
-@navbarLinkHoverColor:@white;
+@navbarLinkColor:darken(#FFF, 30%);
+@navbarLinkHoverColor:#FFF;
 
-@titleBarBackgroundColor:desaturate(lighten(spin(@baseColor, -10), 30%), 5%);
+@titleBarBackgroundColor:#63c4b0;
 @actionBarBackgroundColor:darken(spin(@pageBackgroundColor, 10), 4%);
 
-@white: #FFF;
-@red: #F00;
 @groupBackgroundColor: darken(spin(@pageBackgroundColor, 10), 2%);
 @groupBorderColor: darken(@groupBackgroundColor, 5%);
 
 @tableBorderColor: #DDD;
 @tableHeaderColor: #2C2C2C;
 @errorBorderColor: #B94A48;
+
+@templateGroupHeaderBackgroundColor: @baseColor;
+@templateGroupHeaderBorderBottomColor: darken(@baseColor, 5%);
+@templateGroupHeaderBorderTopColor: lighten(spin(@baseColor, 5),3%);
+@templateGroupHeaderBackgroundColorActive: lighten(@templateGroupHeaderBackgroundColor, 3%);
+@templateGroupHeaderBorderBottomColorActive: @templateGroupHeaderBorderBottomColor;
+@templateGroupHeaderBorderTopColorActive: lighten(spin(@baseColor, 5),6%);
+
+@templateItemBorderTopColor: #FFF;
+@templateItemBorderBottomColor: #DDD;
+@templateItemBackgroundColor: #EEE;
+@templateItemBackgroundColorActive: lighten(@baseColor, 50%);
+@templateItemBackgroundColorActiveUnsaved: lighten(#F00, 37%);
+@templateItemBackgroundColorUnsaved: lighten(#F00, 40%);
+
+@actionDropDownTextColor: @linkColor;
+@actionDropDownBackgroundColor: @pageBackgroundColor;
+@actionDropDownItemHoverBackgroundColor: @templateItemBackgroundColorActive;

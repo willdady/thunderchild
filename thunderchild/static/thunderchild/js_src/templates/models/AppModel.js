@@ -33,8 +33,8 @@ define(['jquery', 'lib/backbone'], function() {
 			this.trigger("openEditTemplateGroupModal", templateGroupModel);
 		},
 	
-		openConfirmDeleteTemplateModal : function() {
-			this.trigger("openConfirmDeleteTemplateModal");
+		openConfirmDeleteTemplateModal : function(model) {
+			this.trigger("openConfirmDeleteTemplateModal", model);
 		},
 	
 		openConfirmDeleteTemplateGroupModal : function(templateGroupModel) {
@@ -47,6 +47,14 @@ define(['jquery', 'lib/backbone'], function() {
 	
 		closeMediaChooserModal : function() {
 			this.trigger("closeMediaChooserModal");
+		},
+		
+		showActionDropDown : function(x, y, callbacks) {
+			this.trigger("showActionDropDown", x, y, callbacks);
+		},
+		
+		showTemplateSettingsModal : function(model) {
+			this.trigger("showTemplateSettingsModal", model);
 		}
 		
 	}) 

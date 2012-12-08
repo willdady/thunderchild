@@ -33,7 +33,7 @@ define([
 			$("#id2_templategroup").val(templateGroupModel.id);
 			// We clean up the modal by removing any previously entered values and error alerts
 			this.removeErrors();
-			this.$el.find("form").each(function() {
+			this.$("form").each(function() {
 				this.reset()
 			});
 			// Explicitly set 'Is Private?' radio back to 'No'.
@@ -45,8 +45,8 @@ define([
 		},
 
 		removeErrors : function() {
-			this.$el.find(".alert").remove();
-			this.$el.find(".error").removeClass("error");
+			this.$(".alert").remove();
+			this.$(".error").removeClass("error");
 		},
 
 		close : function() {
@@ -54,11 +54,11 @@ define([
 		},
 
 		createTemplateButtonClickHandler : function(e) {
-			var formData = this.$el.find("form").serializeObject();
+			var formData = this.$("form").serializeObject();
 			// This value is not part of the form but is required so we set it here.
 			formData.template_cache_timeout = 0;
-			this.temp_model = new TemplateModel(formData);
-			this.temp_model.save({}, {
+			this.temp_model = new TemplateModel();
+			this.temp_model.save(formData, {
 				success : _.bind(function(model, response) {
 					model.templateGroupModel(this.templateGroupModel);
 					templateCollection.add(model);

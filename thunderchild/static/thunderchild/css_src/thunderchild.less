@@ -56,7 +56,24 @@ textarea{
     margin:0;
   }
   label {
+    display:inline-block;
     font-weight:bold;
+    input[type="radio"] {
+      display:inline-block;
+    }
+  }
+  .field-holder {
+    > ul {
+      display:block;
+      margin-bottom:8px;
+      .clearfix;
+      label {
+        font-weight:normal;
+      }
+    }
+  }
+  input, select {
+    display:block;
   }
   input[type="text"] {
     width:516px;
@@ -92,7 +109,7 @@ textarea{
     font-style:italic;
     color: lighten(@textColor, 25%);
     clear:both;
-    margin:0;
+    margin:0 0 5px 0;
     padding:0;
     line-height:1.5em;
 }
@@ -202,6 +219,7 @@ a {
   padding-bottom:7px;
 }
 .navbar {
+  min-width:940px;
   .navbar-inner {
     min-height:32px;
     .navbar-gradient();
@@ -363,19 +381,6 @@ a {
   }
 }
 
-.chevron {
-  display:inline-block;
-  width:15px;
-  height:15px;
-  background:url("images/chevron-sprite-sheet.png") no-repeat;
-  background-position:-15px 0;
-}
-.collapsed {
-  .chevron {
-    background-position:0 0;
-  }
-}
-
 div.ui-datepicker {
  font-size:11px;
  .box-shadow(1px 2px 3px 0px rgba(0, 0, 0, 0.35);
@@ -395,3 +400,4 @@ div.ui-datepicker {
 @import "categories.less";
 @import "fields.less";
 @import "time-picker.less";
+@import "tc-spritesheet.less";

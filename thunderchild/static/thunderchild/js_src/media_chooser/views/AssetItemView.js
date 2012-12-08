@@ -6,7 +6,7 @@ define(['jquery',
 	var AssetItemView = Backbone.View.extend({
 
 		initialize : function() {
-			this.filename = this.$el.find("label").text();
+			this.filename = this.$("label").text();
 			this.id = this.$el.attr("data-id");
 			this.url = this.$el.attr("data-url");
 		},
@@ -19,7 +19,7 @@ define(['jquery',
 			appModel.assetSelectionCallback({
 				id : this.id,
 				filename : this.filename,
-				thumbnail_url : this.$el.find("img")[0].src,
+				thumbnail_url : this.$("img")[0].src,
 				url : this.url
 			});
 			e.preventDefault();

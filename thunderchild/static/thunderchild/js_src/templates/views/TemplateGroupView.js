@@ -1,14 +1,15 @@
-define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateModel', 'templates/views/TemplateListItemView', 'templates/models/TemplateCollection','lib/backbone'], function($, appModel, TemplateModel, TemplateListItemView, templateCollection) {
+define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateModel', 'templates/views/TemplateListItemView', 'templates/models/TemplateCollection', 'lib/backbone'], function($, appModel, TemplateModel, TemplateListItemView, templateCollection) {
 
 	var TemplateGroupView = Backbone.View.extend({
 
 		initialize : function() {
 			// Instantiate a TemplateListItemView for each Template belonging to this group
-			this.$el.find("ul.collapse > li").each(_.bind(function(i, el) {
+			this.$("ul.collapse > li").each(_.bind(function(i, el) {
 				var model = new TemplateModel({
 					id : $(el).attr("data-id"),
 					templategroup : this.model.id,
-					template_short_name : $.trim($(el).text())
+					template_short_name : $.trim($(el).text()),
+					template_is_private : $(el).hasClass('is-fragment')
 				});
 				model.templateGroupModel(this.model);
 				templateListItemView = new TemplateListItemView({
@@ -26,41 +27,56 @@ define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateModel',
 			templateCollection.on("add", this.templateAddedHandler, this);
 			this.model.on("destroy", this.destroyHandler, this);
 			this.model.on("change", this.render, this);
+			appModel.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
 		},
 
 		events : {
-			"click .new-template-button" : "newTemplateButtonClickHandler",
-			"click .edit-templategroup-button" : "editTemplateGroupButtonClickHandler"
+			"click .but-tmpl-grp-action" : "actionButtonClickHandler"
 		},
 
-		newTemplateButtonClickHandler : function(e) {
-			appModel.openNewTemplateModal(this.model);
+		actionButtonClickHandler : function(e) {
+			var coords = $(e.currentTarget).offset();
+			var actions = [{
+				'New Template' : _.bind(this.newTemplateAction, this)
+			}, {
+				'Delete' : _.bind(this.deleteAction, this)
+			}, {
+				'Settings' : _.bind(this.settingsAction, this)
+			}];
+			appModel.showActionDropDown(coords.left, coords.top + 15, actions);
 			e.stopPropagation();
+		},
+
+		newTemplateAction : function(e) {
+			appModel.openNewTemplateModal(this.model);
 			e.preventDefault();
 		},
 
-		editTemplateGroupButtonClickHandler : function(e) {
+		deleteAction : function(e) {
+			appModel.openConfirmDeleteTemplateGroupModal(this.model);
+			e.preventDefault();
+		},
+
+		settingsAction : function(e) {
 			appModel.openEditTemplateGroupModal(this.model);
 			e.preventDefault();
-			e.stopPropagation();
 		},
 
 		sort : function() {
-			this.$el.find("> ul > li").tsort();
+			this.$("> ul > li").tsort("a");
 			// Keep the index template always first
-			this.$el.find("> ul").prepend(this.$el.find("[data-is-index=1]"));
+			this.$("> ul").prepend(this.$("[data-is-index=1]"));
 		},
 
 		templateAddedHandler : function(templateModel) {
 			// If the newly created template belongs to this group instantiate it's view and add a new element to the DOM.
 			if (templateModel.get("templategroup") == this.model.id) {
-				var el = $(_.template($("#template-list-item-template").text(), templateModel.toJSON()));
-				this.$el.find("ul.collapse").prepend(el);
-				this.sort();
 				var templateView = new TemplateListItemView({
-					el : el,
+					el : _.template($("#template-list-item-template").text(), templateModel.toJSON()),
 					model : templateModel
 				});
+				this.$("ul.collapse").prepend(templateView.el);
+				this.sort();
 				// Since we have a complete model returned from the server we set this flag true so we don't do another request for the data on selection.
 				templateView.modelPopulated = true;
 				appModel.selectedTemplate(templateModel);
@@ -79,12 +95,17 @@ define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateModel',
 		destroyHandler : function() {
 			this.$el.remove()
 		},
+		
+		selectedTemplateChangeHandler : function() {
+			var templateModel = appModel.get("selectedTemplate");
+			this.$el.toggleClass("active", templateModel.templateGroupModel() === this.model);
+		},
 
 		render : function() {
-			this.$el.find(".group-header h3").text(this.model.get("templategroup_short_name"));
+			this.$(".group-header h3").text(this.model.get("templategroup_short_name"));
 		}
 	})
 
 	return TemplateGroupView;
 
-}); 
+});

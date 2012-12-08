@@ -22,35 +22,25 @@
 	<div id="template-browser">
 		<ul>
 			{% for t in templates %}
-			<li data-id="{{ t.templategroup.id }}">
+			<li data-id="{{ t.templategroup.id }}" class="template-group">
 				<div class="group-header collapsed clearfix" data-toggle="collapse" data-target="#template-group-{{ t.templategroup.id }}">
-					<i class="chevron"></i>
 					{% if t.templategroup.templategroup_short_name == "root" %}
-					<h3><em>{{ t.templategroup.templategroup_short_name }}</em></h3>
-					<ul class="controls pull-right">
-						<li><a href="#" class="new-template-button"><i class="icon-plus icon-white"></i></a></li>
-					</ul>
+					<h3><i class="sml-triangle-white"></i><em>{{ t.templategroup.templategroup_short_name }}</em></h3>
 					{% else %}
-					<h3>{{ t.templategroup.templategroup_short_name }}</h3>
-					<ul class="controls pull-right">
-						<li><a href="#" class="edit-templategroup-button"><i class="icon-cog icon-white"></i></a></li>
-						<li><a href="#" class="new-template-button"><i class="icon-plus icon-white"></i></a></li>
-					</ul>
+					<h3><i class="sml-triangle-white"></i>{{ t.templategroup.templategroup_short_name }}</h3>
 					{% endif %}
+					<button class="but-tmpl-grp-action pull-right"></button>
 				</div>
 				<ul id="template-group-{{ t.templategroup.id }}" class="collapse">
 				{% for template in t.templates %}
-					{% spaceless %}
-					{% if template.template_short_name == 'index' %}
-					<li data-id="{{ template.id }}" data-is-index="1">
-						<a href="#"><em>{{ template.template_short_name }}</em></a>
-					</li>
-					{% else %}
-					<li data-id="{{ template.id }}">
+					<li data-id="{{ template.id }}" {% if template.template_is_private %}class="is-fragment"{% endif %} {% if template.template_short_name == 'index' %}data-is-index="1"{% endif %}>
+						<i class="icon"></i>
 						<a href="#">{{ template.template_short_name }}</a>
+						<div class="pull-right controls">
+							<img src="{{ STATIC_URL }}thunderchild/images/template-loading.gif" class="loading-anim hide" />
+							<button class="but-tmpl-action"></button>
+						</div>
 					</li>
-					{% endif %}
-					{% endspaceless %}
 				{% endfor %}
 				</ul>
 			</li>
@@ -58,67 +48,36 @@
 		</ul>
 	</div>
 	<script id="templategroup-list-item-template" type="text/html">
-		<li data-id="<%= id %>">
+		<li data-id="<%= id %>" class="template-group">
 			<div class="group-header clearfix" data-toggle="collapse" data-target="#template-group-<%= id %>">
-				<i class="chevron"></i>
-				<h3><%= templategroup_short_name %></h3>
-				<ul class="controls pull-right">
-					<li><a href="#" class="edit-templategroup-button"><i class="icon-cog icon-white"></i></a></li>
-					<li><a href="#" class="new-template-button"><i class="icon-plus icon-white"></i></a></li>
-				</ul>
+				<h3><i class="sml-triangle-white"></i><%= templategroup_short_name %></h3>
+				<button class="but-tmpl-grp-action pull-right"></button>
 			</div>
 			<ul id="template-group-<%= id %>" class="collapse in"></ul>
 		</li>
 	</script>
 	<script id="template-list-item-template" type="text/html">
-		<li data-id="<%= id %>"><a href="#"><%= template_short_name %></a></li>
+		<li data-id="<%= id %>">
+			<i class="icon"></i>
+			<a href="#"><%= template_short_name %></a>
+			<div class="pull-right controls">
+				<img src="{{ STATIC_URL }}thunderchild/images/template-loading.gif" width="12" height="12" class="loading-anim hide" />
+				<button class="but-tmpl-action"></button>
+			</div>
+		</li>
 	</script>
 		
 	<div id="template-view">
-		<ul class="nav nav-tabs" id="tabs">
-		  <li class="active"><a href="#editor-pane">Editor</a></li>
-		  <li><a href="#settings-pane">Settings</a></li>
-		</ul>
-		
-		<div id="preview-link-holder">
-			<p class="preview-url"><span class="template-dynamic-url">{{ absolute_dynamic_url }}</span><span class="template-uid"></span></p>
-			<input class="preview-url-parameters" type="text" />
-			<a id="preview-template-button" href="#" target="_blank" class="btn btn-mini">Preview</a>
-		</div>
-		
-		<div class="tab-content">
-			<div id="editor-pane" class="tab-pane active">
-				<a id="media_chooser_button" href="#" class="btn btn-mini"><i class="icon-picture"></i> Media Chooser</a>
-				<pre id="editor"></pre>
-			</div>
-			<div id="settings-pane" class="tab-pane">
-				<form id="settings-form">
-					{% for field in template_form %}
-						{% if not field.is_hidden %}
-							<div id="{{ field.html_name|slugify }}-field-group" class="field-group">
-								<div class="field-label-holder">
-									{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
-								</div>
-								<div class="field-holder">
-									{{ field }}
-									{% if field.help_text %}
-										<p class="help-text">{{ field.help_text }}</p>
-									{% endif %}
-								</div>
-							</div>
-						{% else %}
-							{% if field.label != 'Content' %}
-								{{ field }}
-							{% endif %}
-						{% endif %}
-					{% endfor %}
-				</form>
+		<div id="template-editor-controls">
+			<button id="media_chooser_button" class="btn btn-mini"><i class="icon-picture"></i> Media Chooser</button>
+			<div id="preview-template-control" class="pull-right">
+				<p class="preview-url"><span class="template-dynamic-url">{{ absolute_dynamic_url }}</span><span class="template-uid"></span></p>
+				<input class="preview-url-parameters" type="text" />
+				<a id="preview-template-button" href="#" target="_blank" class="btn btn-mini">Preview</a>
 			</div>
 		</div>
+		<pre id="editor"></pre>
 	</div>
-	<script id="form-error-template" type="text/html">
-		<div class="alert alert-error"><ul class="errorlist"><%= errors %></ul></div>
-	</script>
 		
 {% endblock %}
 
@@ -225,14 +184,53 @@
 	</div>
 </div>
 
+<div class="modal hide" id="template-settings-modal">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>Template Settings</h3>
+	</div>
+	<div class="modal-body">
+		<form id="settings-form-">
+			{% for field in template_form %}
+				{% if not field.is_hidden %}
+					<div class="field-holder {{ field.html_name }}">
+						{% if field.field.required %}<span class="required">* </span>{% endif %}{{ field.label_tag }}
+						{{ field }}
+						{% if field.help_text %}
+							<p class="help-text">{{ field.help_text }}</p>
+						{% endif %}
+					</div>
+				{% else %}
+					{% if field.label != 'Content' %}
+						{{ field }}
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal">Cancel</button>
+		<button class="btn btn-primary" id="confirm-template-settings-button">Save</button>
+	</div>
+</div>
+<script id="form-error-template" type="text/html">
+	<div class="alert alert-error"><ul class="errorlist"><%= errors %></ul></div>
+</script>
+
+<ul id="action-drop-down"></ul>
+<script id="action-drop-down-item-template" type="text/html">
+	<li><a href="#"><%= action_name %></a></li>
+</script>
+
 {% include 'thunderchild/includes/media_chooser_modal.html' %}
 {% endblock %}
 
 {% block javascript %}
 	<script>
-	// Set paths needed by templates.js
-	var templateRoot = "{% url thunderchild.template_views.template_create %}";
-	var templateGroupRoot = "{% url thunderchild.template_views.group_create %}";
+		var thunderchild = {
+			templateRoot : "{% url thunderchild.template_views.template_create %}",
+			templateGroupRoot : "{% url thunderchild.template_views.group_create %}"
+		};
 	</script>
 	<script src="{{ STATIC_URL }}thunderchild/js/lib/ace/ace.js"></script>
 	<script src="{{ STATIC_URL }}thunderchild/js/lib/ace/theme-twilight.js"></script>
