@@ -1,5 +1,7 @@
 {% extends "thunderchild/_page.html" %}
 
+{% block body_classes %}create-entry{% endblock %}
+
 {% block css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}thunderchild/css/cupertino/jquery-ui-1.8.21.custom.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="{{ STATIC_URL }}thunderchild/css/farbtastic.css" type="text/css" media="screen"/>
@@ -9,11 +11,13 @@
 {% block title_bar_title %}Create Entry{% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-	<li>
-		<a href="{% url thunderchild.entry_views.entries %}">Entries</a> <span class="divider">/</span>
-	</li>
-</ul>
+<div class="breadcrumbs-bar">
+	<ul class="breadcrumb">
+		<li>
+			<a href="{% url thunderchild.entry_views.entries %}">Entries</a> <span class="divider">/</span>
+		</li>
+	</ul>
+</div>
 {% endblock %}
 
 {% block pre_action_bar %}

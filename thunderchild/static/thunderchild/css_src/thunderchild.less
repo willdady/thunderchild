@@ -4,12 +4,15 @@
 
 body {
   overflow-y:scroll;
-  padding-top:176px;
+  padding-top:155px;
   background:@pageBackgroundColor;
   &.media-chooser {
     padding:0;
     background:none;
     overflow-y:visible;
+  }
+  &.edit-entry, &.create-entry {
+    padding-top:176px;
   }
 }
 textarea{
