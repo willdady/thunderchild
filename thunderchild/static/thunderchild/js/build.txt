@@ -110,7 +110,7 @@ templates/Main.js
 ----------------
 templates/models/AppModel.js
 templates/views/ActionBarView.js
-templates/views/TemplatePreviewControlsView.js
+templates/views/TemplateEditorControlsView.js
 templates/models/TemplateGroupModel.js
 templates/models/TemplateModel.js
 templates/views/TemplateListItemView.js
@@ -120,7 +120,6 @@ templates/models/TemplateGroupCollection.js
 lib/jquery.tinysort.js
 templates/views/TemplateBrowserView.js
 templates/views/TemplateEditorView.js
-templates/views/SettingsView.js
 lib/jquery.serialize-object.js
 templates/views/NewTemplateModalView.js
 templates/views/ConfirmDeleteTemplateModalView.js
@@ -128,5 +127,7 @@ templates/views/MediaChooserModalView.js
 templates/views/NewTemplateGroupModalView.js
 templates/views/EditTemplateGroupModalView.js
 templates/views/ConfirmDeleteTemplateGroupModalView.js
+templates/views/ActionDropDownView.js
+templates/views/TemplateSettingsModalView.js
 templates/views/AppView.js
 templates/Main.js

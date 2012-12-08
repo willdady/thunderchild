@@ -81,7 +81,31 @@ textarea {
   margin: 0;
 }
 .modal label {
+  display: inline-block;
   font-weight: bold;
+}
+.modal label input[type="radio"] {
+  display: inline-block;
+}
+.modal .field-holder > ul {
+  display: block;
+  margin-bottom: 8px;
+  *zoom: 1;
+}
+.modal .field-holder > ul:before,
+.modal .field-holder > ul:after {
+  display: table;
+  content: "";
+}
+.modal .field-holder > ul:after {
+  clear: both;
+}
+.modal .field-holder > ul label {
+  font-weight: normal;
+}
+.modal input,
+.modal select {
+  display: block;
 }
 .modal input[type="text"] {
   width: 516px;
@@ -114,8 +138,9 @@ textarea {
   font-style: italic;
   color: #848484;
   clear: both;
-  margin: 0;
+  margin: 0 0 5px 0;
   padding: 0;
+  line-height: 1.5em;
 }
 .non-editable p {
   height: 18px;
@@ -291,6 +316,9 @@ a:hover {
   padding-top: 7px;
   padding-bottom: 7px;
 }
+.navbar {
+  min-width: 940px;
+}
 .navbar .navbar-inner {
   min-height: 32px;
   background: #525858;
@@ -415,7 +443,7 @@ a:hover {
 }
 #content-bar .title-bar {
   color: #f7fffd;
-  background: url('images/title_bar_bg.jpg') repeat-x #70d0aa;
+  background: url('images/title_bar_bg.jpg') repeat-x #63c4b0;
   padding: 8px 0;
   -webkit-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.45);
   -moz-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.45);
@@ -451,6 +479,10 @@ a:hover {
 #content-bar .action-bar .btn-link {
   margin-top: 4px;
 }
+#content-bar .action-bar .btn-link.disabled:hover {
+  color: #333333;
+  text-decoration: none;
+}
 #content-bar .action-bar .pull-right .dropdown-menu {
   left: auto;
   right: 0;
@@ -461,16 +493,6 @@ a:hover {
 #content-container header h1,
 #content-container header h2 {
   margin: 0;
-}
-.chevron {
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  background: url("images/chevron-sprite-sheet.png") no-repeat;
-  background-position: -15px 0;
-}
-.collapsed .chevron {
-  background-position: 0 0;
 }
 div.ui-datepicker {
   font-size: 11px;
@@ -547,9 +569,9 @@ div.ui-datepicker {
   left: 20px;
   top: 170px;
   bottom: 10px;
-  right: 81%;
+  width: 300px;
   overflow: auto;
-  background: #ffffff;
+  background: #FFF;
   border: solid 1px #dddddd;
   padding: 4px;
 }
@@ -560,20 +582,17 @@ div.ui-datepicker {
 #template-browser ul {
   list-style: none;
   margin: 0;
-  background: #ffffff;
-}
-#template-browser ul li.active {
-  background: #baece0;
-}
-#template-browser ul li.active.unsaved {
-  background: #ff8f8f;
-}
-#template-browser ul li.unsaved {
-  background: #ffb3b3;
+  background: #FFF;
 }
 #template-browser ul li a {
-  display: block;
-  padding: 3px 6px;
+  display: inline-block;
+  padding: 6px;
+  line-height: 1em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 #template-browser ul li a:hover {
   text-decoration: none;
@@ -582,55 +601,86 @@ div.ui-datepicker {
 #template-browser ul li .group-header {
   font-weight: bold;
   background: #25826d;
-  color: #ffffff;
-  padding: 3px 6px;
+  color: #FFF;
+  padding: 4px 6px;
   border-bottom: 1px solid #1f6e5c;
   border-top: 1px solid #288e7f;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 #template-browser ul li .group-header h3 {
-  float: left;
-  margin: 0;
+  display: inline-block;
   font-size: 14px;
-  line-height: 19px;
+  line-height: 1em;
+  margin: 0;
+  position: relative;
+  top: -1px;
+}
+#template-browser ul li .group-header h3 .sml-triangle-white {
+  margin-right: 9px;
 }
 #template-browser ul li .group-header a {
   padding: 0;
 }
-#template-browser ul li .group-header .chevron {
-  display: block;
+#template-browser ul li .group-header .but-tmpl-grp-action {
+  margin-top: 3px;
+}
+#template-browser ul li.template-group ul li {
+  padding: 0 6px;
+  background: #eeeeee;
+  border-top: 1px solid #ffffff;
+  border-bottom: 1px solid #dddddd;
+  cursor: pointer;
+}
+#template-browser ul li.template-group ul li .controls {
+  margin-top: 7px;
+  width: 30px;
+}
+#template-browser ul li.template-group ul li .but-tmpl-action {
+  float: right;
+}
+#template-browser ul li.template-group ul li .loading-anim {
   float: left;
-  width: 15px;
-  height: 15px;
-  margin-right: 2px;
-  background: url('images/chevron-sprite-sheet-white.png') no-repeat;
-  background-position: -15px;
 }
-#template-browser ul li .group-header.collapsed .chevron {
-  background-position: 0;
+#template-browser ul li.template-group ul li.active {
+  background: #baece0;
 }
-#template-browser ul li .group-header ul.controls {
-  background: none;
+#template-browser ul li.template-group ul li.active.unsaved {
+  background: #ffbdbd;
 }
-#template-browser ul li .group-header ul.controls li {
+#template-browser ul li.template-group ul li.unsaved {
+  background: #ffcccc;
+}
+#template-browser ul li.template-group ul li .icon {
   float: left;
-  margin-left: 3px;
+  margin-top: 7px;
+  display: inline-block;
+  width: 10px;
+  height: 12px;
+  background: url('images/tc-spritesheet.png') 0 -48px no-repeat;
+}
+#template-browser ul li.template-group ul li.is-fragment .icon {
+  height: 11px;
+  background-position: 0 -60px;
+}
+#template-browser ul li.template-group.active .group-header {
+  background: #288e77;
+  border-bottom-color: #1f6e5c;
+  border-top-color: #2c9a8a;
 }
 #template-view {
   position: absolute;
-  left: 20%;
+  left: 340px;
   right: 20px;
   top: 170px;
   bottom: 10px;
+  min-width: 580px;
 }
-#template-view .tab-content {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 42px;
-  bottom: 0;
-  overflow: visible;
-}
-#template-view .tab-content #editor {
+#template-view #editor {
   margin: 0;
   padding: 0;
   border: none;
@@ -643,25 +693,62 @@ div.ui-datepicker {
   top: 30px;
   bottom: 0;
 }
-#preview-link-holder {
-  position: absolute;
-  right: 0;
-  top: 4px;
-}
-#preview-link-holder .preview-url,
-#preview-link-holder input,
-#preview-link-holder a {
+#preview-template-control .preview-url,
+#preview-template-control input,
+#preview-template-control a {
   float: left;
   display: inline-block;
   margin-left: 5px;
   font-size: 11px;
 }
-#preview-link-holder input {
+#preview-template-control input {
   padding: 0;
   width: 130px;
 }
-#preview-link-holder p {
+#preview-template-control p {
   line-height: 22px;
+}
+#action-drop-down {
+  display: none;
+  position: absolute;
+  z-index: 9999;
+  margin: 0;
+  top: 0;
+  left: 0;
+  list-style: none;
+  background: #ecf0f1;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.4);
+}
+#action-drop-down li a {
+  color: #25826d;
+  font-size: 11px;
+  padding: 1px 5px;
+  display: block;
+}
+#action-drop-down li a:hover {
+  background: #baece0;
+  text-decoration: none;
+}
+#action-drop-down li:first-child a:hover {
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+}
+#action-drop-down li:last-child a:hover {
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+}
+#template-settings-modal {
+  width: 575px;
+}
+#template-settings-modal select {
+  width: 260px;
 }
 .dashboard-panel {
   background: #aaa;
@@ -726,7 +813,7 @@ div.ui-datepicker {
   position: relative;
   float: left;
   clear: both;
-  background: #ffffff;
+  background: #FFF;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -763,7 +850,7 @@ div.ui-datepicker {
   -moz-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.35);
   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.35);
   position: absolute;
-  background: #ff0000;
+  background: #F00;
   background-color: #d60000;
   background-image: -moz-linear-gradient(top, #ff0000, #990000);
   background-image: -ms-linear-gradient(top, #ff0000, #990000);
@@ -776,7 +863,7 @@ div.ui-datepicker {
   font-weight: bold;
   font-size: 17px;
   line-height: 17px;
-  color: #ffffff;
+  color: #FFF;
   width: 16px;
   height: 16px;
   top: 7px;
@@ -874,7 +961,7 @@ ul.thumbnails li a {
 }
 ul.thumbnails li .thumbnail {
   text-align: center;
-  background: #ffffff;
+  background: #FFF;
   height: 160px;
   position: relative;
 }
@@ -949,7 +1036,7 @@ ul.thumbnails li .thumbnail input[type=checkbox] {
   margin-bottom: 14px;
 }
 .media-chooser .modal-backdrop {
-  background-color: #ffffff;
+  background-color: #FFF;
 }
 .media-chooser #upload-modal {
   top: 370px;
@@ -1042,4 +1129,59 @@ ul.thumbnails li .thumbnail input[type=checkbox] {
   border: none;
   margin: 0;
   padding: 0;
+}
+.but-tmpl-grp-action {
+  border: none;
+  width: 12px;
+  height: 12px;
+  background: url('images/tc-spritesheet.png') 0 -12px no-repeat;
+}
+.but-tmpl-grp-action.active {
+  background-position: 0 0;
+}
+.but-tmpl-action {
+  border: none;
+  width: 12px;
+  height: 12px;
+  background: url('images/tc-spritesheet.png') 0 -36px no-repeat;
+}
+.but-tmpl-action.active {
+  background-position: 0 -24px;
+}
+[class^="tc-icon-"],
+[class*=" tc-icon-"] {
+  display: inline-block;
+  background: url('images/tc-spritesheet.png') no-repeat;
+}
+.tc-icon-file {
+  width: 10px;
+  height: 12px;
+  background-position: 0 -48px;
+}
+.tc-icon-file-fragment {
+  width: 10px;
+  height: 11px;
+  background-position: 0 -60px;
+}
+.sml-triangle {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: url('images/tc-spritesheet.png') no-repeat;
+  background-position: -2px -78px;
+  vertical-align: middle;
+}
+.collapsed .sml-triangle {
+  background-position: -2px -71px;
+}
+.sml-triangle-white {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: url('images/tc-spritesheet.png') no-repeat;
+  background-position: -2px -92px;
+  vertical-align: middle;
+}
+.collapsed .sml-triangle-white {
+  background-position: -2px -85px;
 }
