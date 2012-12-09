@@ -5,12 +5,13 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		el : "#template-settings-modal",
 		
 		initialize : function() {
-			appModel.on("showTemplateSettingsModal", this.open, this);
+			appModel.on("openTemplateSettingsModal", this.open, this);
 		},
 		
 		events : {
 			"change input[type=radio][name=template_is_private]" : "isPrivateChangeHander",
-			"click #confirm-template-settings-button" : "saveClickHandler"
+			"click #confirm-template-settings-button" : "saveClickHandler",
+			"change #id_template_redirect_type" : "redirectTypeChangeHandler"
 		},
 
 		isPrivateChangeHander : function() {
@@ -38,7 +39,9 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 
 			// As index templates are forbidden from being renamed we hide the input
 			$(".field-holder.template_short_name").toggle( this.model.get("template_short_name") != 'index' );
-			
+			// Show/Hide the redirect url field based on the value of template_redirect_type
+			var redirectType = this.model.get("template_redirect_type");
+			$(".field-holder.template_redirect_url").toggle(redirectType == "301" || redirectType == "302");
 		},
 
 		close : function() {
@@ -83,6 +86,11 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 					}
 				}, this)
 			});
+		},
+		
+		redirectTypeChangeHandler : function(e){
+			var redirectType = $(e.currentTarget).val();
+			$(".field-holder.template_redirect_url").toggle(redirectType === "301" || redirectType === "302");
 		}
 		
 	});

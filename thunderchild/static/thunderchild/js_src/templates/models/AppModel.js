@@ -61,8 +61,8 @@ define(['jquery', 'lib/backbone'], function() {
 			this.trigger("showActionDropDown", x, y, callbacks);
 		},
 		
-		showTemplateSettingsModal : function(model) {
-			this.trigger("showTemplateSettingsModal", model);
+		openTemplateSettingsModal : function(model) {
+			this.trigger("openTemplateSettingsModal", model);
 		}
 		
 	}) 
