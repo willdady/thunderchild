@@ -9,7 +9,6 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 
 		events : {
-			"click #create-templategroup-button" : "createTemplateGroupClickHandler",
 			"click #delete-template-button" : "deleteTemplateClickHandler",
 			"click #save-template-button" : "saveTemplateClickHandler"
 		},
@@ -22,11 +21,6 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			} else {
 				$("#delete-template-button").removeClass("disabled");
 			}
-		},
-
-		createTemplateGroupClickHandler : function(e) {
-			appModel.openNewTemplateGroupModal();
-			e.preventDefault();
 		},
 
 		deleteTemplateClickHandler : function(e) {

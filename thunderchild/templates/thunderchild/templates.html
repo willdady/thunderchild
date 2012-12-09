@@ -6,7 +6,6 @@
 
 
 {% block action_bar %}
-<a id="create-templategroup-button" href="#" class="btn btn-primary">Create Template Group</a>
 <ul class="pull-right">
 	<li>
 		<a id="delete-template-button" href="#" class="btn btn-mini btn-link">Delete Template</a>
@@ -19,6 +18,9 @@
 
 
 {% block content %}
+	<div id="new-group-tab">
+		<button id="create-templategroup-button" class="btn btn-primary"><span class="icon"></span></button>
+	</div>
 	<div id="template-browser">
 		<ul>
 			{% for t in templates %}
