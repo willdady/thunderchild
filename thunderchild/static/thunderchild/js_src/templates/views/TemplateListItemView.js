@@ -34,7 +34,11 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		},
 		
 		deleteAction : function(e) {
-			appModel.openConfirmDeleteTemplateModal(this.model);
+			if (this.model.get("template_short_name") == "index" && this.model.templateGroupModel().get("templategroup_short_name") == "root") {
+				appModel.openDisallowedRootIndexDeleteAlertModal();
+			} else {
+				appModel.openConfirmDeleteTemplateModal(this.model);
+			}
 			e.preventDefault();
 		},
 		

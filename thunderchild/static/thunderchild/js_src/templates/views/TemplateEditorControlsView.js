@@ -10,7 +10,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 
 		events : {
 			"change #preview-template-control .preview-url-parameters" : "resetPreviewButtonHref",
-			"click #media_chooser_button" : "mediaChooserClickHandler"
+			"click #media-chooser-button" : "mediaChooserClickHandler"
 		},
 		
 		mediaChooserClickHandler : function() {

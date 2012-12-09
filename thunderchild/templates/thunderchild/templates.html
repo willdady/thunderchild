@@ -71,7 +71,7 @@
 		
 	<div id="template-view">
 		<div id="template-editor-controls">
-			<button id="media_chooser_button" class="btn btn-mini"><i class="icon-picture"></i> Media Chooser</button>
+			<button id="media-chooser-button" class="btn btn-mini"><i class="icon-picture"></i> Media Chooser</button>
 			<div id="preview-template-control" class="pull-right">
 				<p class="preview-url"><span class="template-dynamic-url">{{ absolute_dynamic_url }}</span><span class="template-uid"></span></p>
 				<input class="preview-url-parameters" type="text" />
@@ -225,6 +225,7 @@
 </script>
 
 {% include 'thunderchild/includes/media_chooser_modal.html' %}
+{% include 'thunderchild/includes/alert_modal.html' %}
 {% endblock %}
 
 {% block javascript %}

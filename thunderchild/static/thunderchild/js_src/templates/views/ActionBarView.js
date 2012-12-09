@@ -4,28 +4,21 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		
 		el:'.action-bar',
 
-		initialize : function() {
-			appModel.on("change:selectedTemplate", this.selectedTemplateChangeHandler, this);
-		},
-
 		events : {
 			"click #delete-template-button" : "deleteTemplateClickHandler",
 			"click #save-template-button" : "saveTemplateClickHandler"
 		},
 
-		selectedTemplateChangeHandler : function() {
-			// Disable the delete button if an index template becomes selected. Index templates cannot be deleted.
-			var selectedTemplate = appModel.get("selectedTemplate");
-			if (selectedTemplate.get("template_short_name") == "index") {
-				$("#delete-template-button").addClass("disabled");
-			} else {
-				$("#delete-template-button").removeClass("disabled");
-			}
-		},
-
 		deleteTemplateClickHandler : function(e) {
 			if (!$("#delete-template-button").hasClass("disabled")) {
-				appModel.openConfirmDeleteTemplateModal(appModel.selectedTemplate());
+				var selectedTemplate = appModel.selectedTemplate();
+				var selectedTemplateGroup = selectedTemplate.templateGroupModel();
+				console.log(selectedTemplateGroup.get("templategroup_short_name"));
+				if (selectedTemplate.get("template_short_name") == "index" && selectedTemplateGroup.get("templategroup_short_name") == "root") {
+					appModel.openDisallowedRootIndexDeleteAlertModal();
+				} else {
+					appModel.openConfirmDeleteTemplateModal(selectedTemplate);					
+				}
 			}
 			e.preventDefault()
 		},

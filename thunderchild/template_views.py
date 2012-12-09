@@ -83,7 +83,15 @@ def template(request, id):
         else:
             return HttpResponseBadRequest(json.dumps({'errors':form.errors}), content_type="application/json")
     elif request.method == 'DELETE':
-        models.Template.objects.filter(pk=id).delete()
+        try:
+            model = models.Template.objects.get(pk=id)
+        except models.Template.DoesNotExist:
+            return HttpResponse("OK")
+        # Requesting to delete the root/index template is prevented client side however we still block it here incase of malicious requests.
+        if model.templategroup.templategroup_short_name == 'root' and model.template_short_name == 'index':
+            return HttpResponseBadRequest()
+        else:
+            model.delete()
         return HttpResponse("OK")
     elif request.method == 'GET':
         model = models.Template.objects.filter(pk=id)[0]
