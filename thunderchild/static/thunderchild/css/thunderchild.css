@@ -27,13 +27,17 @@
 }
 body {
   overflow-y: scroll;
-  padding-top: 176px;
+  padding-top: 155px;
   background: #ecf0f1;
 }
 body.media-chooser {
   padding: 0;
   background: none;
   overflow-y: visible;
+}
+body.edit-entry,
+body.create-entry {
+  padding-top: 176px;
 }
 textarea {
   resize: none;
@@ -567,7 +571,7 @@ div.ui-datepicker {
 #template-browser {
   position: absolute;
   left: 20px;
-  top: 170px;
+  top: 178px;
   bottom: 10px;
   width: 300px;
   overflow: auto;
@@ -672,11 +676,44 @@ div.ui-datepicker {
   border-bottom-color: #1f6e5c;
   border-top-color: #2c9a8a;
 }
+#new-group-tab {
+  position: absolute;
+  z-index: 1;
+  top: 148px;
+  width: 30px;
+  height: 30px;
+  background: #FFF;
+  border: solid 1px #dddddd;
+  border-bottom: none;
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+#new-group-tab button {
+  position: absolute;
+  left: 6px;
+  top: 7px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+#new-group-tab button .icon {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  display: block;
+  background: url('images/tc-spritesheet.png') 0 -98px no-repeat;
+  width: 12px;
+  height: 12px;
+}
 #template-view {
   position: absolute;
   left: 340px;
   right: 20px;
-  top: 170px;
+  top: 149px;
   bottom: 10px;
   min-width: 580px;
 }
@@ -692,6 +729,10 @@ div.ui-datepicker {
   right: 0;
   top: 30px;
   bottom: 0;
+}
+#template-view #media-chooser-button i {
+  position: relative;
+  top: -1px;
 }
 #preview-template-control .preview-url,
 #preview-template-control input,

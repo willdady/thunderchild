@@ -129,5 +129,7 @@ templates/views/EditTemplateGroupModalView.js
 templates/views/ConfirmDeleteTemplateGroupModalView.js
 templates/views/ActionDropDownView.js
 templates/views/TemplateSettingsModalView.js
+templates/views/CreateTemplateGroupButtonView.js
+templates/views/AlertModalView.js
 templates/views/AppView.js
 templates/Main.js
