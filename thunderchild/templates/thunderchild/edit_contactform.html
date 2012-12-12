@@ -3,12 +3,16 @@
 {% block title %}Edit Contact Form{% endblock %}
 {% block title_bar_title %}Edit Contact Form{% endblock %}
 
+{% block body_classes %}edit-contact-form{% endblock %}
+
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-	<li>
-		<a href="{% url thunderchild.form_views.contactforms %}">Contact Forms</a> <span class="divider">/</span>
-	</li>
-</ul>
+<div class="breadcrumbs-bar">
+	<ul class="breadcrumb">
+		<li>
+			<a href="{% url thunderchild.form_views.contactforms %}">Contact Forms</a> <span class="divider">/</span>
+		</li>
+	</ul>
+</div>
 {% endblock %}
 
 {% block pre_action_bar %}
