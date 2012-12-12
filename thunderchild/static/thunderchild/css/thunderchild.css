@@ -36,7 +36,9 @@ body.media-chooser {
   overflow-y: visible;
 }
 body.edit-entry,
-body.create-entry {
+body.create-entry,
+body.edit-contact-form,
+body.create-contact-form {
   padding-top: 176px;
 }
 textarea {
@@ -574,10 +576,15 @@ div.ui-datepicker {
   top: 178px;
   bottom: 10px;
   width: 300px;
-  overflow: auto;
+  /*overflow:auto;*/
+
   background: #FFF;
   border: solid 1px #dddddd;
   padding: 4px;
+}
+#template-browser .inner {
+  height: 100%;
+  overflow: auto;
 }
 #template-browser .btn-primary {
   margin-top: 5px;

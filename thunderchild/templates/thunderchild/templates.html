@@ -22,6 +22,7 @@
 		<button id="create-templategroup-button" class="btn btn-primary"><span class="icon"></span></button>
 	</div>
 	<div id="template-browser">
+		<div class="inner">
 		<ul>
 			{% for t in templates %}
 			<li data-id="{{ t.templategroup.id }}" class="template-group">
@@ -48,6 +49,7 @@
 			</li>
 			{% endfor %}
 		</ul>
+		</div>
 	</div>
 	<script id="templategroup-list-item-template" type="text/html">
 		<li data-id="<%= id %>" class="template-group">

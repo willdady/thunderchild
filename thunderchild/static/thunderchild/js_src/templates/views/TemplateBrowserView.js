@@ -5,7 +5,7 @@ define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateGroupMo
 		el:"#template-browser",
 
 		initialize : function() {
-			this.$("> ul > li").each(_.bind(function(i, el) {
+			this.$(".inner > ul > li").each(_.bind(function(i, el) {
 				var model = new TemplateGroupModel({
 					id : parseInt($(el).attr("data-id")),
 					templategroup_short_name : $(el).find(".group-header h3").text()
@@ -30,14 +30,14 @@ define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateGroupMo
 
 		sort : function() {
 			// Sort all template groups alphabetically
-			this.$("> ul > li").tsort(".group-header h3");
+			this.$(".inner > ul > li").tsort(".group-header h3");
 			// Make the root template group always first in the list
-			this.$("> ul").prepend(this.$("ul > li .group-header h3:contains(root)").closest("li"));
+			this.$(".inner > ul").prepend(this.$(".inner ul > li .group-header h3:contains(root)").closest("li"));
 		},
 
 		templateGroupAddHandler : function(model) {
 			var templategroup_element = $(_.template($("#templategroup-list-item-template").text(), model.toJSON()));
-			this.$("> ul").prepend(templategroup_element);
+			this.$(".inner > ul").prepend(templategroup_element);
 			var templategroup = new TemplateGroupView({
 				el : templategroup_element,
 				model : model,
