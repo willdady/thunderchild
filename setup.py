@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 from distutils.core import setup
+from distutils.sysconfig import get_python_lib
 import os
 
 def get_file_list(directory):
       list = []
       for dirpath, dirnames, filenames in os.walk(directory):
             for filename in filenames:
-                  list.append( os.path.join(dirpath, filename) )
+                  list.append( os.path.normpath(os.path.join(dirpath, filename)) )
       return list
 
 setup(name='Thunderchild',
@@ -22,8 +23,8 @@ setup(name='Thunderchild',
       	'pil(>=1.1.7)'
       ],
       data_files=[
-      	('thunderchild/static/', get_file_list('thunderchild/static/')),
-            ('thunderchild/fixtures/', get_file_list('thunderchild/fixtures/')),
-            ('thunderchild/templates/', get_file_list('thunderchild/templates/')),
+            (os.path.join(get_python_lib(), 'thunderchild/static'), get_file_list('thunderchild/static')),
+            (os.path.join(get_python_lib(), 'thunderchild/fixtures'), get_file_list('thunderchild/fixtures')),
+            (os.path.join(get_python_lib(), 'thunderchild/templates'), get_file_list('thunderchild/templates')),
       ],
      )
