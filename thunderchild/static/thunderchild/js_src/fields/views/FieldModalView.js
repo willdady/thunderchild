@@ -2,7 +2,6 @@ define(['jquery',
 		'fields/models/AppModel', 
 		'fields/models/FieldCollection', 
 		'lib/utilities',
-		'lib/jquery.serialize-object',  
 		'lib/backbone'], function($, appModel, fieldCollection, Utilities) {
 
 	var FieldModalView = Backbone.View.extend({

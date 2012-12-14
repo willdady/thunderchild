@@ -2,7 +2,6 @@ define(['jquery',
 		'entry_types/models/AppModel',
 		'entry_types/models/EntryTypeCollection', 
 		'lib/utilities', 
-		'lib/jquery.serialize-object', 
 		'lib/backbone'], function($, appModel, entryTypeCollection, Utilities) {
 	
 	

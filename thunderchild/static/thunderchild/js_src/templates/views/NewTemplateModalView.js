@@ -3,8 +3,7 @@ define([
 	'templates/models/AppModel', 
 	'templates/models/TemplateModel', 
 	'templates/models/TemplateCollection', 
-	'lib/backbone',
-	'lib/jquery.serialize-object'
+	'lib/backbone'
 	], 
 	function($, appModel, TemplateModel, templateCollection) {
 

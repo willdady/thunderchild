@@ -1,4 +1,4 @@
-define(['jquery', 'fields/models/AppModel', 'fields/models/FieldGroupCollection', 'lib/utilities', 'lib/backbone', 'lib/bootstrap', 'lib/jquery.serialize-object'], function($, appModel, fieldGroups, Utilities) {
+define(['jquery', 'fields/models/AppModel', 'fields/models/FieldGroupCollection', 'lib/utilities', 'lib/backbone', 'lib/bootstrap'], function($, appModel, fieldGroups, Utilities) {
 	
 	var FieldGroupModalView = Backbone.View.extend({
 		

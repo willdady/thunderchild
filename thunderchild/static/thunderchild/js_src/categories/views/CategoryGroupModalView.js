@@ -1,4 +1,4 @@
-define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryGroupCollection', 'lib/utilities', 'lib/backbone', 'lib/bootstrap', 'lib/jquery.serialize-object'], function($, appModel, categoryGroups, Utilities) {
+define(['jquery', 'categories/models/AppModel', 'categories/models/CategoryGroupCollection', 'lib/utilities', 'lib/backbone', 'lib/bootstrap'], function($, appModel, categoryGroups, Utilities) {
 	
 	var CategoryGroupModalView = Backbone.View.extend({
 		

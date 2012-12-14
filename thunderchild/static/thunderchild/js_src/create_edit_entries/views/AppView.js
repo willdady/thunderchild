@@ -16,7 +16,7 @@ define([
 	var AppView = Backbone.View.extend({
 
 		initialize : function() {
-			//# Select first tab by default
+			// Select first tab by default
 			$("#tabs a:first").tab("show");
 			// Auto slug the title field
 			Utilities.autoSlug($("#id_title"), $("#id_slug"));

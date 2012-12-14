@@ -8,13 +8,7 @@
     },
     modules: [
         {
-            name: 'common',
-            include: [
-                      'lib/backbone',
-                      'lib/utilities',
-                      'lib/bootstrap',
-                      'lib/log'
-            ]
+            name: 'common'
         },
         {
             name: 'categories/Main',

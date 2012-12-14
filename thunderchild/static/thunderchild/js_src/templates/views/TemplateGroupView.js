@@ -1,4 +1,4 @@
-define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateModel', 'templates/views/TemplateListItemView', 'templates/models/TemplateCollection', 'lib/backbone'], function($, appModel, TemplateModel, TemplateListItemView, templateCollection) {
+define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateModel', 'templates/views/TemplateListItemView', 'templates/models/TemplateCollection', 'lib/backbone', 'lib/jquery.tinysort'], function($, appModel, TemplateModel, TemplateListItemView, templateCollection) {
 
 	var TemplateGroupView = Backbone.View.extend({
 

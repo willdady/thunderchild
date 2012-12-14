@@ -1,13 +1,15 @@
 
 common.js
 ----------------
-lib/django-ajax.js
-lib/bootstrap.js
-common.js
+lib/jquery.js
 lib/underscore.js
 lib/backbone.js
+lib/bootstrap.js
+lib/django-ajax.js
 lib/utilities.js
 lib/log.js
+lib/jquery.serialize-object.js
+common.js
 
 categories/Main.js
 ----------------
@@ -19,7 +21,6 @@ categories/models/CategoryGroupCollection.js
 categories/views/CategoryView.js
 categories/views/CategoryGroupView.js
 categories/views/AppView.js
-lib/jquery.serialize-object.js
 categories/views/CategoryGroupModalView.js
 categories/views/ConfirmDeleteModalView.js
 categories/views/CategoryModalView.js
@@ -57,7 +58,6 @@ entry_types/models/EntryTypeCollection.js
 entry_types/views/EntryTypeView.js
 entry_types/views/AppView.js
 entry_types/views/ConfirmDeleteModalView.js
-lib/jquery.serialize-object.js
 entry_types/views/EntryTypeModalView.js
 entry_types/Main.js
 
@@ -71,7 +71,6 @@ fields/models/FieldGroupCollection.js
 fields/views/FieldView.js
 fields/views/FieldGroupView.js
 fields/views/AppView.js
-lib/jquery.serialize-object.js
 fields/views/FieldGroupModalView.js
 fields/views/ConfirmDeleteModalView.js
 fields/views/FieldModalView.js
@@ -115,12 +114,11 @@ templates/models/TemplateGroupModel.js
 templates/models/TemplateModel.js
 templates/views/TemplateListItemView.js
 templates/models/TemplateCollection.js
+lib/jquery.tinysort.js
 templates/views/TemplateGroupView.js
 templates/models/TemplateGroupCollection.js
-lib/jquery.tinysort.js
 templates/views/TemplateBrowserView.js
 templates/views/TemplateEditorView.js
-lib/jquery.serialize-object.js
 templates/views/NewTemplateModalView.js
 templates/views/ConfirmDeleteTemplateModalView.js
 templates/views/MediaChooserModalView.js
