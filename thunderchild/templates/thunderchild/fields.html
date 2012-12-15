@@ -7,6 +7,10 @@
 <a id="create-fieldgroup-button" class="btn btn-primary pull-right" href="#">Create field group</a>
 {% endblock %}
 
+{% block content %}
+<p id="no-groups-msg" class="hide">There are no field groups defined. Click 'Create field group' above to create one.</p>
+{% endblock %}
+
 {% block post_content %}
 <script type="text/html" id="fieldgroup-template">
 	<div class="group-header clearfix collapsed" data-toggle="collapse" data-target="#group-content-<%= id %>">

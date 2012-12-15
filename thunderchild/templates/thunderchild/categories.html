@@ -9,6 +9,10 @@
 <a id="create-categorygroup-button" class="btn btn-primary pull-right" href="#">Create category group</a>
 {% endblock %}
 
+{% block content %}
+<p id="no-groups-msg" class="hide">There are no category groups defined. Click 'Create category group' above to create one.</p>
+{% endblock %}
+
 {% block post_content %}
 <script type="text/html" id="categorygroup-template">
 	<div class="group-header clearfix collapsed" data-toggle="collapse" data-target="#group-content-<%= id %>">

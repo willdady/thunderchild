@@ -4,7 +4,7 @@
     removeCombined: true,
     preserveLicenseComments: false,
     paths : {
-    	jquery: "empty:"
+    	/*jquery: "empty:"*/
     },
     modules: [
         {
