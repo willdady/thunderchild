@@ -8,17 +8,18 @@
 {% endblock %}
 
 {% block content %}
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Short name</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+	<p id="no-entrytypes-msg" class="hide">There are no entry types defined. Click 'Create entry type' above to create one.</p>
+	<table id="entrytype-table" class="table hide">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Short name</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
 {% endblock %}
 
 {% block post_content %}

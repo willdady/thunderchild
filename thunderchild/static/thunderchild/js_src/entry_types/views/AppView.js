@@ -14,6 +14,7 @@ define(['jquery',
 			this.tableBody = this.$("table tbody");
 			entryTypeCollection.on("reset", this.entryTypeResetHandler, this);
 			entryTypeCollection.on("add", this.entryTypeAddHandler, this);
+			entryTypeCollection.on("remove", this.entryTypeRemoveHandler, this);
 		},
 		
 		events : {
@@ -21,19 +22,35 @@ define(['jquery',
 		},
 		
 		entryTypeResetHandler : function() {
-			_.each(entryTypeCollection.models, _.bind(function(model) {
-				var view = new EntryTypeView({
-					model : model
-				});
-				this.tableBody.append(view.el);
-			}, this));
+			if (entryTypeCollection.models.length == 0) {
+				$("#no-entrytypes-msg").removeClass('hide');
+				$("#entrytype-table").addClass('hide');
+			} else {
+				$("#no-entrytypes-msg").addClass('hide');
+				$("#entrytype-table").removeClass('hide');
+				_.each(entryTypeCollection.models, _.bind(function(model) {
+					var view = new EntryTypeView({
+						model : model
+					});
+					this.tableBody.append(view.el);
+				}, this));
+			}
 		},
 		
 		entryTypeAddHandler : function(model) {
+			$("#no-entrytypes-msg").addClass('hide');
+			$("#entrytype-table").removeClass('hide');
 			var view = new EntryTypeView({
 				model : model
 			});
 			this.tableBody.append(view.el);
+		},
+		
+		entryTypeRemoveHandler : function() {
+			if (entryTypeCollection.models.length == 0) {
+				$("#no-entrytypes-msg").removeClass('hide');
+				$("#entrytype-table").addClass('hide');
+			}
 		},
 		
 		createEntryTypeClickHandler : function() {
