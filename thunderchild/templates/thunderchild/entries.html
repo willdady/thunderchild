@@ -11,7 +11,7 @@
 	<li>
 		<div class="btn-group">
 			<a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-				New Entry
+				New entry
 				<span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
@@ -28,6 +28,7 @@
 
 {% block content %}
 
+	{% if entries|length > 0 %}
 		<form id="entries-filter-form" action="{% url thunderchild.entry_views.entries %}" method="get">
 			<ul>
 				{% for field in form %}
@@ -65,6 +66,9 @@
 				{% endfor %}
 			</tbody>
 		</table>
+	{% else %}
+		<p id="no-entries-msg">There are no entires defined. Click 'New entry' above to create one.</p>
+	{% endif %}
 	
 	{% if page.paginator.num_pages > 1 %}
 	<hr />
