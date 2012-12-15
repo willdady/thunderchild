@@ -26,6 +26,7 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			appModel.selectedTemplate(this.model);
 			var coords = $(e.currentTarget).offset();
 			var actions = [
+				{'Reload' : _.bind(this.reloadAction, this)},
 				{'Delete' : _.bind(this.deleteAction, this)},
 				{'Settings' : _.bind(this.settingsAction, this)}
 			];
@@ -44,6 +45,11 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 		
 		settingsAction : function(e) {
 			appModel.openTemplateSettingsModal(this.model);
+			e.preventDefault();
+		},
+		
+		reloadAction : function(e) {
+			this.model.fetch();
 			e.preventDefault();
 		},
 
