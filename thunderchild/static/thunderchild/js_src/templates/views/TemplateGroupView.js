@@ -53,7 +53,11 @@ define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateModel',
 		},
 
 		deleteAction : function(e) {
-			appModel.openConfirmDeleteTemplateGroupModal(this.model);
+			if (this.model.get('templategroup_short_name') == 'root') {
+				appModel.openDisallowedRootGroupDeleteAlertModal();
+			} else {
+				appModel.openConfirmDeleteTemplateGroupModal(this.model);
+			}
 			e.preventDefault();
 		},
 

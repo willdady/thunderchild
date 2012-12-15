@@ -52,6 +52,10 @@ define(['jquery', 'lib/backbone'], function() {
 		openDisallowedRootIndexDeleteAlertModal : function() {
 			this.openAlertModal("Deleting the root index template is forbidden.");
 		},
+		
+		openDisallowedRootGroupDeleteAlertModal : function() {
+			this.openAlertModal("Deleting the root template group is forbidden.");
+		},
 	
 		closeMediaChooserModal : function() {
 			this.trigger("closeMediaChooserModal");
