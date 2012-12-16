@@ -9,7 +9,8 @@ define(['jquery', 'templates/models/AppModel', 'templates/models/TemplateModel',
 					id : $(el).attr("data-id"),
 					templategroup : this.model.id,
 					template_short_name : $.trim($(el).text()),
-					template_is_private : $(el).hasClass('is-fragment')
+					template_is_private : $(el).hasClass('is-fragment'),
+					template_redirect_type : $(el).attr('data-redirect-type')
 				});
 				model.templateGroupModel(this.model);
 				templateListItemView = new TemplateListItemView({

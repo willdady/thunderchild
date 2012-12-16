@@ -76,6 +76,8 @@ define(['jquery', 'templates/models/AppModel', 'lib/backbone'], function($, appM
 			this.$("a").text(this.model.get("template_short_name"));
 			this.$el.toggleClass("unsaved", this.model.requiresSave() === true);
 			this.$el.toggleClass("is-fragment", this.model.get("template_is_private") === true);
+			var redirectType = this.model.get("template_redirect_type");
+			this.$el.toggleClass("is-redirected", redirectType !== undefined && redirectType !== null);
 		},
 		
 		saveHandler : function() {

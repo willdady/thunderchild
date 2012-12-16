@@ -3,9 +3,6 @@
     dir: 'js',
     removeCombined: true,
     preserveLicenseComments: false,
-    paths : {
-    	/*jquery: "empty:"*/
-    },
     modules: [
         {
             name: 'common'

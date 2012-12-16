@@ -33,8 +33,6 @@ def templates(request):
         else:
             templates_list.append({'templategroup':templategroup, 'templates':_templates})
     
-    print Site.objects.get_current().domain
-    
     # Build the absolute URL for thunderchild.dynamic_view.dynamic_view. This is rendered as part of the the preview template controls.
     domain = "{}{}".format("http://", Site.objects.get_current().domain)
     path = reverse('thunderchild.dynamic_view.dynamic_view', args=[''])

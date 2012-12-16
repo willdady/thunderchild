@@ -36,7 +36,12 @@
 				</div>
 				<ul id="template-group-{{ t.templategroup.id }}" class="collapse">
 				{% for template in t.templates %}
-					<li data-id="{{ template.id }}" {% if template.template_is_private %}class="is-fragment"{% endif %} {% if template.template_short_name == 'index' %}data-is-index="1"{% endif %}>
+					<li data-id="{{ template.id }}" class="
+					    {% if template.template_is_private %}is-fragment{% endif %}
+					    {% if template.template_redirect_type != None %} is-redirected{% endif %}" 
+					    {% if template.template_short_name == 'index' %}data-is-index="1"{% endif %} 
+					    {% if template.template_redirect_type != None %}data-redirect-type="{{ template.template_redirect_type }}"{% endif %} 
+					>
 						<i class="icon"></i>
 						<a href="#">{{ template.template_short_name }}</a>
 						<div class="pull-right controls">
